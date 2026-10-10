@@ -50,7 +50,7 @@
         background-color: #ffffff !important;
         color: #000000 !important;
       }
-      #desktop-sidebar, #mobile-header, #mobile-bottom-nav, #toast-container, .no-print {
+      #app-sidebar, #mobile-header, #sidebar-backdrop, #toast-container, .no-print {
         display: none !important;
       }
       main {
@@ -76,6 +76,9 @@
 <body class="min-h-screen flex flex-col md:flex-row bg-slate-50 antialiased selection:bg-emerald-500 selection:text-white">
 
   <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col space-y-2 pointer-events-none"></div>
+
+  <!-- Mobile Backdrop Overlay untuk Sidebar Kiri -->
+  <div id="sidebar-backdrop" onclick="toggleMobileSidebar(false)" class="fixed inset-0 bg-slate-950/50 backdrop-blur-xs z-40 hidden md:hidden transition-opacity duration-300"></div>
 
   <!-- Modal Konfirmasi / Detail -->
   <div id="custom-modal" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm hidden items-center justify-center p-4">
@@ -139,7 +142,7 @@
         </div>
         <div>
           <label class="block text-xs font-semibold text-slate-700 mb-1">Kata Sandi *</label>
-          <input type="text" id="input-judge-password" required value="password123" placeholder="Minimal 6 karakter" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+          <input type="text" id="input-judge-password" required placeholder="Minimal 6 karakter" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
         </div>
         <div class="flex justify-end gap-2 pt-3 border-t border-slate-100">
           <button type="button" onclick="closeModalAddJudge()" class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-100 transition">Batal</button>
@@ -232,16 +235,24 @@
     </div>
   </div>
 
-  <!-- Desktop Fixed Sidebar -->
-  <aside id="desktop-sidebar" class="hidden md:flex flex-col w-64 bg-white border-r border-slate-200 h-screen sticky top-0 z-40 p-5">
-    <div class="flex items-center gap-3 pb-6 border-b border-slate-100">
-      <div class="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center shadow-lg shadow-emerald-600/30">
-        <i data-lucide="sparkles" class="w-5 h-5"></i>
+  <!-- SIDEBAR KIRI TERPADU (Desktop: Sticky Sidebar | Mobile: Drawer Kiri Slide-In) -->
+  <aside id="app-sidebar" class="fixed inset-y-0 left-0 z-50 w-72 md:w-64 bg-white border-r border-slate-200 h-screen p-5 flex flex-col transform -translate-x-full md:translate-x-0 md:sticky md:top-0 transition-transform duration-300 ease-in-out shadow-2xl md:shadow-none hidden">
+    
+    <!-- Sidebar Header with Logo & Mobile Close Button -->
+    <div class="flex items-center justify-between pb-5 border-b border-slate-100">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center shadow-lg shadow-emerald-600/30">
+          <i data-lucide="sparkles" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <h1 class="font-bold text-slate-900 leading-tight">SiBersih</h1>
+          <p class="text-xs text-slate-400 font-medium">Penilaian Kelas Adiwiyata</p>
+        </div>
       </div>
-      <div>
-        <h1 class="font-bold text-slate-900 leading-tight">SiBersih</h1>
-        <p class="text-xs text-slate-400 font-medium">Penilaian Kelas Adiwiyata</p>
-      </div>
+      <!-- Tombol Tutup Sidebar Khusus Mobile -->
+      <button type="button" onclick="toggleMobileSidebar(false)" class="md:hidden p-2 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-xl transition">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
     </div>
 
     <!-- User Profile Badge -->
@@ -253,8 +264,8 @@
       </div>
     </div>
 
-    <!-- Navigation Menu -->
-    <nav class="flex-1 space-y-1 mt-2">
+    <!-- Navigation Menu (Sidebar Kiri) -->
+    <nav class="flex-1 space-y-1 mt-1 overflow-y-auto pr-1">
       <button onclick="navigateView('dashboard')" id="nav-btn-dashboard" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition">
         <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Dashboard
       </button>
@@ -277,46 +288,33 @@
     </div>
   </aside>
 
-  <!-- Mobile Header -->
-  <header id="mobile-header" class="md:hidden flex items-center justify-between p-4 bg-white border-b border-slate-200 sticky top-0 z-30">
-    <div class="flex items-center gap-2">
-      <div class="w-8 h-8 rounded-lg bg-emerald-600 text-white flex items-center justify-center">
-        <i data-lucide="sparkles" class="w-4 h-4"></i>
+  <!-- Mobile Top Header (Dilengkapi Hamburger Button di Sebelah Kiri) -->
+  <header id="mobile-header" class="hidden items-center justify-between p-3.5 bg-white/95 backdrop-blur-md border-b border-slate-200 sticky top-0 z-30 md:hidden">
+    <div class="flex items-center gap-2.5">
+      <!-- Hamburger Menu Button Pembuka Sidebar Kiri di Mobile -->
+      <button type="button" onclick="toggleMobileSidebar(true)" class="p-2 rounded-xl text-slate-700 hover:bg-slate-100 active:scale-95 transition" aria-label="Buka Menu Sidebar">
+        <i data-lucide="menu" class="w-5 h-5"></i>
+      </button>
+      <div class="flex items-center gap-2">
+        <div class="w-7 h-7 rounded-lg bg-emerald-600 text-white flex items-center justify-center shadow-xs">
+          <i data-lucide="sparkles" class="w-4 h-4"></i>
+        </div>
+        <span class="font-black text-slate-900 text-sm tracking-tight">SiBersih</span>
       </div>
-      <span class="font-bold text-slate-900 text-sm">SiBersih</span>
     </div>
+    
     <div class="flex items-center gap-2">
-      <span id="mobile-user-badge" class="text-xs px-2.5 py-1 bg-slate-100 text-slate-700 font-medium rounded-full"></span>
-      <button onclick="handleLogout()" class="p-1.5 text-rose-600 hover:bg-rose-50 rounded-lg">
-        <i data-lucide="log-out" class="w-5 h-5"></i>
+      <span id="mobile-user-badge" class="text-xs px-2.5 py-1 bg-slate-100 text-slate-700 font-semibold rounded-full max-w-[120px] truncate"></span>
+      <button onclick="handleLogout()" class="p-1.5 text-rose-600 hover:bg-rose-50 rounded-lg transition" title="Keluar">
+        <i data-lucide="log-out" class="w-4 h-4"></i>
       </button>
     </div>
   </header>
 
-  <!-- Mobile Bottom Floating Navigation -->
-  <nav id="mobile-bottom-nav" class="md:hidden fixed bottom-3 left-3 right-3 bg-white/90 backdrop-blur-md border border-slate-200/80 shadow-xl rounded-2xl z-40 px-2 py-2 flex justify-around">
-    <button onclick="navigateView('dashboard')" id="mobile-nav-dashboard" class="flex flex-col items-center py-1 px-3 text-slate-500 rounded-xl transition">
-      <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
-      <span class="text-[10px] font-medium mt-1">Beranda</span>
-    </button>
-    <button onclick="navigateView('scoring')" id="mobile-nav-scoring" class="flex flex-col items-center py-1 px-3 text-slate-500 rounded-xl transition">
-      <i data-lucide="clipboard-check" class="w-5 h-5"></i>
-      <span class="text-[10px] font-medium mt-1">Penilaian</span>
-    </button>
-    <button onclick="navigateView('leaderboard')" id="mobile-nav-leaderboard" class="flex flex-col items-center py-1 px-3 text-slate-500 rounded-xl transition">
-      <i data-lucide="trophy" class="w-5 h-5"></i>
-      <span class="text-[10px] font-medium mt-1">Peringkat</span>
-    </button>
-    <button onclick="navigateView('manage')" id="mobile-nav-manage" class="admin-only hidden flex flex-col items-center py-1 px-3 text-slate-500 rounded-xl transition">
-      <i data-lucide="database" class="w-5 h-5"></i>
-      <span class="text-[10px] font-medium mt-1">Kelola</span>
-    </button>
-  </nav>
+  <main class="flex-1 p-4 md:p-8 overflow-y-auto max-w-7xl mx-auto w-full">
 
-  <main class="flex-1 p-4 md:p-8 pb-24 md:pb-8 overflow-y-auto max-w-7xl mx-auto w-full">
-
-    <!-- VIEW 0: LOGIN SCREEN -->
-    <section id="view-login" class="hidden min-h-[80vh] flex items-center justify-center py-6">
+    <!-- VIEW 0: LOGIN SCREEN (DEFAULT TAMPIL LANGSUNG SEJAK AWAL) -->
+    <section id="view-login" class="min-h-[85vh] flex items-center justify-center py-6">
       <div class="w-full max-w-md bg-white rounded-3xl p-8 border border-slate-200/80 shadow-2xl">
         <div class="text-center mb-8">
           <div class="w-14 h-14 bg-emerald-600 rounded-2xl mx-auto flex items-center justify-center text-white mb-3 shadow-lg shadow-emerald-500/25">
@@ -336,32 +334,28 @@
           </button>
         </div>
 
-        <!-- Evaluator Form -->
+        <!-- Evaluator Form (Bersih Tanpa Default Value & Tanpa Kotak Dummy) -->
         <form id="form-login-evaluator" onsubmit="event.preventDefault(); submitLoginEvaluator();" class="space-y-4">
           <div>
             <label class="block text-xs font-semibold text-slate-700 mb-1">Username / ID Penilai</label>
             <div class="relative">
               <i data-lucide="user" class="w-4 h-4 absolute left-3.5 top-3.5 text-slate-400"></i>
-              <input type="text" id="evaluator-username" required value="penilai_a" placeholder="Contoh: penilai_a" class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
+              <input type="text" id="evaluator-username" required placeholder="Masukkan username penilai" class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
             </div>
           </div>
           <div>
             <label class="block text-xs font-semibold text-slate-700 mb-1">Kata Sandi</label>
             <div class="relative">
               <i data-lucide="lock" class="w-4 h-4 absolute left-3.5 top-3.5 text-slate-400"></i>
-              <input type="password" id="evaluator-password" required value="password123" placeholder="••••••••" class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
+              <input type="password" id="evaluator-password" required placeholder="••••••••" class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
             </div>
-          </div>
-          <div class="p-3 bg-emerald-50 rounded-xl text-[11px] text-emerald-700 leading-relaxed border border-emerald-100 flex items-center justify-between gap-2">
-            <span>💡 Akun demo: <strong class="font-bold">penilai_a</strong> s.d. <strong class="font-bold">penilai_g</strong> (Sandi: <strong class="font-bold">password123</strong>)</span>
-            <button type="button" onclick="quickFillEvaluator()" class="text-[10px] underline font-bold hover:text-emerald-900">Isi Otomatis</button>
           </div>
           <button type="submit" class="w-full py-3 bg-emerald-600 hover:bg-emerald-700 active:scale-[0.99] text-white font-semibold text-sm rounded-xl shadow-lg shadow-emerald-600/25 transition">
             Masuk Sebagai Penilai
           </button>
         </form>
 
-        <!-- Admin Form (Firebase Auth) -->
+        <!-- Admin Form (Firebase Auth - Bersih Tanpa Kotak Demo) -->
         <form id="form-login-admin" onsubmit="event.preventDefault(); submitLoginAdmin();" class="space-y-4 hidden">
           <div>
             <label class="block text-xs font-semibold text-slate-700 mb-1">Email Administrator</label>
@@ -377,9 +371,6 @@
               <input type="password" id="admin-password" required placeholder="••••••••" class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
             </div>
           </div>
-          <div class="p-3 bg-blue-50 rounded-xl text-[11px] text-blue-700 leading-relaxed border border-blue-100">
-            🔒 Khusus Admin Sekolah: Sandi demo <strong class="font-bold text-blue-900">admin123</strong> untuk simulasi login admin.
-          </div>
           <button type="submit" class="w-full py-3 bg-slate-900 hover:bg-slate-800 active:scale-[0.99] text-white font-semibold text-sm rounded-xl shadow-lg transition">
             Masuk Sebagai Admin
           </button>
@@ -387,8 +378,8 @@
       </div>
     </section>
 
-    <!-- VIEW 1: DASHBOARD -->
-    <section id="view-dashboard" class="space-y-6">
+    <!-- VIEW 1: DASHBOARD (AWAL DISEMBUNYIKAN) -->
+    <section id="view-dashboard" class="hidden space-y-6">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h2 class="text-2xl font-black text-slate-900 tracking-tight">Dashboard Kebersihan</h2>
@@ -866,7 +857,7 @@
         }
       ],
       evaluations: [
-        // ======================== PEKAN 1 (2026-10-02) ========================
+        // Pekan 1
         createDummyEval("ev_p1_c1_j1", "sch_1", "Pekan 1 Oktober 2026", "2026-10-02", "cls_1", "X MIPA 1", "usr_1", "Ibu Nurul (Tim Adiwiyata)",
           { c1: [5, 5, 5, 4], c2: [5, 5, 5, 5, 4], c3: [5, 5, 4], c4: [5, 5, 4, 5, 4] }, "Lantai sangat bersih, tempat pemilahan sampah 3 jenis tersedia lengkap."),
         createDummyEval("ev_p1_c1_j2", "sch_1", "Pekan 1 Oktober 2026", "2026-10-02", "cls_1", "X MIPA 1", "usr_2", "Pak Hendra (Guru Piket)",
@@ -895,7 +886,7 @@
         createDummyEval("ev_p1_c4_j3", "sch_1", "Pekan 1 Oktober 2026", "2026-10-02", "cls_4", "XII RPL 1", "usr_3", "Pak Suwarno (Guru BK)",
           { c1: [5, 5, 5, 5], c2: [5, 5, 5, 5, 5], c3: [5, 5, 5], c4: [5, 5, 4, 5, 5] }, "Stiker hemat energi tertempel rapi di saklar listrik dan AC."),
 
-        // ======================== PEKAN 2 (2026-10-09) ========================
+        // Pekan 2
         createDummyEval("ev_p2_c1_j4", "sch_2", "Pekan 2 Oktober 2026", "2026-10-09", "cls_1", "X MIPA 1", "usr_4", "Ibu Ratna (Guru Biologi)",
           { c1: [5, 5, 5, 5], c2: [5, 5, 5, 5, 5], c3: [5, 5, 5], c4: [5, 5, 4, 5, 5] }, "Identifikasi nama latin tanaman lengkap dan daun tampak segar terawat."),
         createDummyEval("ev_p2_c1_j5", "sch_2", "Pekan 2 Oktober 2026", "2026-10-09", "cls_1", "X MIPA 1", "usr_5", "Pak Bambang (Waka Kesiswaan)",
@@ -924,7 +915,7 @@
         createDummyEval("ev_p2_c4_j6", "sch_2", "Pekan 2 Oktober 2026", "2026-10-09", "cls_4", "XII RPL 1", "usr_6", "Ibu Dewi (Guru Kimia)",
           { c1: [5, 5, 5, 5], c2: [5, 5, 5, 5, 4], c3: [5, 5, 5], c4: [5, 5, 5, 5, 5] }, "Kebersihan meja praktikum komputer kelas sangat terjaga."),
 
-        // ======================== PEKAN 3 (2026-10-16) ========================
+        // Pekan 3
         createDummyEval("ev_p3_c1_j1", "sch_3", "Pekan 3 Oktober 2026", "2026-10-16", "cls_1", "X MIPA 1", "usr_1", "Ibu Nurul (Tim Adiwiyata)",
           { c1: [5, 5, 5, 5], c2: [5, 5, 5, 5, 5], c3: [5, 5, 5], c4: [5, 5, 5, 5, 5] }, "Pojok baca dipercantik dengan rak daur ulang kayu palet. Sangat menginspirasi!"),
         createDummyEval("ev_p3_c1_j5", "sch_3", "Pekan 3 Oktober 2026", "2026-10-16", "cls_1", "X MIPA 1", "usr_5", "Pak Bambang (Waka Kesiswaan)",
@@ -949,7 +940,7 @@
         createDummyEval("ev_p3_c4_j1", "sch_3", "Pekan 3 Oktober 2026", "2026-10-16", "cls_4", "XII RPL 1", "usr_1", "Ibu Nurul (Tim Adiwiyata)",
           { c1: [5, 5, 5, 5], c2: [5, 5, 5, 5, 5], c3: [5, 5, 5], c4: [5, 5, 5, 5, 5] }, "Konsistensi luar biasa sepanjang 3 pekan berturut-turut! Layak menjadi kelas percontohan."),
         createDummyEval("ev_p3_c4_j5", "sch_3", "Pekan 3 Oktober 2026", "2026-10-16", "cls_4", "XII RPL 1", "usr_5", "Pak Bambang (Waka Kesiswaan)",
-          { c1: [5, 5, 5, 5], c2: [5, 5, 5, 5, 5], c3: [5, 5, 5], c4: [5, 5, 5, 5, 5] }, "Seluruh sarana dan inovasi lingkungan berfungsi optimal."),
+          { c1: [5, 5, 5, 5], c2: [5, 5, 5, 5, 5], c3: [5, 5, 5], c4: [5, 5, 4, 5, 5] }, "Seluruh sarana dan inovasi lingkungan berfungsi optimal."),
         createDummyEval("ev_p3_c4_j7", "sch_3", "Pekan 3 Oktober 2026", "2026-10-16", "cls_4", "XII RPL 1", "usr_7", "Pak Joko (Guru PJOK)",
           { c1: [5, 5, 5, 5], c2: [5, 5, 5, 5, 4], c3: [5, 5, 5], c4: [5, 5, 5, 5, 5] }, "Ruangan harum, lantai berkilau, dan penataan sangat ergonomis.")
       ]
@@ -1024,13 +1015,31 @@
     let currentUser = null;
     let currentScoringState = {};
     let currentEditingEvalId = null;
-    let isFormReadOnly = false; // Flag status formulir (terkunci bagi Juri)
+    let isFormReadOnly = false;
 
     function safeCreateIcons() {
       if (window.lucide && typeof window.lucide.createIcons === 'function') {
         window.lucide.createIcons();
       }
     }
+
+    // Toggle Mobile Sidebar Drawer di Sebelah Kiri
+    window.toggleMobileSidebar = function(isOpen) {
+      const sidebar = document.getElementById('app-sidebar');
+      const backdrop = document.getElementById('sidebar-backdrop');
+      if (!sidebar || !backdrop) return;
+
+      if (isOpen) {
+        sidebar.classList.remove('-translate-x-full');
+        sidebar.classList.add('translate-x-0');
+        backdrop.classList.remove('hidden');
+      } else {
+        sidebar.classList.add('-translate-x-full');
+        sidebar.classList.remove('translate-x-0');
+        backdrop.classList.add('hidden');
+      }
+      safeCreateIcons();
+    };
 
     // Helper Format Tanggal Indonesia
     window.formatDateIndo = function(dateStr) {
@@ -1112,24 +1121,30 @@
         return;
       }
 
-      const desktopSidebar = document.getElementById('desktop-sidebar');
+      // Tutup drawer sidebar mobile jika terbuka saat berpindah halaman
+      window.toggleMobileSidebar(false);
+
+      const appSidebar = document.getElementById('app-sidebar');
       const mobileHeader = document.getElementById('mobile-header');
-      const mobileNav = document.getElementById('mobile-bottom-nav');
 
       if (viewId === 'login') {
-        if (desktopSidebar) {
-          desktopSidebar.classList.add('hidden');
-          desktopSidebar.classList.remove('md:flex');
+        if (appSidebar) {
+          appSidebar.classList.add('hidden');
+          appSidebar.classList.remove('md:flex');
         }
-        if (mobileHeader) mobileHeader.classList.add('hidden');
-        if (mobileNav) mobileNav.classList.add('hidden');
+        if (mobileHeader) {
+          mobileHeader.classList.add('hidden');
+          mobileHeader.classList.remove('flex');
+        }
       } else {
-        if (desktopSidebar) {
-          desktopSidebar.classList.remove('hidden');
-          desktopSidebar.classList.add('md:flex');
+        if (appSidebar) {
+          appSidebar.classList.remove('hidden');
+          appSidebar.classList.add('md:flex');
         }
-        if (mobileHeader) mobileHeader.classList.remove('hidden');
-        if (mobileNav) mobileNav.classList.remove('hidden');
+        if (mobileHeader) {
+          mobileHeader.classList.remove('hidden');
+          mobileHeader.classList.add('flex');
+        }
       }
 
       const views = ['login', 'dashboard', 'scoring', 'leaderboard', 'manage'];
@@ -1139,11 +1154,15 @@
       });
 
       const target = document.getElementById(`view-${viewId}`);
-      if (target) target.classList.remove('hidden');
+      if (target) {
+        target.classList.remove('hidden');
+        if (viewId === 'login') {
+          target.classList.add('flex');
+        }
+      }
 
       ['dashboard', 'scoring', 'leaderboard', 'manage'].forEach(nav => {
         const btnDesk = document.getElementById(`nav-btn-${nav}`);
-        const btnMob = document.getElementById(`mobile-nav-${nav}`);
         if (btnDesk) {
           if (nav === viewId) {
             btnDesk.classList.add('bg-emerald-50', 'text-emerald-700');
@@ -1151,15 +1170,6 @@
           } else {
             btnDesk.classList.remove('bg-emerald-50', 'text-emerald-700');
             btnDesk.classList.add('text-slate-600');
-          }
-        }
-        if (btnMob) {
-          if (nav === viewId) {
-            btnMob.classList.add('text-emerald-600');
-            btnMob.classList.remove('text-slate-500');
-          } else {
-            btnMob.classList.remove('text-emerald-600');
-            btnMob.classList.add('text-slate-500');
           }
         }
       });
@@ -1170,12 +1180,6 @@
       if (viewId === 'scoring') resetScoringForm();
 
       window.scrollTo({ top: 0, behavior: 'smooth' });
-    };
-
-    window.quickFillEvaluator = function() {
-      document.getElementById('evaluator-username').value = 'penilai_a';
-      document.getElementById('evaluator-password').value = 'password123';
-      showToast('Form penilai terisi otomatis (penilai_a)!');
     };
 
     window.showToast = function(message, type = 'success') {
@@ -1259,6 +1263,11 @@
       const usernameInput = document.getElementById('evaluator-username').value.trim();
       const passwordInput = document.getElementById('evaluator-password').value.trim();
 
+      if (!usernameInput || !passwordInput) {
+        showToast("Harap masukkan username dan kata sandi penilai", "error");
+        return;
+      }
+
       let matchedUser = null;
 
       if (!IS_PREVIEW && fbDb) {
@@ -1289,7 +1298,7 @@
       } else {
         showCustomModal({
           title: 'Login Gagal',
-          desc: 'Username atau kata sandi penilai tidak cocok. Silakan coba kembali.',
+          desc: 'Username atau kata sandi penilai tidak cocok. Silakan periksa kembali.',
           icon: 'alert-triangle'
         });
       }
@@ -1298,6 +1307,11 @@
     window.submitLoginAdmin = async function() {
       const email = document.getElementById('admin-email').value.trim();
       const password = document.getElementById('admin-password').value.trim();
+
+      if (!email || !password) {
+        showToast("Harap masukkan email dan kata sandi admin", "error");
+        return;
+      }
 
       if (!IS_PREVIEW && fbAuth) {
         try {
@@ -1329,7 +1343,7 @@
         } else {
           showCustomModal({
             title: 'Akses Ditolak',
-            desc: 'Gunakan kata sandi admin123 untuk simulasi login admin.',
+            desc: 'Email atau kata sandi administrator salah. Silakan coba kembali.',
             icon: 'alert-triangle'
           });
         }
@@ -1341,6 +1355,18 @@
       if (!IS_PREVIEW && fbAuth) {
         signOut(fbAuth);
       }
+      
+      const evalUserInput = document.getElementById('evaluator-username');
+      const evalPassInput = document.getElementById('evaluator-password');
+      const adminEmailInput = document.getElementById('admin-email');
+      const adminPassInput = document.getElementById('admin-password');
+      
+      if (evalUserInput) evalUserInput.value = '';
+      if (evalPassInput) evalPassInput.value = '';
+      if (adminEmailInput) adminEmailInput.value = '';
+      if (adminPassInput) adminPassInput.value = '';
+
+      window.toggleMobileSidebar(false);
       navigateView('login');
       showToast("Anda telah keluar.");
     };
@@ -1724,7 +1750,6 @@
       const rawEvals = await getEvaluationsList();
       const isAdmin = currentUser && currentUser.role === 'admin';
 
-      // Cari data penilaian yang cocok
       const existing = rawEvals.find(e => {
         const matchClass = (e.classId === classId);
         const matchEvaluator = isAdmin ? true : (e.evaluatorId === currentUser?.id || e.evaluatorName === currentUser?.name);
@@ -1736,7 +1761,6 @@
       if (existing) {
         currentEditingEvalId = existing.id;
 
-        // Muat nilai ke state rubrik
         currentScoringState = {};
         if (existing.indicatorScores && Object.keys(existing.indicatorScores).length > 0) {
           currentScoringState = { ...existing.indicatorScores };
@@ -1765,7 +1789,6 @@
 
         calculateLiveScores();
 
-        // KONTROL AKSES: JURI HANYA LIHAT (TERKUNCI), ADMIN BOLEH EDIT
         if (isAdmin) {
           applyReadOnlyLockToRubric(false);
           if (editBanner) {
@@ -1794,7 +1817,6 @@
 
           showToast(`Mode Edit Admin: Anda dapat memperbarui penilaian untuk ${existing.className}.`, "success");
         } else {
-          // JURI: KUNCI FORM & HANYA LIHAT (READ-ONLY)
           applyReadOnlyLockToRubric(true);
 
           if (editBanner) {
@@ -1825,7 +1847,6 @@
         }
 
       } else {
-        // Kelas belum pernah dinilai -> Mode Penilaian Baru (Aktif & Dapat Diisi)
         currentEditingEvalId = null;
         currentScoringState = {};
         clearScoringButtonHighlights();
@@ -1896,7 +1917,6 @@
       const tanggalPelaksanaan = document.getElementById('score-date-input').value.trim() || new Date().toISOString().split('T')[0];
       const notes = document.getElementById('score-notes').value.trim();
 
-      // VALIDASI HAK AKSES PENGUBAHAN NILAI (ADMIN ONLY)
       if (currentEditingEvalId && (!currentUser || currentUser.role !== 'admin')) {
         showCustomModal({
           title: 'Akses Ditolak',
@@ -2020,7 +2040,6 @@
       return mockDB.evaluations;
     }
 
-    // PENGELOMPOKAN REKAPITULASI DENGAN TANGGAL PELAKSANAAN TERPADU
     function getAggregatedEvaluations(evalsList) {
       const classMap = new Map();
 
@@ -2234,7 +2253,6 @@
       const periodFilter = periodSelect.value;
       const isSingleWeek = periodFilter !== 'ALL';
 
-      // Populasi Opsi Dropdown Filter dengan Tanggal Pelaksanaan
       const sessionMap = new Map();
       rawEvals.forEach(e => {
         const p = e.periode || 'Pekan Penilaian';
@@ -2253,7 +2271,6 @@
         periodSelect.appendChild(opt);
       });
 
-      // Update Label Header Tabel Berdasarkan Mode Filter
       const thColClassHistory = document.getElementById('th-col-class-history');
       const thColWeekDetail = document.getElementById('th-col-week-detail');
       const thLabelFinalScore = document.getElementById('th-label-final-score');
@@ -2271,7 +2288,6 @@
         if (thSublabelFinalScore) thSublabelFinalScore.innerText = '(dasar perankingan)';
       }
 
-      // Filter Data Berdasarkan Pencarian & Pekan Terpilih
       let filtered = currentAggregatedCache.filter(item => {
         const matchSearch = item.className.toLowerCase().includes(searchQuery);
         let matchPeriod = true;
@@ -2281,8 +2297,6 @@
         return matchSearch && matchPeriod;
       });
 
-      // Transformasi & Perankingan Data:
-      // Jika mode single week, gunakan nilai pekan tersebut sebagai dasar nilai & perankingan
       const displayList = filtered.map(item => {
         if (isSingleWeek) {
           const targetWeek = item.weeksSummary.find(w => w.periode === periodFilter);
@@ -2317,7 +2331,6 @@
         }
       });
 
-      // Urutkan ranking berdasarkan displayScore (Nilai Pekan Terpilih atau Rerata Gabungan)
       displayList.sort((a, b) => b.displayScore - a.displayScore);
 
       const tbody = document.getElementById('leaderboard-tbody');
@@ -2375,7 +2388,6 @@
           weekSubtitleText = `Total ${item.totalWeeksCount} pekan penilaian (${item.totalJudgesAllWeeks} total lembar nilai juri)`;
         }
 
-        // Cari index asli di currentAggregatedCache untuk fungsi view modal
         const originalIndex = currentAggregatedCache.findIndex(c => c.classId === item.classId);
 
         tr.innerHTML = `
@@ -2434,7 +2446,6 @@
         return;
       }
 
-      // Set schedule dan class sesuai evaluasi yang diedit
       const schedSelect = document.getElementById('score-schedule-select');
       const classSelect = document.getElementById('score-class-select');
 
@@ -2535,7 +2546,6 @@
 
       const contentHtml = `
         <div class="space-y-4">
-          <!-- Summary Banner Gabungan Seluruh Pekan -->
           <div class="p-4 bg-emerald-600 text-white rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-md shadow-emerald-600/20">
             <div>
               <p class="text-xs font-semibold text-emerald-100 uppercase tracking-wider">Hasil Akumulasi Seluruh Pekan</p>
@@ -2568,7 +2578,6 @@
         confirmText: 'Tutup'
       });
 
-      // Tambahkan tombol cetak PDF langsung di dalam footer modal
       const modalActions = document.getElementById('modal-actions');
       if (modalActions) {
         const printBtn = document.createElement('button');
@@ -2581,7 +2590,6 @@
       }
     };
 
-    // FUNGSI CETAK LEMBAR RINCIAN KELAS KE PDF
     window.printClassDetailPDF = function(group) {
       const printWindow = window.open('', '_blank');
       if (!printWindow) {
@@ -2630,7 +2638,7 @@
                   <td style="padding: 6px 8px; border: 1px solid #cbd5e1; text-align: center; color: #065f46;">${w.avgWK2}</td>
                   <td style="padding: 6px 8px; border: 1px solid #cbd5e1; text-align: center; color: #065f46;">${w.avgWK3}</td>
                   <td style="padding: 6px 8px; border: 1px solid #cbd5e1; text-align: center; color: #065f46;">${w.avgWK4}</td>
-                  <td style="padding: 6px 8px; border: 1px solid #cbd5e1; text-align: center; color: #065f46;">${w.avgWTotal.toFixed(2)}</td>
+                  <td style="padding: 6px 8px; border: 1px solid #cbd5e1; text-align: color: #065f46;">${w.avgWTotal.toFixed(2)}</td>
                 </tr>
               </tbody>
             </table>
@@ -2706,7 +2714,6 @@
       printWindow.document.close();
     };
 
-    // FUNGSI CETAK REKAPITULASI SELURUH PERINGKAT KE PDF
     window.printLeaderboardPDF = async function() {
       const rawEvals = await getEvaluationsList();
       const list = getAggregatedEvaluations(rawEvals);
@@ -3335,12 +3342,12 @@
       }
     }
 
-    window.addEventListener('DOMContentLoaded', async () => {
+    // Inisialisasi: Langsung kunci ke layar Login sejak awal
+    window.addEventListener('DOMContentLoaded', () => {
       safeCreateIcons();
-      registerDynamicPWA();
-      await autoSetupDatabase();
-
       navigateView('login');
+      registerDynamicPWA();
+      autoSetupDatabase();
     });
   </script>
 </body>
