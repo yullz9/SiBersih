@@ -44,7 +44,6 @@
       scrollbar-width: none;
     }
 
-    /* CSS Khusus Media Cetak / Simpan ke PDF */
     @media print {
       body {
         background-color: #ffffff !important;
@@ -159,7 +158,7 @@
         <i data-lucide="trash-2" class="w-6 h-6"></i>
       </div>
       <h3 id="delete-modal-title" class="text-base font-bold text-slate-900 mb-1">Konfirmasi Hapus</h3>
-      <p id="delete-modal-message" class="text-xs text-slate-500 mb-6">Apakah Anda yakin ingin memproses tindakan ini? Tindakan ini tidak dapat dibatalkan.</p>
+      <div id="delete-modal-message" class="text-xs text-slate-500 mb-6 leading-relaxed">Apakah Anda yakin ingin memproses tindakan ini? Tindakan ini tidak dapat dibatalkan.</div>
       <div class="flex justify-center gap-3">
         <button type="button" onclick="closeDeleteModal()" class="w-full py-2.5 rounded-xl text-xs font-semibold border border-slate-200 text-slate-600 hover:bg-slate-50 transition">Batal</button>
         <button type="button" id="btn-execute-delete" class="w-full py-2.5 rounded-xl text-xs font-bold bg-rose-600 hover:bg-rose-700 text-white shadow-md shadow-rose-600/25 transition">Ya, Lanjutkan</button>
@@ -252,7 +251,6 @@
           <p class="text-xs text-slate-400 font-medium">Penilaian Kelas Adiwiyata</p>
         </div>
       </div>
-      <!-- Tombol Tutup Sidebar Khusus Mobile -->
       <button type="button" onclick="toggleMobileSidebar(false)" class="md:hidden p-2 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-xl transition">
         <i data-lucide="x" class="w-5 h-5"></i>
       </button>
@@ -291,10 +289,9 @@
     </div>
   </aside>
 
-  <!-- Mobile Top Header (Dilengkapi Hamburger Button di Sebelah Kiri) -->
+  <!-- Mobile Top Header -->
   <header id="mobile-header" class="hidden items-center justify-between p-3.5 bg-white/95 backdrop-blur-md border-b border-slate-200 sticky top-0 z-30 md:hidden">
     <div class="flex items-center gap-2.5">
-      <!-- Hamburger Menu Button Pembuka Sidebar Kiri di Mobile -->
       <button type="button" onclick="toggleMobileSidebar(true)" class="p-2 rounded-xl text-slate-700 hover:bg-slate-100 active:scale-95 transition" aria-label="Buka Menu Sidebar">
         <i data-lucide="menu" class="w-5 h-5"></i>
       </button>
@@ -337,7 +334,7 @@
           </button>
         </div>
 
-        <!-- Evaluator Form (Bersih Tanpa Default Value & Tanpa Kotak Dummy) -->
+        <!-- Evaluator Form -->
         <form id="form-login-evaluator" onsubmit="event.preventDefault(); submitLoginEvaluator();" class="space-y-4">
           <div>
             <label class="block text-xs font-semibold text-slate-700 mb-1">Username / ID Penilai</label>
@@ -358,7 +355,7 @@
           </button>
         </form>
 
-        <!-- Admin Form (Firebase Auth - Bersih Tanpa Kotak Demo) -->
+        <!-- Admin Form (Firebase Auth) -->
         <form id="form-login-admin" onsubmit="event.preventDefault(); submitLoginAdmin();" class="space-y-4 hidden">
           <div>
             <label class="block text-xs font-semibold text-slate-700 mb-1">Email Administrator</label>
@@ -381,7 +378,7 @@
       </div>
     </section>
 
-    <!-- VIEW 1: DASHBOARD (AWAL DISEMBUNYIKAN) -->
+    <!-- VIEW 1: DASHBOARD -->
     <section id="view-dashboard" class="hidden space-y-6">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
@@ -437,7 +434,6 @@
 
       <!-- Quick Ranking & Recent Submissions Grid -->
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <!-- Top 3 Podium Card -->
         <div class="lg:col-span-1 bg-white rounded-2xl border border-slate-200 p-6 shadow-sm flex flex-col justify-between">
           <div>
             <div class="flex items-center justify-between mb-4">
@@ -452,7 +448,6 @@
           </button>
         </div>
 
-        <!-- Recent Evaluations Table -->
         <div class="lg:col-span-2 bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
           <h4 class="font-bold text-slate-900 text-base mb-4 flex items-center gap-2">
             <i data-lucide="clock" class="w-5 h-5 text-slate-400"></i> Penilaian Terbaru
@@ -484,7 +479,7 @@
           </div>
         </div>
 
-        <!-- Indikator Status Form (Mode Admin Edit / Mode Juri Terkunci) -->
+        <!-- Indikator Status Form -->
         <div id="edit-mode-indicator" class="hidden mb-6 p-4 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs shadow-sm">
           <div class="flex items-center gap-3">
             <div id="indicator-icon-wrap" class="w-9 h-9 rounded-xl flex items-center justify-center font-bold flex-shrink-0"></div>
@@ -500,7 +495,6 @@
           
           <!-- Metadata input terintegrasi Jadwal Sesi Admin -->
           <div class="grid grid-cols-1 md:grid-cols-4 gap-3.5 mb-4 p-4 bg-slate-50/70 rounded-2xl border border-slate-200/80">
-            <!-- Pilihan Jadwal Sesi -->
             <div class="md:col-span-2">
               <div class="flex items-center justify-between mb-1.5">
                 <label class="block text-xs font-bold text-slate-700">Jadwal Sesi & Tanggal Pelaksanaan *</label>
@@ -511,12 +505,10 @@
               <select id="score-schedule-select" required onchange="handleScheduleChange()" class="w-full p-2.5 rounded-xl border border-slate-200 bg-white text-xs font-semibold text-slate-800 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
                 <option value="">-- Memuat Jadwal Sesi... --</option>
               </select>
-              <!-- Hidden inputs untuk menyimpan periode & tanggal terpilih -->
-              <input type="hidden" id="score-period-input" value="Pekan 1 Oktober 2026">
-              <input type="hidden" id="score-date-input" value="2026-10-02">
+              <input type="hidden" id="score-period-input" value="">
+              <input type="hidden" id="score-date-input" value="">
             </div>
 
-            <!-- Pilihan Kelas -->
             <div>
               <label class="block text-xs font-bold text-slate-700 mb-1.5">Pilih Kelas yang Dinilai *</label>
               <select id="score-class-select" required onchange="handleClassSelectionChange()" class="w-full p-2.5 rounded-xl border border-slate-200 bg-white text-xs font-semibold text-slate-800 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
@@ -524,7 +516,6 @@
               </select>
             </div>
 
-            <!-- Juri -->
             <div>
               <label class="block text-xs font-bold text-slate-700 mb-1.5">Nama Juri / Penilai</label>
               <input type="text" id="score-evaluator-name" readonly class="w-full p-2.5 rounded-xl border border-slate-200 bg-slate-100 text-xs font-medium text-slate-500 cursor-not-allowed">
@@ -534,9 +525,8 @@
           <!-- Banner Status Jadwal Penilaian Juri -->
           <div id="judge-schedule-banner" class="mb-8 p-3.5 rounded-2xl border text-xs flex items-center justify-between gap-3"></div>
 
-          <!-- RUBRIK CONTAINER: 4 KOMPONEN RESMI -->
+          <!-- RUBRIK CONTAINER: 4 KOMPONEN -->
           <div class="space-y-8" id="rubric-container">
-            
             <!-- KOMPONEN 1: KEBERSIHAN FISIK (BOBOT 30%) -->
             <div class="rounded-2xl border border-emerald-100 overflow-hidden bg-white shadow-sm">
               <div class="bg-emerald-800 text-white p-4 flex flex-wrap items-center justify-between gap-2">
@@ -596,7 +586,6 @@
               </div>
               <div class="p-4 md:p-6 divide-y divide-slate-100" id="section-rubric-4"></div>
             </div>
-
           </div>
 
           <!-- Total Calculation Banner & Note -->
@@ -689,24 +678,21 @@
           <p class="text-xs md:text-sm text-slate-500">Tambah dan kelola data kelas, akun juri/penilai, buat jadwal sesi penilaian tim 3 juri, backup data, restore data cadangan, serta reset data aplikasi.</p>
         </div>
         <div class="flex flex-wrap items-center gap-2">
-          <!-- Tombol Backup Data JSON -->
           <button type="button" onclick="backupDatabaseJSON()" class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 transition shadow-sm" title="Unduh seluruh data ke berkas JSON">
             <i data-lucide="hard-drive-download" class="w-4 h-4"></i> Backup (JSON)
           </button>
           
-          <!-- Tombol Restore Data JSON -->
           <button type="button" onclick="triggerRestoreFileInput()" class="px-3.5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 transition shadow-sm" title="Pulihkan data dari berkas JSON hasil backup">
             <i data-lucide="rotate-ccw" class="w-4 h-4"></i> Restore Data
           </button>
 
-          <!-- Tombol Reset Seluruh Data -->
           <button type="button" onclick="confirmResetAllData()" class="px-3.5 py-2 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 transition shadow-sm" title="Hapus seluruh data (nilai, jadwal, kelas, juri)">
             <i data-lucide="trash-2" class="w-4 h-4"></i> Reset Data
           </button>
         </div>
       </div>
 
-      <!-- Panel 1: Master Jadwal Sesi Tim 3 Juri -->
+      <!-- Master Jadwal Sesi -->
       <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
           <div>
@@ -736,7 +722,7 @@
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <!-- Panel 2: Kelola Kelas -->
+        <!-- Master Kelas -->
         <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
           <div class="flex items-center justify-between mb-4">
             <h3 class="font-bold text-slate-900 text-base flex items-center gap-2">
@@ -749,7 +735,7 @@
           <div class="overflow-y-auto max-h-80 divide-y divide-slate-100" id="list-master-classes"></div>
         </div>
 
-        <!-- Panel 3: Kelola Akun Juri -->
+        <!-- Master Akun Juri -->
         <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
           <div class="flex items-center justify-between mb-4">
             <h3 class="font-bold text-slate-900 text-base flex items-center gap-2">
@@ -768,7 +754,10 @@
   </main>
 
   <script type="module">
+    // ===============================================================
     // KONFIGURASI APLIKASI
+    // Set IS_PREVIEW = false JIKA SUDAH TERHUBUNG KE FIREBASE ASLI
+    // ===============================================================
     const IS_PREVIEW = false;
 
     // PASTE FIREBASE CONFIG ANDA DI SINI
@@ -781,7 +770,7 @@
   appId: "1:153733624871:web:25cfa2ec21ff679f5a8a02"
     };
 
-    // Helper Generator Penilaian Dummy Lengkap
+    // Helper Generator Penilaian Dummy (Hanya dipakai saat IS_PREVIEW == true)
     function createDummyEval(id, schedId, period, date, classId, className, judgeId, judgeName, scoresK, note) {
       const { c1, c2, c3, c4 } = scoresK;
       const raw1 = c1.reduce((a, b) => a + b, 0);
@@ -830,18 +819,20 @@
       };
     }
 
-    // Master Data Mock Lengkap: Pekan 1, 2, dan 3
+    // In-memory Database: Hanya terisi dummy jika IS_PREVIEW = true DAN belum pernah di-reset
+    const isLocalReset = localStorage.getItem('sibersih_is_reset') === 'true';
+
     let mockDB = {
       settings: {
         activePeriod: "Pekan 3 Oktober 2026"
       },
-      classes: [
+      classes: (!IS_PREVIEW || isLocalReset) ? [] : [
         { id: "cls_1", namaKelas: "X MIPA 1", waliKelas: "Drs. Ahmad Fauzi" },
         { id: "cls_2", namaKelas: "X MIPA 2", waliKelas: "Siti Rahmawati, S.Pd" },
         { id: "cls_3", namaKelas: "XI IPS 1", waliKelas: "Budi Santoso, M.Pd" },
         { id: "cls_4", namaKelas: "XII RPL 1", waliKelas: "Maya Indah, S.Kom" }
       ],
-      users: [
+      users: (!IS_PREVIEW || isLocalReset) ? [] : [
         { id: "usr_1", nama: "Ibu Nurul (Tim Adiwiyata)", username: "penilai_a", password: "password123", role: "juri" },
         { id: "usr_2", nama: "Pak Hendra (Guru Piket)", username: "penilai_b", password: "password123", role: "juri" },
         { id: "usr_3", nama: "Pak Suwarno (Guru BK)", username: "penilai_c", password: "password123", role: "juri" },
@@ -850,7 +841,7 @@
         { id: "usr_6", nama: "Ibu Dewi (Guru Kimia)", username: "penilai_f", password: "password123", role: "juri" },
         { id: "usr_7", nama: "Pak Joko (Guru PJOK)", username: "penilai_g", password: "password123", role: "juri" }
       ],
-      schedules: [
+      schedules: (!IS_PREVIEW || isLocalReset) ? [] : [
         {
           id: "sch_1",
           periode: "Pekan 1 Oktober 2026",
@@ -879,93 +870,15 @@
           notes: "Evaluasi inovasi 3R limbah bekas, kerapian pojok baca, dan penyimpanan alat kebersihan."
         }
       ],
-      evaluations: [
-        // Pekan 1
+      evaluations: (!IS_PREVIEW || isLocalReset) ? [] : [
         createDummyEval("ev_p1_c1_j1", "sch_1", "Pekan 1 Oktober 2026", "2026-10-02", "cls_1", "X MIPA 1", "usr_1", "Ibu Nurul (Tim Adiwiyata)",
           { c1: [5, 5, 5, 4], c2: [5, 5, 5, 5, 4], c3: [5, 5, 4], c4: [5, 5, 4, 5, 4] }, "Lantai sangat bersih, tempat pemilahan sampah 3 jenis tersedia lengkap."),
         createDummyEval("ev_p1_c1_j2", "sch_1", "Pekan 1 Oktober 2026", "2026-10-02", "cls_1", "X MIPA 1", "usr_2", "Pak Hendra (Guru Piket)",
           { c1: [5, 4, 5, 4], c2: [5, 4, 5, 5, 4], c3: [5, 5, 5], c4: [4, 5, 4, 5, 4] }, "Green corner asri, tanaman indoor sehat berlabel latin."),
         createDummyEval("ev_p1_c1_j3", "sch_1", "Pekan 1 Oktober 2026", "2026-10-02", "cls_1", "X MIPA 1", "usr_3", "Pak Suwarno (Guru BK)",
           { c1: [5, 5, 5, 4], c2: [5, 4, 4, 5, 4], c3: [5, 5, 4], c4: [5, 5, 4, 5, 4] }, "Pojok baca rapi dan buku ditata dengan baik."),
-
-        createDummyEval("ev_p1_c2_j1", "sch_1", "Pekan 1 Oktober 2026", "2026-10-02", "cls_2", "X MIPA 2", "usr_1", "Ibu Nurul (Tim Adiwiyata)",
-          { c1: [4, 4, 5, 4], c2: [5, 4, 4, 4, 4], c3: [4, 5, 4], c4: [4, 4, 4, 4, 4] }, "Papan tulis bersih, tanaman di depan kelas perlu disiram rutin."),
-        createDummyEval("ev_p1_c2_j2", "sch_1", "Pekan 1 Oktober 2026", "2026-10-02", "cls_2", "X MIPA 2", "usr_2", "Pak Hendra (Guru Piket)",
-          { c1: [4, 4, 4, 4], c2: [4, 4, 4, 4, 4], c3: [4, 4, 4], c4: [4, 4, 4, 4, 4] }, "Alat kebersihan tersimpan di belakang lemari, cukup rapi."),
-        createDummyEval("ev_p1_c2_j3", "sch_1", "Pekan 1 Oktober 2026", "2026-10-02", "cls_2", "X MIPA 2", "usr_3", "Pak Suwarno (Guru BK)",
-          { c1: [4, 4, 4, 3], c2: [4, 4, 3, 4, 4], c3: [5, 4, 3], c4: [4, 4, 3, 4, 4] }, "Administrasi dan struktur kelas terpampang lengkap."),
-
-        createDummyEval("ev_p1_c3_j1", "sch_1", "Pekan 1 Oktober 2026", "2026-10-02", "cls_3", "XI IPS 1", "usr_1", "Ibu Nurul (Tim Adiwiyata)",
-          { c1: [5, 4, 4, 4], c2: [4, 4, 5, 4, 4], c3: [4, 4, 4], c4: [5, 4, 4, 4, 4] }, "Inovasi pot gantung dari botol plastik bekas sangat kreatif."),
-        createDummyEval("ev_p1_c3_j2", "sch_1", "Pekan 1 Oktober 2026", "2026-10-02", "cls_3", "XI IPS 1", "usr_2", "Pak Hendra (Guru Piket)",
-          { c1: [4, 4, 4, 4], c2: [4, 4, 4, 4, 4], c3: [4, 4, 4], c4: [4, 4, 4, 4, 4] }, "Sirkulasi udara baik, gorden jendela rapi."),
-        createDummyEval("ev_p1_c3_j3", "sch_1", "Pekan 1 Oktober 2026", "2026-10-02", "cls_3", "XI IPS 1", "usr_3", "Pak Suwarno (Guru BK)",
-          { c1: [4, 4, 4, 4], c2: [4, 3, 4, 4, 3], c3: [4, 4, 4], c4: [4, 3, 4, 4, 4] }, "Drainase teras depan kelas bersih bebas lumut."),
-
         createDummyEval("ev_p1_c4_j1", "sch_1", "Pekan 1 Oktober 2026", "2026-10-02", "cls_4", "XII RPL 1", "usr_1", "Ibu Nurul (Tim Adiwiyata)",
-          { c1: [5, 5, 5, 5], c2: [5, 5, 5, 5, 5], c3: [5, 5, 5], c4: [5, 5, 5, 5, 5] }, "Luar biasa! Sangat bersih, bank sampah digital kelas berjalan aktif."),
-        createDummyEval("ev_p1_c4_j2", "sch_1", "Pekan 1 Oktober 2026", "2026-10-02", "cls_4", "XII RPL 1", "usr_2", "Pak Hendra (Guru Piket)",
-          { c1: [5, 5, 5, 5], c2: [5, 5, 5, 5, 4], c3: [5, 5, 5], c4: [5, 5, 5, 5, 5] }, "Kaca jendela bening mengkilap tanpa debu."),
-        createDummyEval("ev_p1_c4_j3", "sch_1", "Pekan 1 Oktober 2026", "2026-10-02", "cls_4", "XII RPL 1", "usr_3", "Pak Suwarno (Guru BK)",
-          { c1: [5, 5, 5, 5], c2: [5, 5, 5, 5, 5], c3: [5, 5, 5], c4: [5, 5, 4, 5, 5] }, "Stiker hemat energi tertempel rapi di saklar listrik dan AC."),
-
-        // Pekan 2
-        createDummyEval("ev_p2_c1_j4", "sch_2", "Pekan 2 Oktober 2026", "2026-10-09", "cls_1", "X MIPA 1", "usr_4", "Ibu Ratna (Guru Biologi)",
-          { c1: [5, 5, 5, 5], c2: [5, 5, 5, 5, 5], c3: [5, 5, 5], c4: [5, 5, 4, 5, 5] }, "Identifikasi nama latin tanaman lengkap dan daun tampak segar terawat."),
-        createDummyEval("ev_p2_c1_j5", "sch_2", "Pekan 2 Oktober 2026", "2026-10-09", "cls_1", "X MIPA 1", "usr_5", "Pak Bambang (Waka Kesiswaan)",
-          { c1: [5, 5, 5, 4], c2: [5, 5, 4, 5, 4], c3: [5, 5, 4], c4: [5, 4, 4, 5, 4] }, "Ketertiban siswa menjaga kebersihan meja belajar patut diapresiasi."),
-        createDummyEval("ev_p2_c1_j6", "sch_2", "Pekan 2 Oktober 2026", "2026-10-09", "cls_1", "X MIPA 1", "usr_6", "Ibu Dewi (Guru Kimia)",
-          { c1: [5, 5, 5, 5], c2: [5, 5, 5, 5, 4], c3: [5, 5, 5], c4: [5, 4, 5, 5, 4] }, "Tempat sampah organik dan anorganik terpilah tanpa sampah campur."),
-
-        createDummyEval("ev_p2_c2_j4", "sch_2", "Pekan 2 Oktober 2026", "2026-10-09", "cls_2", "X MIPA 2", "usr_4", "Ibu Ratna (Guru Biologi)",
-          { c1: [4, 4, 4, 4], c2: [4, 4, 4, 4, 4], c3: [4, 4, 4], c4: [4, 4, 4, 4, 4] }, "Pemberian label latin sudah ditambah pada beberapa tanaman hias."),
-        createDummyEval("ev_p2_c2_j5", "sch_2", "Pekan 2 Oktober 2026", "2026-10-09", "cls_2", "X MIPA 2", "usr_5", "Pak Bambang (Waka Kesiswaan)",
-          { c1: [4, 4, 4, 3], c2: [4, 4, 3, 4, 4], c3: [4, 4, 4], c4: [4, 3, 4, 4, 4] }, "Formasi meja dan kursi tertata simetris."),
-        createDummyEval("ev_p2_c2_j6", "sch_2", "Pekan 2 Oktober 2026", "2026-10-09", "cls_2", "X MIPA 2", "usr_6", "Ibu Dewi (Guru Kimia)",
-          { c1: [4, 4, 5, 4], c2: [4, 4, 4, 4, 3], c3: [4, 4, 4], c4: [4, 4, 4, 4, 4] }, "Area wastafel dan sabun cuci tangan tersedia dengan baik."),
-
-        createDummyEval("ev_p2_c3_j4", "sch_2", "Pekan 2 Oktober 2026", "2026-10-09", "cls_3", "XI IPS 1", "usr_4", "Ibu Ratna (Guru Biologi)",
-          { c1: [5, 4, 4, 4], c2: [5, 4, 5, 5, 4], c3: [4, 5, 4], c4: [5, 4, 4, 5, 4] }, "Koleksi tanaman lidah mertua (Sansevieria) sangat menunjang sirkulasi."),
-        createDummyEval("ev_p2_c3_j5", "sch_2", "Pekan 2 Oktober 2026", "2026-10-09", "cls_3", "XI IPS 1", "usr_5", "Pak Bambang (Waka Kesiswaan)",
-          { c1: [4, 5, 4, 4], c2: [4, 4, 4, 4, 4], c3: [5, 4, 4], c4: [4, 4, 4, 4, 4] }, "Ada peningkatan signifikan pada kerapian perlengkapan piket."),
-        createDummyEval("ev_p2_c3_j6", "sch_2", "Pekan 2 Oktober 2026", "2026-10-09", "cls_3", "XI IPS 1", "usr_6", "Ibu Dewi (Guru Kimia)",
-          { c1: [5, 4, 5, 4], c2: [4, 5, 4, 4, 4], c3: [4, 4, 5], c4: [4, 4, 4, 4, 5] }, "Ruang kelas wangi dan sudut belakang bebas sarang laba-laba."),
-
-        createDummyEval("ev_p2_c4_j4", "sch_2", "Pekan 2 Oktober 2026", "2026-10-09", "cls_4", "XII RPL 1", "usr_4", "Ibu Ratna (Guru Biologi)",
-          { c1: [5, 5, 5, 5], c2: [5, 5, 5, 5, 5], c3: [5, 5, 5], c4: [5, 5, 5, 5, 5] }, "Penataan tanaman vertikal dengan sistem hidroponik mini sangat inovatif."),
-        createDummyEval("ev_p2_c4_j5", "sch_2", "Pekan 2 Oktober 2026", "2026-10-09", "cls_4", "XII RPL 1", "usr_5", "Pak Bambang (Waka Kesiswaan)",
-          { c1: [5, 5, 5, 5], c2: [5, 5, 5, 5, 5], c3: [5, 5, 5], c4: [5, 5, 4, 5, 5] }, "Disiplin pemilahan limbah botol plastik berjalan konsisten."),
-        createDummyEval("ev_p2_c4_j6", "sch_2", "Pekan 2 Oktober 2026", "2026-10-09", "cls_4", "XII RPL 1", "usr_6", "Ibu Dewi (Guru Kimia)",
-          { c1: [5, 5, 5, 5], c2: [5, 5, 5, 5, 4], c3: [5, 5, 5], c4: [5, 5, 5, 5, 5] }, "Kebersihan meja praktikum komputer kelas sangat terjaga."),
-
-        // Pekan 3
-        createDummyEval("ev_p3_c1_j1", "sch_3", "Pekan 3 Oktober 2026", "2026-10-16", "cls_1", "X MIPA 1", "usr_1", "Ibu Nurul (Tim Adiwiyata)",
-          { c1: [5, 5, 5, 5], c2: [5, 5, 5, 5, 5], c3: [5, 5, 5], c4: [5, 5, 5, 5, 5] }, "Pojok baca dipercantik dengan rak daur ulang kayu palet. Sangat menginspirasi!"),
-        createDummyEval("ev_p3_c1_j5", "sch_3", "Pekan 3 Oktober 2026", "2026-10-16", "cls_1", "X MIPA 1", "usr_5", "Pak Bambang (Waka Kesiswaan)",
-          { c1: [5, 5, 5, 4], c2: [5, 5, 4, 5, 5], c3: [5, 5, 5], c4: [5, 4, 5, 5, 4] }, "Seluruh jadwal piket dijalankan penuh dedikasi oleh regu piket harian."),
-        createDummyEval("ev_p3_c1_j7", "sch_3", "Pekan 3 Oktober 2026", "2026-10-16", "cls_1", "X MIPA 1", "usr_7", "Pak Joko (Guru PJOK)",
-          { c1: [5, 5, 5, 5], c2: [5, 5, 5, 5, 4], c3: [5, 5, 5], c4: [5, 5, 4, 5, 5] }, "Sirkulasi udara sangat segar dan tidak pengap sama sekali."),
-
-        createDummyEval("ev_p3_c2_j1", "sch_3", "Pekan 3 Oktober 2026", "2026-10-16", "cls_2", "X MIPA 2", "usr_1", "Ibu Nurul (Tim Adiwiyata)",
-          { c1: [5, 4, 4, 4], c2: [4, 4, 4, 4, 4], c3: [5, 4, 4], c4: [4, 4, 4, 4, 4] }, "Sudah ada kemajuan dalam merapikan ember pel dan sapu ke sudut tertutup."),
-        createDummyEval("ev_p3_c2_j5", "sch_3", "Pekan 3 Oktober 2026", "2026-10-16", "cls_2", "X MIPA 2", "usr_5", "Pak Bambang (Waka Kesiswaan)",
-          { c1: [4, 4, 4, 4], c2: [4, 4, 4, 4, 4], c3: [4, 4, 4], c4: [4, 4, 4, 4, 4] }, "Denah tempat duduk dan struktur organisasi kelas terpasang rapi."),
-        createDummyEval("ev_p3_c2_j7", "sch_3", "Pekan 3 Oktober 2026", "2026-10-16", "cls_2", "X MIPA 2", "usr_7", "Pak Joko (Guru PJOK)",
-          { c1: [4, 5, 4, 4], c2: [4, 4, 4, 4, 4], c3: [4, 4, 4], c4: [4, 4, 4, 4, 4] }, "Lantai bersih bebas bungkus jajanan plastik."),
-
-        createDummyEval("ev_p3_c3_j1", "sch_3", "Pekan 3 Oktober 2026", "2026-10-16", "cls_3", "XI IPS 1", "usr_1", "Ibu Nurul (Tim Adiwiyata)",
-          { c1: [5, 5, 5, 4], c2: [5, 4, 5, 5, 4], c3: [5, 4, 5], c4: [5, 4, 5, 5, 4] }, "Buku pojok baca diklasifikasikan dengan label warna yang rapi."),
-        createDummyEval("ev_p3_c3_j5", "sch_3", "Pekan 3 Oktober 2026", "2026-10-16", "cls_3", "XI IPS 1", "usr_5", "Pak Bambang (Waka Kesiswaan)",
-          { c1: [5, 4, 4, 5], c2: [4, 5, 4, 4, 4], c3: [4, 5, 4], c4: [4, 4, 4, 4, 5] }, "Penghijauan depan kelas sangat indah dan terawat."),
-        createDummyEval("ev_p3_c3_j7", "sch_3", "Pekan 3 Oktober 2026", "2026-10-16", "cls_3", "XI IPS 1", "usr_7", "Pak Joko (Guru PJOK)",
-          { c1: [5, 4, 5, 4], c2: [5, 4, 4, 4, 4], c3: [4, 4, 4], c4: [5, 4, 4, 4, 4] }, "Area ventilasi atas bersih dari jaring serangga."),
-
-        createDummyEval("ev_p3_c4_j1", "sch_3", "Pekan 3 Oktober 2026", "2026-10-16", "cls_4", "XII RPL 1", "usr_1", "Ibu Nurul (Tim Adiwiyata)",
-          { c1: [5, 5, 5, 5], c2: [5, 5, 5, 5, 5], c3: [5, 5, 5], c4: [5, 5, 5, 5, 5] }, "Konsistensi luar biasa sepanjang 3 pekan berturut-turut! Layak menjadi kelas percontohan."),
-        createDummyEval("ev_p3_c4_j5", "sch_3", "Pekan 3 Oktober 2026", "2026-10-16", "cls_4", "XII RPL 1", "usr_5", "Pak Bambang (Waka Kesiswaan)",
-          { c1: [5, 5, 5, 5], c2: [5, 5, 5, 5, 5], c3: [5, 5, 5], c4: [5, 5, 4, 5, 5] }, "Seluruh sarana dan inovasi lingkungan berfungsi optimal."),
-        createDummyEval("ev_p3_c4_j7", "sch_3", "Pekan 3 Oktober 2026", "2026-10-16", "cls_4", "XII RPL 1", "usr_7", "Pak Joko (Guru PJOK)",
-          { c1: [5, 5, 5, 5], c2: [5, 5, 5, 5, 4], c3: [5, 5, 5], c4: [5, 5, 5, 5, 5] }, "Ruangan harum, lantai berkilau, dan penataan sangat ergonomis.")
+          { c1: [5, 5, 5, 5], c2: [5, 5, 5, 5, 5], c3: [5, 5, 5], c4: [5, 5, 5, 5, 5] }, "Luar biasa! Sangat bersih, bank sampah digital kelas berjalan aktif.")
       ]
     };
 
@@ -1046,7 +959,6 @@
       }
     }
 
-    // Toggle Mobile Sidebar Drawer di Sebelah Kiri
     window.toggleMobileSidebar = function(isOpen) {
       const sidebar = document.getElementById('app-sidebar');
       const backdrop = document.getElementById('sidebar-backdrop');
@@ -1064,7 +976,6 @@
       safeCreateIcons();
     };
 
-    // Helper Format Tanggal Indonesia
     window.formatDateIndo = function(dateStr) {
       if (!dateStr) return '-';
       try {
@@ -1101,39 +1012,31 @@
       if (evalNameInput) evalNameInput.value = user.name;
     }
 
-    // FUNGSI SETUP DATABASE OTOMATIS
+    // ===============================================================
+    // FUNGSI AUTO SETUP: DIPERBAIKI SECARA AMAN
+    // Tidak akan lagi meng-inject data dummy jika:
+    // 1. IS_PREVIEW == false (Mode Deploy Asli)
+    // 2. Sistem sudah pernah diinisialisasi / di-reset oleh Admin
+    // ===============================================================
     async function autoSetupDatabase() {
+      // Jika mode deploy produksi (Firebase Asli), JANGAN masukkan data dummy!
       if (!IS_PREVIEW && fbDb) {
         try {
-          const classSnap = await getDocs(collection(fbDb, 'classes'));
-          if (classSnap.empty) {
-            for (const cls of mockDB.classes) {
-              await setDoc(doc(fbDb, 'classes', cls.id), cls);
-            }
-          }
+          // Cek dokumen penanda status sistem
+          const initDocRef = doc(fbDb, 'settings', 'system_init');
+          const initSnap = await getDoc(initDocRef);
 
-          const userSnap = await getDocs(collection(fbDb, 'users'));
-          if (userSnap.empty) {
-            for (const usr of mockDB.users) {
-              await setDoc(doc(fbDb, 'users', usr.id), usr);
-            }
-          }
-
-          const schedSnap = await getDocs(collection(fbDb, 'schedules'));
-          if (schedSnap.empty) {
-            for (const sc of mockDB.schedules) {
-              await setDoc(doc(fbDb, 'schedules', sc.id), sc);
-            }
-          }
-
-          const evalSnap = await getDocs(collection(fbDb, 'evaluations'));
-          if (evalSnap.empty) {
-            for (const ev of mockDB.evaluations) {
-              await setDoc(doc(fbDb, 'evaluations', ev.id), ev);
-            }
+          if (!initSnap.exists()) {
+            // Pertama kali database dibuat: cukup buat penanda sistem kosong
+            await setDoc(initDocRef, {
+              initialized: true,
+              isCleanState: true,
+              createdAt: new Date().toISOString()
+            });
+            console.log("[SiBersih] Basis data produksi siap dalam kondisi BERSIH (tanpa data dummy).");
           }
         } catch (err) {
-          console.warn("[AutoSetup] Catatan koneksi Firebase:", err.message);
+          console.warn("[AutoSetup Info]:", err.message);
         }
       }
     }
@@ -1144,7 +1047,6 @@
         return;
       }
 
-      // Tutup drawer sidebar mobile jika terbuka saat berpindah halaman
       window.toggleMobileSidebar(false);
 
       const appSidebar = document.getElementById('app-sidebar');
@@ -1321,7 +1223,7 @@
       } else {
         showCustomModal({
           title: 'Login Gagal',
-          desc: 'Username atau kata sandi penilai tidak cocok. Silakan periksa kembali.',
+          desc: 'Username atau kata sandi penilai tidak cocok. Silakan hubungi Administrator.',
           icon: 'alert-triangle'
         });
       }
@@ -1559,7 +1461,7 @@
           return list;
         } catch (err) {
           console.error(err);
-          return mockDB.schedules;
+          return [];
         }
       }
       return mockDB.schedules;
@@ -1669,8 +1571,8 @@
           const snapE = await getDocs(collection(fbDb, 'evaluations'));
           snapE.forEach(d => existingEvals.push({ id: d.id, ...d.data() }));
         } catch (err) {
-          classes = mockDB.classes;
-          existingEvals = mockDB.evaluations;
+          classes = [];
+          existingEvals = [];
         }
       } else {
         classes = mockDB.classes;
@@ -2201,7 +2103,7 @@
           const snapC = await getDocs(collection(fbDb, 'classes'));
           snapC.forEach(d => classes.push(d.data()));
         } catch (e) {
-          classes = mockDB.classes;
+          classes = [];
         }
       } else {
         classes = mockDB.classes;
@@ -2953,9 +2855,9 @@
           const snapS = await getDocs(collection(fbDb, 'schedules'));
           snapS.forEach(d => schedules.push({ id: d.id, ...d.data() }));
         } catch (e) {
-          classes = mockDB.classes;
-          users = mockDB.users;
-          schedules = mockDB.schedules;
+          classes = [];
+          users = [];
+          schedules = [];
         }
       } else {
         classes = mockDB.classes;
@@ -3151,7 +3053,7 @@
       [j1, j2, j3].forEach(sel => sel.innerHTML = '<option value="">-- Pilih Juri --</option>');
       notesInput.value = '';
 
-      periodInput.value = "Pekan 4 Oktober 2026";
+      periodInput.value = "Pekan 1 Oktober 2026";
       dateInput.value = new Date().toISOString().split('T')[0];
 
       let users = [];
@@ -3160,7 +3062,7 @@
           const snapU = await getDocs(collection(fbDb, 'users'));
           snapU.forEach(d => users.push({ id: d.id, ...d.data() }));
         } catch (e) {
-          users = mockDB.users;
+          users = [];
         }
       } else {
         users = mockDB.users;
@@ -3254,6 +3156,10 @@
       renderManageData();
     };
 
+    // ===============================================================
+    // FITUR RESET DATA: DIPERBAIKI SECARA PERMANEN
+    // Menghapus seluruh koleksi dan menetapkan flag agar refresh tidak memunculkan dummy
+    // ===============================================================
     window.confirmResetAllData = function() {
       if (!currentUser || currentUser.role !== 'admin') {
         showToast("Hanya Administrator yang berhak mereset data.", "error");
@@ -3261,7 +3167,11 @@
       }
 
       document.getElementById('delete-modal-title').innerText = "Reset Seluruh Data Aplikasi";
-      document.getElementById('delete-modal-message').innerText = "PERINGATAN KRUSIAL: Tindakan ini akan menghapus SEMUA data di aplikasi, meliputi: seluruh lembar penilaian, jadwal sesi penugasan, master kelas, dan akun juri. Pastikan Anda telah mengunduh Backup Data (JSON) terlebih dahulu. Lanjutkan?";
+      document.getElementById('delete-modal-message').innerHTML = `
+        <span class="block text-rose-600 font-bold mb-2">PERINGATAN KRUSIAL!</span>
+        Tindakan ini akan mengosongkan <strong>SEMUA DATA</strong> di database (seluruh lembar nilai, jadwal sesi, master kelas, dan akun juri).<br><br>
+        Setelah di-reset, data <strong>TIDAK AKAN KEMBALI</strong> meskipun halaman di-refresh. Pastikan Anda telah melakukan <strong>Backup (JSON)</strong> terlebih dahulu. Lanjutkan?
+      `;
 
       const iconWrap = document.getElementById('delete-modal-icon-wrap');
       if (iconWrap) {
@@ -3278,18 +3188,32 @@
       pendingDeleteAction = async () => {
         if (!IS_PREVIEW && fbDb) {
           try {
+            showToast("Sedang membersihkan seluruh data di database Firebase...");
             const collectionsToClear = ['evaluations', 'schedules', 'classes', 'users'];
             for (const colName of collectionsToClear) {
               const snap = await getDocs(collection(fbDb, colName));
               const deletePromises = snap.docs.map(d => deleteDoc(doc(fbDb, colName, d.id)));
               await Promise.all(deletePromises);
             }
+
+            // Tulis dokumen flag permanen di settings bahwa data telah di-reset
+            await setDoc(doc(fbDb, 'settings', 'system_init'), {
+              initialized: true,
+              isCleanState: true,
+              lastResetAt: new Date().toISOString(),
+              resetBy: currentUser.name || "Administrator"
+            });
+
           } catch (err) {
             console.error("Gagal mereset koleksi Firebase:", err);
-            showToast("Gagal mereset data di server.", "error");
+            showToast("Gagal mereset data di server: " + err.message, "error");
             return;
           }
         }
+
+        // Tandai localStorage agar saat di-refresh dalam kondisi preview pun tidak memuat dummy
+        localStorage.setItem('sibersih_is_reset', 'true');
+
         mockDB.evaluations = [];
         mockDB.schedules = [];
         mockDB.classes = [];
@@ -3298,7 +3222,9 @@
         closeDeleteModal();
         renderManageData();
         await resetScoringForm();
-        showToast("Seluruh data (penilaian, jadwal, kelas, dan akun juri) berhasil dikosongkan!");
+        loadDashboardData();
+        renderLeaderboardTable();
+        showToast("Seluruh data berhasil dikosongkan secara permanen! Database kini benar-benar bersih.");
       };
 
       const modal = document.getElementById('modal-confirm-delete');
@@ -3379,7 +3305,6 @@
       showToast(`Cadangan data (${evaluations.length} lembar nilai, ${classes.length} kelas) berhasil diunduh!`);
     };
 
-    // FITUR RESTORE DATA (JSON)
     window.triggerRestoreFileInput = function() {
       if (!currentUser || currentUser.role !== 'admin') {
         showToast("Hanya Administrator yang berhak memulihkan data.", "error");
@@ -3387,7 +3312,7 @@
       }
       const fileInput = document.getElementById('file-input-restore');
       if (fileInput) {
-        fileInput.value = ''; // Reset input agar event onchange selalu terpicu
+        fileInput.value = '';
         fileInput.click();
       }
     };
@@ -3402,7 +3327,6 @@
           const content = e.target.result;
           const parsed = JSON.parse(content);
 
-          // Validasi Struktur File Cadangan
           if (!parsed.data || typeof parsed.data !== 'object') {
             throw new Error("Struktur berkas tidak valid: Objek data utama tidak ditemukan.");
           }
@@ -3412,7 +3336,6 @@
           const incomingSchedules = Array.isArray(parsed.data.schedules) ? parsed.data.schedules : [];
           const incomingEvaluations = Array.isArray(parsed.data.evaluations) ? parsed.data.evaluations : [];
 
-          // Tampilkan Modal Konfirmasi Restore
           document.getElementById('delete-modal-title').innerText = "Konfirmasi Pemulihan (Restore) Data";
           document.getElementById('delete-modal-message').innerHTML = `
             Anda akan memulihkan data dari berkas cadangan tanggal <strong>${parsed.backupDateIndo || parsed.backupTimestamp || '-'}</strong>.<br><br>
@@ -3441,7 +3364,6 @@
             if (!IS_PREVIEW && fbDb) {
               try {
                 showToast("Sedang memproses sinkronisasi data ke Firebase...");
-                // 1. Bersihkan koleksi lama
                 const collectionsToClear = ['evaluations', 'schedules', 'classes', 'users'];
                 for (const colName of collectionsToClear) {
                   const snap = await getDocs(collection(fbDb, colName));
@@ -3449,7 +3371,6 @@
                   await Promise.all(deletePromises);
                 }
 
-                // 2. Suntikkan data dari cadangan
                 for (const c of incomingClasses) {
                   const docId = c.id || `cls_${Date.now()}_${Math.random()}`;
                   await setDoc(doc(fbDb, 'classes', docId), c);
@@ -3466,6 +3387,13 @@
                   const docId = ev.id || `eval_${Date.now()}_${Math.random()}`;
                   await setDoc(doc(fbDb, 'evaluations', docId), ev);
                 }
+
+                await setDoc(doc(fbDb, 'settings', 'system_init'), {
+                  initialized: true,
+                  isCleanState: false,
+                  lastRestoreAt: new Date().toISOString()
+                });
+
               } catch (err) {
                 console.error("Gagal restore ke Firebase:", err);
                 showToast("Gagal menyimpan data yang dipulihkan ke Firebase: " + err.message, "error");
@@ -3473,7 +3401,8 @@
               }
             }
 
-            // Perbarui data memori (Preview/Local)
+            localStorage.removeItem('sibersih_is_reset');
+
             mockDB.classes = [...incomingClasses];
             mockDB.users = [...incomingUsers];
             mockDB.schedules = [...incomingSchedules];
@@ -3482,6 +3411,8 @@
             closeDeleteModal();
             renderManageData();
             await resetScoringForm();
+            loadDashboardData();
+            renderLeaderboardTable();
             showToast(`Data berhasil dipulihkan (${incomingEvaluations.length} lembar nilai, ${incomingClasses.length} kelas)!`);
           };
 
@@ -3649,7 +3580,6 @@
       }
     }
 
-    // Inisialisasi: Langsung kunci ke layar Login sejak awal
     window.addEventListener('DOMContentLoaded', () => {
       safeCreateIcons();
       navigateView('login');
