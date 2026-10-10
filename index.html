@@ -152,17 +152,17 @@
     </div>
   </div>
 
-  <!-- Modal Dialog Konfirmasi Hapus -->
+  <!-- Modal Dialog Konfirmasi Hapus / Tindakan Bahaya -->
   <div id="modal-confirm-delete" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm hidden items-center justify-center p-4">
     <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-slate-100 text-center">
-      <div class="w-12 h-12 rounded-2xl bg-rose-100 text-rose-600 flex items-center justify-center mx-auto mb-3">
+      <div id="delete-modal-icon-wrap" class="w-12 h-12 rounded-2xl bg-rose-100 text-rose-600 flex items-center justify-center mx-auto mb-3">
         <i data-lucide="trash-2" class="w-6 h-6"></i>
       </div>
       <h3 id="delete-modal-title" class="text-base font-bold text-slate-900 mb-1">Konfirmasi Hapus</h3>
-      <p id="delete-modal-message" class="text-xs text-slate-500 mb-6">Apakah Anda yakin ingin menghapus data ini? Tindakan ini tidak dapat dibatalkan.</p>
+      <p id="delete-modal-message" class="text-xs text-slate-500 mb-6">Apakah Anda yakin ingin memproses tindakan ini? Tindakan ini tidak dapat dibatalkan.</p>
       <div class="flex justify-center gap-3">
         <button type="button" onclick="closeDeleteModal()" class="w-full py-2.5 rounded-xl text-xs font-semibold border border-slate-200 text-slate-600 hover:bg-slate-50 transition">Batal</button>
-        <button type="button" id="btn-execute-delete" class="w-full py-2.5 rounded-xl text-xs font-bold bg-rose-600 hover:bg-rose-700 text-white shadow-md shadow-rose-600/25 transition">Ya, Hapus</button>
+        <button type="button" id="btn-execute-delete" class="w-full py-2.5 rounded-xl text-xs font-bold bg-rose-600 hover:bg-rose-700 text-white shadow-md shadow-rose-600/25 transition">Ya, Lanjutkan</button>
       </div>
     </div>
   </div>
@@ -234,6 +234,9 @@
       </form>
     </div>
   </div>
+
+  <!-- Hidden File Input untuk Restore Data JSON -->
+  <input type="file" id="file-input-restore" accept=".json,application/json" onchange="handleRestoreFileSelected(event)" class="hidden">
 
   <!-- SIDEBAR KIRI TERPADU (Desktop: Sticky Sidebar | Mobile: Drawer Kiri Slide-In) -->
   <aside id="app-sidebar" class="fixed inset-y-0 left-0 z-50 w-72 md:w-64 bg-white border-r border-slate-200 h-screen p-5 flex flex-col transform -translate-x-full md:translate-x-0 md:sticky md:top-0 transition-transform duration-300 ease-in-out shadow-2xl md:shadow-none hidden">
@@ -474,9 +477,11 @@
     <!-- VIEW 2: FORM SCORING -->
     <section id="view-scoring" class="hidden space-y-6">
       <div class="bg-white rounded-3xl p-6 md:p-8 border border-slate-200 shadow-sm">
-        <div class="border-b border-slate-100 pb-5 mb-6">
-          <h2 class="text-2xl font-black text-slate-900">Formulir Penilaian Kebersihan & Adiwiyata</h2>
-          <p class="text-xs md:text-sm text-slate-500 mt-1">Gunakan rubrik standar (Skala 1 - 5) untuk setiap indikator spesifik.</p>
+        <div class="border-b border-slate-100 pb-5 mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <h2 class="text-2xl font-black text-slate-900">Formulir Penilaian Kebersihan & Adiwiyata</h2>
+            <p class="text-xs md:text-sm text-slate-500 mt-1">Gunakan rubrik standar (Skala 1 - 5) untuk setiap indikator spesifik.</p>
+          </div>
         </div>
 
         <!-- Indikator Status Form (Mode Admin Edit / Mode Juri Terkunci) -->
@@ -678,9 +683,27 @@
 
     <!-- VIEW 4: KELOLA MASTER DATA (ADMIN ONLY) -->
     <section id="view-manage" class="hidden space-y-6">
-      <div class="border-b border-slate-200 pb-4">
-        <h2 class="text-2xl font-black text-slate-900">Kelola Master Data (Khusus Admin)</h2>
-        <p class="text-xs md:text-sm text-slate-500">Tambah dan kelola data kelas, akun juri/penilai, serta buat jadwal sesi penilaian tim 3 juri.</p>
+      <div class="border-b border-slate-200 pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h2 class="text-2xl font-black text-slate-900">Kelola Master Data (Khusus Admin)</h2>
+          <p class="text-xs md:text-sm text-slate-500">Tambah dan kelola data kelas, akun juri/penilai, buat jadwal sesi penilaian tim 3 juri, backup data, restore data cadangan, serta reset data aplikasi.</p>
+        </div>
+        <div class="flex flex-wrap items-center gap-2">
+          <!-- Tombol Backup Data JSON -->
+          <button type="button" onclick="backupDatabaseJSON()" class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 transition shadow-sm" title="Unduh seluruh data ke berkas JSON">
+            <i data-lucide="hard-drive-download" class="w-4 h-4"></i> Backup (JSON)
+          </button>
+          
+          <!-- Tombol Restore Data JSON -->
+          <button type="button" onclick="triggerRestoreFileInput()" class="px-3.5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 transition shadow-sm" title="Pulihkan data dari berkas JSON hasil backup">
+            <i data-lucide="rotate-ccw" class="w-4 h-4"></i> Restore Data
+          </button>
+
+          <!-- Tombol Reset Seluruh Data -->
+          <button type="button" onclick="confirmResetAllData()" class="px-3.5 py-2 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 transition shadow-sm" title="Hapus seluruh data (nilai, jadwal, kelas, juri)">
+            <i data-lucide="trash-2" class="w-4 h-4"></i> Reset Data
+          </button>
+        </div>
       </div>
 
       <!-- Panel 1: Master Jadwal Sesi Tim 3 Juri -->
@@ -707,7 +730,7 @@
                 <th class="py-3 px-4 text-center w-20">Aksi</th>
               </tr>
             </thead>
-            <tbody id="list-master-schedules" class="divide-y divide-slate-100 text-slate-700"></tbody>
+            <tbody id="list-master-schedules" class="divide-y border-slate-100 text-slate-700"></tbody>
           </table>
         </div>
       </div>
@@ -746,16 +769,16 @@
 
   <script type="module">
     // KONFIGURASI APLIKASI
-    const IS_PREVIEW = false;
+    const IS_PREVIEW = true;
 
     // PASTE FIREBASE CONFIG ANDA DI SINI
     const firebaseConfig = {
-  apiKey: "AIzaSyAamuE83Ae136RCH5OrHnjZ2e4Lxs0jJks",
-  authDomain: "sibersih-6f323.firebaseapp.com",
-  projectId: "sibersih-6f323",
-  storageBucket: "sibersih-6f323.firebasestorage.app",
-  messagingSenderId: "153733624871",
-  appId: "1:153733624871:web:25cfa2ec21ff679f5a8a02"
+      apiKey: "",
+      authDomain: "kebersihan-kelas-adiwiyata.firebaseapp.com",
+      projectId: "kebersihan-kelas-adiwiyata",
+      storageBucket: "kebersihan-kelas-adiwiyata.appspot.com",
+      messagingSenderId: "123456789",
+      appId: "1:123456789:web:abcdef123456"
     };
 
     // Helper Generator Penilaian Dummy Lengkap
@@ -2371,7 +2394,7 @@
         } else {
           weekHistoryBadges = item.weeksSummary.map(w => `
             <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-amber-50 text-amber-900 border border-amber-200 text-[10px] font-semibold mr-1 mb-1">
-              <i data-lucide="calendar" class="w-3 h-3 text-amber-600"></i> ${w.periode} (${formatDateIndo(w.tanggal)})
+              <i data-lucide="calendar" class="w-3 3 text-amber-600"></i> ${w.periode} (${formatDateIndo(w.tanggal)})
             </span>
           `).join('');
 
@@ -2638,7 +2661,7 @@
                   <td style="padding: 6px 8px; border: 1px solid #cbd5e1; text-align: center; color: #065f46;">${w.avgWK2}</td>
                   <td style="padding: 6px 8px; border: 1px solid #cbd5e1; text-align: center; color: #065f46;">${w.avgWK3}</td>
                   <td style="padding: 6px 8px; border: 1px solid #cbd5e1; text-align: center; color: #065f46;">${w.avgWK4}</td>
-                  <td style="padding: 6px 8px; border: 1px solid #cbd5e1; text-align: color: #065f46;">${w.avgWTotal.toFixed(2)}</td>
+                  <td style="padding: 6px 8px; border: 1px solid #cbd5e1; text-align: center; color: #065f46;">${w.avgWTotal.toFixed(2)}</td>
                 </tr>
               </tbody>
             </table>
@@ -3231,9 +3254,269 @@
       renderManageData();
     };
 
+    window.confirmResetAllData = function() {
+      if (!currentUser || currentUser.role !== 'admin') {
+        showToast("Hanya Administrator yang berhak mereset data.", "error");
+        return;
+      }
+
+      document.getElementById('delete-modal-title').innerText = "Reset Seluruh Data Aplikasi";
+      document.getElementById('delete-modal-message').innerText = "PERINGATAN KRUSIAL: Tindakan ini akan menghapus SEMUA data di aplikasi, meliputi: seluruh lembar penilaian, jadwal sesi penugasan, master kelas, dan akun juri. Pastikan Anda telah mengunduh Backup Data (JSON) terlebih dahulu. Lanjutkan?";
+
+      const iconWrap = document.getElementById('delete-modal-icon-wrap');
+      if (iconWrap) {
+        iconWrap.className = 'w-12 h-12 rounded-2xl bg-rose-100 text-rose-600 flex items-center justify-center mx-auto mb-3';
+        iconWrap.innerHTML = `<i data-lucide="trash-2" class="w-6 h-6"></i>`;
+      }
+
+      const btnExec = document.getElementById('btn-execute-delete');
+      if (btnExec) {
+        btnExec.className = 'w-full py-2.5 rounded-xl text-xs font-bold bg-rose-600 hover:bg-rose-700 text-white shadow-md shadow-rose-600/25 transition';
+        btnExec.innerText = 'Ya, Reset Seluruh Data';
+      }
+
+      pendingDeleteAction = async () => {
+        if (!IS_PREVIEW && fbDb) {
+          try {
+            const collectionsToClear = ['evaluations', 'schedules', 'classes', 'users'];
+            for (const colName of collectionsToClear) {
+              const snap = await getDocs(collection(fbDb, colName));
+              const deletePromises = snap.docs.map(d => deleteDoc(doc(fbDb, colName, d.id)));
+              await Promise.all(deletePromises);
+            }
+          } catch (err) {
+            console.error("Gagal mereset koleksi Firebase:", err);
+            showToast("Gagal mereset data di server.", "error");
+            return;
+          }
+        }
+        mockDB.evaluations = [];
+        mockDB.schedules = [];
+        mockDB.classes = [];
+        mockDB.users = [];
+
+        closeDeleteModal();
+        renderManageData();
+        await resetScoringForm();
+        showToast("Seluruh data (penilaian, jadwal, kelas, dan akun juri) berhasil dikosongkan!");
+      };
+
+      const modal = document.getElementById('modal-confirm-delete');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      safeCreateIcons();
+    };
+
+    window.backupDatabaseJSON = async function() {
+      if (!currentUser || currentUser.role !== 'admin') {
+        showToast("Hanya Administrator yang dapat mencadangkan data.", "error");
+        return;
+      }
+
+      let classes = [];
+      let users = [];
+      let schedules = [];
+      let evaluations = [];
+
+      if (!IS_PREVIEW && fbDb) {
+        try {
+          const [snapC, snapU, snapS, snapE] = await Promise.all([
+            getDocs(collection(fbDb, 'classes')),
+            getDocs(collection(fbDb, 'users')),
+            getDocs(collection(fbDb, 'schedules')),
+            getDocs(collection(fbDb, 'evaluations'))
+          ]);
+          snapC.forEach(d => classes.push({ id: d.id, ...d.data() }));
+          snapU.forEach(d => users.push({ id: d.id, ...d.data() }));
+          snapS.forEach(d => schedules.push({ id: d.id, ...d.data() }));
+          snapE.forEach(d =>  evaluations.push({ id: d.id, ...d.data() }));
+        } catch (err) {
+          console.warn("Gagal membaca Firebase, menggunakan data memori:", err);
+          classes = mockDB.classes;
+          users = mockDB.users;
+          schedules = mockDB.schedules;
+          evaluations = mockDB.evaluations;
+        }
+      } else {
+        classes = mockDB.classes;
+        users = mockDB.users;
+        schedules = mockDB.schedules;
+        evaluations = mockDB.evaluations;
+      }
+
+      const backupPayload = {
+        appName: "SiBersih - Sistem Penilaian Kebersihan & Adiwiyata",
+        version: "1.0",
+        backupTimestamp: new Date().toISOString(),
+        backupDateIndo: new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }),
+        exportedBy: currentUser.name,
+        stats: {
+          totalClasses: classes.length,
+          totalUsers: users.length,
+          totalSchedules: schedules.length,
+          totalEvaluations: evaluations.length
+        },
+        data: {
+          classes,
+          users,
+          schedules,
+          evaluations
+        }
+      };
+
+      const jsonStr = JSON.stringify(backupPayload, null, 2);
+      const blob = new Blob([jsonStr], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      const dateStr = new Date().toISOString().split('T')[0];
+      a.href = url;
+      a.download = `backup_sibersih_${dateStr}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+
+      showToast(`Cadangan data (${evaluations.length} lembar nilai, ${classes.length} kelas) berhasil diunduh!`);
+    };
+
+    // FITUR RESTORE DATA (JSON)
+    window.triggerRestoreFileInput = function() {
+      if (!currentUser || currentUser.role !== 'admin') {
+        showToast("Hanya Administrator yang berhak memulihkan data.", "error");
+        return;
+      }
+      const fileInput = document.getElementById('file-input-restore');
+      if (fileInput) {
+        fileInput.value = ''; // Reset input agar event onchange selalu terpicu
+        fileInput.click();
+      }
+    };
+
+    window.handleRestoreFileSelected = function(event) {
+      const file = event.target.files && event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = async (e) => {
+        try {
+          const content = e.target.result;
+          const parsed = JSON.parse(content);
+
+          // Validasi Struktur File Cadangan
+          if (!parsed.data || typeof parsed.data !== 'object') {
+            throw new Error("Struktur berkas tidak valid: Objek data utama tidak ditemukan.");
+          }
+
+          const incomingClasses = Array.isArray(parsed.data.classes) ? parsed.data.classes : [];
+          const incomingUsers = Array.isArray(parsed.data.users) ? parsed.data.users : [];
+          const incomingSchedules = Array.isArray(parsed.data.schedules) ? parsed.data.schedules : [];
+          const incomingEvaluations = Array.isArray(parsed.data.evaluations) ? parsed.data.evaluations : [];
+
+          // Tampilkan Modal Konfirmasi Restore
+          document.getElementById('delete-modal-title').innerText = "Konfirmasi Pemulihan (Restore) Data";
+          document.getElementById('delete-modal-message').innerHTML = `
+            Anda akan memulihkan data dari berkas cadangan tanggal <strong>${parsed.backupDateIndo || parsed.backupTimestamp || '-'}</strong>.<br><br>
+            <span class="block bg-slate-50 p-3 rounded-xl border border-slate-200 text-left font-mono text-[11px] text-slate-700 leading-relaxed">
+              • Kelas: <strong>${incomingClasses.length} data</strong><br>
+              • Akun Juri: <strong>${incomingUsers.length} data</strong><br>
+              • Jadwal Sesi: <strong>${incomingSchedules.length} data</strong><br>
+              • Lembar Penilaian: <strong>${incomingEvaluations.length} data</strong>
+            </span>
+            <span class="block text-rose-600 font-semibold mt-3">Perhatian: Data saat ini akan digantikan dengan data dari berkas cadangan ini. Lanjutkan?</span>
+          `;
+
+          const iconWrap = document.getElementById('delete-modal-icon-wrap');
+          if (iconWrap) {
+            iconWrap.className = 'w-12 h-12 rounded-2xl bg-indigo-100 text-indigo-600 flex items-center justify-center mx-auto mb-3';
+            iconWrap.innerHTML = `<i data-lucide="rotate-ccw" class="w-6 h-6"></i>`;
+          }
+
+          const btnExec = document.getElementById('btn-execute-delete');
+          if (btnExec) {
+            btnExec.className = 'w-full py-2.5 rounded-xl text-xs font-bold bg-indigo-600 hover:bg-indigo-700 text-white shadow-md shadow-indigo-600/25 transition';
+            btnExec.innerText = 'Ya, Pulihkan Sekarang';
+          }
+
+          pendingDeleteAction = async () => {
+            if (!IS_PREVIEW && fbDb) {
+              try {
+                showToast("Sedang memproses sinkronisasi data ke Firebase...");
+                // 1. Bersihkan koleksi lama
+                const collectionsToClear = ['evaluations', 'schedules', 'classes', 'users'];
+                for (const colName of collectionsToClear) {
+                  const snap = await getDocs(collection(fbDb, colName));
+                  const deletePromises = snap.docs.map(d => deleteDoc(doc(fbDb, colName, d.id)));
+                  await Promise.all(deletePromises);
+                }
+
+                // 2. Suntikkan data dari cadangan
+                for (const c of incomingClasses) {
+                  const docId = c.id || `cls_${Date.now()}_${Math.random()}`;
+                  await setDoc(doc(fbDb, 'classes', docId), c);
+                }
+                for (const u of incomingUsers) {
+                  const docId = u.id || `usr_${Date.now()}_${Math.random()}`;
+                  await setDoc(doc(fbDb, 'users', docId), u);
+                }
+                for (const s of incomingSchedules) {
+                  const docId = s.id || `sch_${Date.now()}_${Math.random()}`;
+                  await setDoc(doc(fbDb, 'schedules', docId), s);
+                }
+                for (const ev of incomingEvaluations) {
+                  const docId = ev.id || `eval_${Date.now()}_${Math.random()}`;
+                  await setDoc(doc(fbDb, 'evaluations', docId), ev);
+                }
+              } catch (err) {
+                console.error("Gagal restore ke Firebase:", err);
+                showToast("Gagal menyimpan data yang dipulihkan ke Firebase: " + err.message, "error");
+                return;
+              }
+            }
+
+            // Perbarui data memori (Preview/Local)
+            mockDB.classes = [...incomingClasses];
+            mockDB.users = [...incomingUsers];
+            mockDB.schedules = [...incomingSchedules];
+            mockDB.evaluations = [...incomingEvaluations];
+
+            closeDeleteModal();
+            renderManageData();
+            await resetScoringForm();
+            showToast(`Data berhasil dipulihkan (${incomingEvaluations.length} lembar nilai, ${incomingClasses.length} kelas)!`);
+          };
+
+          const modal = document.getElementById('modal-confirm-delete');
+          modal.classList.remove('hidden');
+          modal.classList.add('flex');
+          safeCreateIcons();
+
+        } catch (error) {
+          console.error("Kesalahan berkas JSON:", error);
+          showCustomModal({
+            title: "Gagal Membaca Berkas Cadangan",
+            desc: "Format berkas tidak sesuai atau data JSON rusak. Pastikan Anda mengunggah berkas JSON yang diunduh dari fitur Backup SiBersih.",
+            icon: "alert-triangle"
+          });
+        }
+      };
+      reader.readAsText(file);
+    };
+
     window.requestDeleteSchedule = function(id, periode) {
       document.getElementById('delete-modal-title').innerText = "Hapus Jadwal Sesi Penilaian";
       document.getElementById('delete-modal-message').innerText = `Apakah Anda yakin ingin membatalkan jadwal sesi untuk periode "${periode}"?`;
+
+      const iconWrap = document.getElementById('delete-modal-icon-wrap');
+      if (iconWrap) {
+        iconWrap.className = 'w-12 h-12 rounded-2xl bg-rose-100 text-rose-600 flex items-center justify-center mx-auto mb-3';
+        iconWrap.innerHTML = `<i data-lucide="trash-2" class="w-6 h-6"></i>`;
+      }
+
+      const btnExec = document.getElementById('btn-execute-delete');
+      if (btnExec) {
+        btnExec.className = 'w-full py-2.5 rounded-xl text-xs font-bold bg-rose-600 hover:bg-rose-700 text-white shadow-md shadow-rose-600/25 transition';
+        btnExec.innerText = 'Ya, Hapus';
+      }
 
       pendingDeleteAction = async () => {
         if (!IS_PREVIEW && fbDb) {
@@ -3268,6 +3551,18 @@
       document.getElementById('delete-modal-title').innerText = "Hapus Kelas";
       document.getElementById('delete-modal-message').innerText = `Apakah Anda yakin ingin menghapus kelas "${className}"? Data yang sudah dihapus tidak dapat dipulihkan.`;
       
+      const iconWrap = document.getElementById('delete-modal-icon-wrap');
+      if (iconWrap) {
+        iconWrap.className = 'w-12 h-12 rounded-2xl bg-rose-100 text-rose-600 flex items-center justify-center mx-auto mb-3';
+        iconWrap.innerHTML = `<i data-lucide="trash-2" class="w-6 h-6"></i>`;
+      }
+
+      const btnExec = document.getElementById('btn-execute-delete');
+      if (btnExec) {
+        btnExec.className = 'w-full py-2.5 rounded-xl text-xs font-bold bg-rose-600 hover:bg-rose-700 text-white shadow-md shadow-rose-600/25 transition';
+        btnExec.innerText = 'Ya, Hapus';
+      }
+
       pendingDeleteAction = async () => {
         if (!IS_PREVIEW && fbDb) {
           try {
@@ -3292,6 +3587,18 @@
       document.getElementById('delete-modal-title').innerText = "Hapus Akun Juri";
       document.getElementById('delete-modal-message').innerText = `Apakah Anda yakin ingin menghapus akun juri "${judgeName}"? Juri tidak dapat login setelah akun dihapus.`;
       
+      const iconWrap = document.getElementById('delete-modal-icon-wrap');
+      if (iconWrap) {
+        iconWrap.className = 'w-12 h-12 rounded-2xl bg-rose-100 text-rose-600 flex items-center justify-center mx-auto mb-3';
+        iconWrap.innerHTML = `<i data-lucide="trash-2" class="w-6 h-6"></i>`;
+      }
+
+      const btnExec = document.getElementById('btn-execute-delete');
+      if (btnExec) {
+        btnExec.className = 'w-full py-2.5 rounded-xl text-xs font-bold bg-rose-600 hover:bg-rose-700 text-white shadow-md shadow-rose-600/25 transition';
+        btnExec.innerText = 'Ya, Hapus';
+      }
+
       pendingDeleteAction = async () => {
         if (!IS_PREVIEW && fbDb) {
           try {
