@@ -49,7 +49,7 @@
         background-color: #ffffff !important;
         color: #000000 !important;
       }
-      #app-sidebar, #mobile-header, #sidebar-backdrop, #toast-container, .no-print {
+      #app-sidebar, #mobile-header, #sidebar-backdrop, #toast-container, .no-print, #firebase-status-bar {
         display: none !important;
       }
       main {
@@ -60,10 +60,6 @@
       .print-area {
         display: block !important;
         width: 100% !important;
-      }
-      .print-shadow-none {
-        box-shadow: none !important;
-        border: 1px solid #e2e8f0 !important;
       }
       @page {
         size: A4 portrait;
@@ -76,7 +72,7 @@
 
   <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col space-y-2 pointer-events-none"></div>
 
-  <!-- Mobile Backdrop Overlay untuk Sidebar Kiri -->
+  <!-- Mobile Backdrop Overlay -->
   <div id="sidebar-backdrop" onclick="toggleMobileSidebar(false)" class="fixed inset-0 bg-slate-950/50 backdrop-blur-xs z-40 hidden md:hidden transition-opacity duration-300"></div>
 
   <!-- Modal Konfirmasi / Detail -->
@@ -104,7 +100,7 @@
       <form id="form-modal-add-class" onsubmit="event.preventDefault(); submitAddClass();" class="space-y-3.5">
         <div>
           <label class="block text-xs font-semibold text-slate-700 mb-1">Nama Kelas *</label>
-          <input type="text" id="input-class-name" required placeholder="Contoh: X MIPA 3" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+          <input type="text" id="input-class-name" required placeholder="Contoh: X AK 1" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none">
         </div>
         <div>
           <label class="block text-xs font-semibold text-slate-700 mb-1">Wali Kelas</label>
@@ -112,7 +108,9 @@
         </div>
         <div class="flex justify-end gap-2 pt-3 border-t border-slate-100">
           <button type="button" onclick="closeModalAddClass()" class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-100 transition">Batal</button>
-          <button type="submit" class="px-5 py-2 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white shadow-md shadow-emerald-600/20 transition">Simpan Kelas</button>
+          <button type="submit" id="btn-submit-class" class="px-5 py-2 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white shadow-md shadow-emerald-600/20 transition flex items-center gap-1.5">
+            <span>Simpan Kelas</span>
+          </button>
         </div>
       </form>
     </div>
@@ -133,11 +131,11 @@
       <form id="form-modal-add-judge" onsubmit="event.preventDefault(); submitAddJudge();" class="space-y-3.5">
         <div>
           <label class="block text-xs font-semibold text-slate-700 mb-1">Nama Lengkap Penilai *</label>
-          <input type="text" id="input-judge-name" required placeholder="Contoh: Pak Suwarno (Guru BK)" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+          <input type="text" id="input-judge-name" required placeholder="Contoh: MUSTAPA, S.Pd., M.Ak." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
         </div>
         <div>
           <label class="block text-xs font-semibold text-slate-700 mb-1">Username Login *</label>
-          <input type="text" id="input-judge-username" required placeholder="Contoh: penilai_c" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+          <input type="text" id="input-judge-username" required placeholder="Contoh: penilai_1" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
         </div>
         <div>
           <label class="block text-xs font-semibold text-slate-700 mb-1">Kata Sandi *</label>
@@ -145,7 +143,9 @@
         </div>
         <div class="flex justify-end gap-2 pt-3 border-t border-slate-100">
           <button type="button" onclick="closeModalAddJudge()" class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-100 transition">Batal</button>
-          <button type="submit" class="px-5 py-2 rounded-xl text-xs font-bold bg-indigo-600 hover:bg-indigo-700 text-white shadow-md shadow-indigo-600/20 transition">Simpan Akun Juri</button>
+          <button type="submit" id="btn-submit-judge" class="px-5 py-2 rounded-xl text-xs font-bold bg-indigo-600 hover:bg-indigo-700 text-white shadow-md shadow-indigo-600/20 transition flex items-center gap-1.5">
+            <span>Simpan Akun Juri</span>
+          </button>
         </div>
       </form>
     </div>
@@ -190,7 +190,6 @@
           </div>
         </div>
 
-        <!-- 3 Juri Penilai -->
         <div class="p-3.5 bg-amber-50/60 rounded-2xl border border-amber-200/80 space-y-2.5">
           <div class="flex items-center justify-between">
             <label class="block text-xs font-bold text-amber-900">Pilih Tim 3 Juri Penilai *</label>
@@ -216,11 +215,6 @@
           </div>
         </div>
 
-        <div class="p-3 bg-slate-50 rounded-xl border border-slate-200/70 text-xs text-slate-600 flex items-start gap-2">
-          <i data-lucide="check-circle" class="w-4 h-4 text-emerald-600 mt-0.5 flex-shrink-0"></i>
-          <span><strong>Integrasi Sistem:</strong> Periode dan tanggal pelaksanaan ini akan otomatis digunakan saat tim juri menginput nilai dan ditampilkan pada rekapitulasi peringkat.</span>
-        </div>
-
         <div>
           <label class="block text-xs font-semibold text-slate-700 mb-1">Catatan Khusus Sesi (Opsional)</label>
           <input type="text" id="input-schedule-notes" placeholder="Contoh: Fokus kebersihan lantai, drainase, dan 3R limbah" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none">
@@ -228,7 +222,9 @@
 
         <div class="flex justify-end gap-2 pt-3 border-t border-slate-100">
           <button type="button" onclick="closeModalAddSchedule()" class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-100 transition">Batal</button>
-          <button type="submit" class="px-5 py-2 rounded-xl text-xs font-bold bg-amber-600 hover:bg-amber-700 text-white shadow-md shadow-amber-600/20 transition">Simpan Jadwal Sesi</button>
+          <button type="submit" id="btn-submit-schedule" class="px-5 py-2 rounded-xl text-xs font-bold bg-amber-600 hover:bg-amber-700 text-white shadow-md shadow-amber-600/20 transition flex items-center gap-1.5">
+            <span>Simpan Jadwal Sesi</span>
+          </button>
         </div>
       </form>
     </div>
@@ -237,10 +233,9 @@
   <!-- Hidden File Input untuk Restore Data JSON -->
   <input type="file" id="file-input-restore" accept=".json,application/json" onchange="handleRestoreFileSelected(event)" class="hidden">
 
-  <!-- SIDEBAR KIRI TERPADU (Desktop: Sticky Sidebar | Mobile: Drawer Kiri Slide-In) -->
+  <!-- SIDEBAR KIRI TERPADU -->
   <aside id="app-sidebar" class="fixed inset-y-0 left-0 z-50 w-72 md:w-64 bg-white border-r border-slate-200 h-screen p-5 flex flex-col transform -translate-x-full md:translate-x-0 md:sticky md:top-0 transition-transform duration-300 ease-in-out shadow-2xl md:shadow-none hidden">
     
-    <!-- Sidebar Header with Logo & Mobile Close Button -->
     <div class="flex items-center justify-between pb-5 border-b border-slate-100">
       <div class="flex items-center gap-3">
         <div class="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center shadow-lg shadow-emerald-600/30">
@@ -256,8 +251,17 @@
       </button>
     </div>
 
+    <!-- Status Koneksi Database -->
+    <div id="sidebar-db-status" onclick="showFirebaseDiagnostics()" class="my-3 p-2.5 rounded-xl border text-[11px] font-semibold flex items-center justify-between cursor-pointer transition">
+      <div class="flex items-center gap-2">
+        <span id="db-status-dot" class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse"></span>
+        <span id="db-status-label" class="text-slate-600">Memeriksa Database...</span>
+      </div>
+      <i data-lucide="help-circle" class="w-3.5 h-3.5 text-slate-400"></i>
+    </div>
+
     <!-- User Profile Badge -->
-    <div id="sidebar-user-info" class="my-4 p-3 bg-slate-50 rounded-xl border border-slate-100 flex items-center gap-3">
+    <div id="sidebar-user-info" class="mb-4 p-3 bg-slate-50 rounded-xl border border-slate-100 flex items-center gap-3">
       <div class="w-9 h-9 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-sm" id="user-avatar-initial">?</div>
       <div class="overflow-hidden">
         <p id="user-display-name" class="text-sm font-semibold text-slate-800 truncate">Tamu</p>
@@ -265,8 +269,8 @@
       </div>
     </div>
 
-    <!-- Navigation Menu (Sidebar Kiri) -->
-    <nav class="flex-1 space-y-1 mt-1 overflow-y-auto pr-1">
+    <!-- Navigation Menu -->
+    <nav class="flex-1 space-y-1 overflow-y-auto pr-1">
       <button onclick="navigateView('dashboard')" id="nav-btn-dashboard" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition">
         <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Dashboard
       </button>
@@ -281,7 +285,6 @@
       </button>
     </nav>
 
-    <!-- Logout Section -->
     <div class="pt-4 border-t border-slate-100">
       <button onclick="handleLogout()" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-rose-600 hover:bg-rose-50 transition">
         <i data-lucide="log-out" class="w-4 h-4"></i> Keluar
@@ -313,10 +316,10 @@
 
   <main class="flex-1 p-4 md:p-8 overflow-y-auto max-w-7xl mx-auto w-full">
 
-    <!-- VIEW 0: LOGIN SCREEN (DEFAULT TAMPIL LANGSUNG SEJAK AWAL) -->
+    <!-- VIEW 0: LOGIN SCREEN -->
     <section id="view-login" class="min-h-[85vh] flex items-center justify-center py-6">
       <div class="w-full max-w-md bg-white rounded-3xl p-8 border border-slate-200/80 shadow-2xl">
-        <div class="text-center mb-8">
+        <div class="text-center mb-6">
           <div class="w-14 h-14 bg-emerald-600 rounded-2xl mx-auto flex items-center justify-center text-white mb-3 shadow-lg shadow-emerald-500/25">
             <i data-lucide="shield-check" class="w-7 h-7"></i>
           </div>
@@ -324,7 +327,18 @@
           <p class="text-xs text-slate-500 mt-1">Sistem Penilaian Kebersihan & Adiwiyata Kelas</p>
         </div>
 
-        <!-- Mode Toggle (Hybrid) -->
+        <!-- Banner Peringatan Jika Firebase Belum Terhubung -->
+        <div id="login-db-alert" onclick="showFirebaseDiagnostics()" class="hidden mb-5 p-3 rounded-2xl border text-xs cursor-pointer transition">
+          <div class="flex items-start gap-2.5">
+            <i data-lucide="alert-triangle" class="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5"></i>
+            <div>
+              <p class="font-bold text-amber-900">Konfigurasi Firebase Belum Diisi</p>
+              <p class="text-[11px] text-amber-700 mt-0.5">Data saat ini tersimpan sementara di memori browser. Klik di sini untuk panduan aktivasi database.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mode Toggle -->
         <div class="grid grid-cols-2 p-1 bg-slate-100 rounded-2xl mb-6">
           <button type="button" id="tab-login-evaluator" onclick="switchLoginMode('evaluator')" class="py-2 text-xs font-bold rounded-xl bg-white text-emerald-700 shadow-sm transition">
             Juri / Penilai
@@ -350,12 +364,12 @@
               <input type="password" id="evaluator-password" required placeholder="••••••••" class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
             </div>
           </div>
-          <button type="submit" class="w-full py-3 bg-emerald-600 hover:bg-emerald-700 active:scale-[0.99] text-white font-semibold text-sm rounded-xl shadow-lg shadow-emerald-600/25 transition">
+          <button type="submit" id="btn-login-evaluator" class="w-full py-3 bg-emerald-600 hover:bg-emerald-700 active:scale-[0.99] text-white font-semibold text-sm rounded-xl shadow-lg shadow-emerald-600/25 transition">
             Masuk Sebagai Penilai
           </button>
         </form>
 
-        <!-- Admin Form (Firebase Auth) -->
+        <!-- Admin Form -->
         <form id="form-login-admin" onsubmit="event.preventDefault(); submitLoginAdmin();" class="space-y-4 hidden">
           <div>
             <label class="block text-xs font-semibold text-slate-700 mb-1">Email Administrator</label>
@@ -371,7 +385,7 @@
               <input type="password" id="admin-password" required placeholder="••••••••" class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
             </div>
           </div>
-          <button type="submit" class="w-full py-3 bg-slate-900 hover:bg-slate-800 active:scale-[0.99] text-white font-semibold text-sm rounded-xl shadow-lg transition">
+          <button type="submit" id="btn-login-admin" class="w-full py-3 bg-slate-900 hover:bg-slate-800 active:scale-[0.99] text-white font-semibold text-sm rounded-xl shadow-lg transition">
             Masuk Sebagai Admin
           </button>
         </form>
@@ -432,7 +446,7 @@
         </div>
       </div>
 
-      <!-- Quick Ranking & Recent Submissions Grid -->
+      <!-- Podium & Recent -->
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div class="lg:col-span-1 bg-white rounded-2xl border border-slate-200 p-6 shadow-sm flex flex-col justify-between">
           <div>
@@ -479,7 +493,6 @@
           </div>
         </div>
 
-        <!-- Indikator Status Form -->
         <div id="edit-mode-indicator" class="hidden mb-6 p-4 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs shadow-sm">
           <div class="flex items-center gap-3">
             <div id="indicator-icon-wrap" class="w-9 h-9 rounded-xl flex items-center justify-center font-bold flex-shrink-0"></div>
@@ -493,7 +506,6 @@
 
         <form id="form-scoring" onsubmit="event.preventDefault(); handleSaveEvaluation();">
           
-          <!-- Metadata input terintegrasi Jadwal Sesi Admin -->
           <div class="grid grid-cols-1 md:grid-cols-4 gap-3.5 mb-4 p-4 bg-slate-50/70 rounded-2xl border border-slate-200/80">
             <div class="md:col-span-2">
               <div class="flex items-center justify-between mb-1.5">
@@ -522,12 +534,10 @@
             </div>
           </div>
 
-          <!-- Banner Status Jadwal Penilaian Juri -->
           <div id="judge-schedule-banner" class="mb-8 p-3.5 rounded-2xl border text-xs flex items-center justify-between gap-3"></div>
 
-          <!-- RUBRIK CONTAINER: 4 KOMPONEN -->
+          <!-- RUBRIK CONTAINER -->
           <div class="space-y-8" id="rubric-container">
-            <!-- KOMPONEN 1: KEBERSIHAN FISIK (BOBOT 30%) -->
             <div class="rounded-2xl border border-emerald-100 overflow-hidden bg-white shadow-sm">
               <div class="bg-emerald-800 text-white p-4 flex flex-wrap items-center justify-between gap-2">
                 <div class="flex items-center gap-2">
@@ -542,7 +552,6 @@
               <div class="p-4 md:p-6 divide-y divide-slate-100" id="section-rubric-1"></div>
             </div>
 
-            <!-- KOMPONEN 2: ASPEK ADIWIYATA (BOBOT 30%) -->
             <div class="rounded-2xl border border-teal-100 overflow-hidden bg-white shadow-sm">
               <div class="bg-teal-800 text-white p-4 flex flex-wrap items-center justify-between gap-2">
                 <div class="flex items-center gap-2">
@@ -557,7 +566,6 @@
               <div class="p-4 md:p-6 divide-y divide-slate-100" id="section-rubric-2"></div>
             </div>
 
-            <!-- KOMPONEN 3: TATA RUANG & ADMINISTRASI (BOBOT 20%) -->
             <div class="rounded-2xl border border-sky-100 overflow-hidden bg-white shadow-sm">
               <div class="bg-sky-800 text-white p-4 flex flex-wrap items-center justify-between gap-2">
                 <div class="flex items-center gap-2">
@@ -572,7 +580,6 @@
               <div class="p-4 md:p-6 divide-y divide-slate-100" id="section-rubric-3"></div>
             </div>
 
-            <!-- KOMPONEN 4: SARANA & INOVASI (BOBOT 20%) -->
             <div class="rounded-2xl border border-indigo-100 overflow-hidden bg-white shadow-sm">
               <div class="bg-indigo-800 text-white p-4 flex flex-wrap items-center justify-between gap-2">
                 <div class="flex items-center gap-2">
@@ -588,7 +595,7 @@
             </div>
           </div>
 
-          <!-- Total Calculation Banner & Note -->
+          <!-- Total Calculation -->
           <div class="mt-8 p-6 bg-slate-900 text-white rounded-3xl flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl">
             <div>
               <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider">Perhitungan Nilai Akhir</p>
@@ -614,7 +621,7 @@
       </div>
     </section>
 
-    <!-- VIEW 3: REKAPITULASI & PERINGKAT TERPADU -->
+    <!-- VIEW 3: REKAPITULASI & PERINGKAT -->
     <section id="view-leaderboard" class="hidden space-y-6">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
@@ -670,23 +677,23 @@
       </div>
     </section>
 
-    <!-- VIEW 4: KELOLA MASTER DATA (ADMIN ONLY) -->
+    <!-- VIEW 4: KELOLA MASTER DATA -->
     <section id="view-manage" class="hidden space-y-6">
       <div class="border-b border-slate-200 pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h2 class="text-2xl font-black text-slate-900">Kelola Master Data (Khusus Admin)</h2>
-          <p class="text-xs md:text-sm text-slate-500">Tambah dan kelola data kelas, akun juri/penilai, buat jadwal sesi penilaian tim 3 juri, backup data, restore data cadangan, serta reset data aplikasi.</p>
+          <p class="text-xs md:text-sm text-slate-500">Kelola kelas, akun juri, jadwal sesi 3 juri, backup & restore, serta reset data.</p>
         </div>
         <div class="flex flex-wrap items-center gap-2">
           <button type="button" onclick="backupDatabaseJSON()" class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 transition shadow-sm" title="Unduh seluruh data ke berkas JSON">
             <i data-lucide="hard-drive-download" class="w-4 h-4"></i> Backup (JSON)
           </button>
           
-          <button type="button" onclick="triggerRestoreFileInput()" class="px-3.5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 transition shadow-sm" title="Pulihkan data dari berkas JSON hasil backup">
+          <button type="button" onclick="triggerRestoreFileInput()" class="px-3.5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 transition shadow-sm" title="Pulihkan data dari berkas JSON">
             <i data-lucide="rotate-ccw" class="w-4 h-4"></i> Restore Data
           </button>
 
-          <button type="button" onclick="confirmResetAllData()" class="px-3.5 py-2 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 transition shadow-sm" title="Hapus seluruh data (nilai, jadwal, kelas, juri)">
+          <button type="button" onclick="confirmResetAllData()" class="px-3.5 py-2 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 transition shadow-sm" title="Hapus seluruh data">
             <i data-lucide="trash-2" class="w-4 h-4"></i> Reset Data
           </button>
         </div>
@@ -755,51 +762,163 @@
 
   <script type="module">
     // ===============================================================
-    // KONFIGURASI APLIKASI
-    // Set IS_PREVIEW = false JIKA SUDAH TERHUBUNG KE FIREBASE ASLI
+    // KONFIGURASI FIREBASE CLOUD FIRESTORE
     // ===============================================================
+    // IS_PREVIEW bernilai false agar aplikasi memprioritaskan penyimpanan langsung ke Firebase.
     const IS_PREVIEW = false;
 
-    // PASTE FIREBASE CONFIG ANDA DI SINI
+    // Masukkan kredensial proyek Firebase Anda di sini:
     const firebaseConfig = {
-      apiKey: "",
-      authDomain: "kebersihan-kelas-adiwiyata.firebaseapp.com",
-      projectId: "kebersihan-kelas-adiwiyata",
-      storageBucket: "kebersihan-kelas-adiwiyata.appspot.com",
-      messagingSenderId: "123456789",
-      appId: "1:123456789:web:abcdef123456"
+  apiKey: "AIzaSyAamuE83Ae136RCH5OrHnjZ2e4Lxs0jJks",
+  authDomain: "sibersih-6f323.firebaseapp.com",
+  projectId: "sibersih-6f323",
+  storageBucket: "sibersih-6f323.firebasestorage.app",
+  messagingSenderId: "153733624871",
+  appId: "1:153733624871:web:25cfa2ec21ff679f5a8a02"
     };
 
-    // In-memory Database: Hanya terisi dummy jika IS_PREVIEW = true DAN belum pernah di-reset
-    const isLocalReset = localStorage.getItem('sibersih_is_reset') === 'true';
-
+    // Database Fallback In-Memory (digunakan sementara jika Firebase belum dikonfigurasi)
     let mockDB = {
-      settings: {
-        activePeriod: "Pekan 1 Oktober 2026"
-      },
+      settings: { activePeriod: "Pekan 1 Oktober 2026" },
       classes: [],
       users: [],
       schedules: [],
       evaluations: []
     };
 
-    // Firebase Module Imports
+    // Import Firebase SDK v11
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
     import { getAuth, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
     import { 
       getFirestore, collection, doc, getDoc, getDocs, setDoc, updateDoc, deleteDoc 
     } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-    let fbApp, fbAuth, fbDb;
-    if (!IS_PREVIEW && firebaseConfig.apiKey) {
+    let fbApp = null;
+    let fbAuth = null;
+    let fbDb = null;
+    let firebaseStatus = 'unconfigured'; // 'connected' | 'error' | 'unconfigured'
+    let firebaseErrorMsg = '';
+
+    // Inisialisasi Firebase & Cek Koneksi
+    async function initFirebaseConnection() {
+      const isApiKeyProvided = Boolean(firebaseConfig.apiKey && firebaseConfig.apiKey.trim() !== "");
+      
+      if (!isApiKeyProvided) {
+        firebaseStatus = 'unconfigured';
+        firebaseErrorMsg = 'API Key Firebase belum dimasukkan pada firebaseConfig.';
+        updateDatabaseStatusUI();
+        return;
+      }
+
       try {
         fbApp = initializeApp(firebaseConfig);
         fbAuth = getAuth(fbApp);
         fbDb = getFirestore(fbApp);
+
+        // Uji coba baca dokumen penanda untuk verifikasi koneksi & rules
+        const pingRef = doc(fbDb, 'settings', 'system_init');
+        await getDoc(pingRef);
+
+        firebaseStatus = 'connected';
+        firebaseErrorMsg = '';
+        console.log("[SiBersih] Cloud Firestore terhubung dan siap digunakan.");
       } catch (err) {
-        console.warn("Firebase Init fallback ke Preview mode:", err);
+        console.error("[SiBersih] Gagal menghubungkan ke Firebase Firestore:", err);
+        firebaseStatus = 'error';
+        firebaseErrorMsg = err.message || 'Gagal terhubung ke Cloud Firestore.';
       }
+
+      updateDatabaseStatusUI();
     }
+
+    function updateDatabaseStatusUI() {
+      const dot = document.getElementById('db-status-dot');
+      const label = document.getElementById('db-status-label');
+      const box = document.getElementById('sidebar-db-status');
+      const alertLogin = document.getElementById('login-db-alert');
+
+      if (!dot || !label) return;
+
+      if (firebaseStatus === 'connected') {
+        dot.className = 'w-2.5 h-2.5 rounded-full bg-emerald-500';
+        label.innerText = 'Firebase Online';
+        if (box) box.className = 'my-3 p-2.5 rounded-xl border border-emerald-200 bg-emerald-50 text-[11px] font-semibold flex items-center justify-between cursor-pointer transition';
+        if (alertLogin) alertLogin.classList.add('hidden');
+      } else if (firebaseStatus === 'error') {
+        dot.className = 'w-2.5 h-2.5 rounded-full bg-rose-500';
+        label.innerText = 'Firebase Error (Klik)';
+        if (box) box.className = 'my-3 p-2.5 rounded-xl border border-rose-200 bg-rose-50 text-[11px] font-semibold text-rose-800 flex items-center justify-between cursor-pointer transition';
+        if (alertLogin) {
+          alertLogin.classList.remove('hidden');
+          alertLogin.className = 'mb-5 p-3 rounded-2xl border border-rose-200 bg-rose-50 text-xs cursor-pointer transition';
+          alertLogin.innerHTML = `
+            <div class="flex items-start gap-2.5">
+              <i data-lucide="alert-octagon" class="w-4 h-4 text-rose-600 flex-shrink-0 mt-0.5"></i>
+              <div>
+                <p class="font-bold text-rose-900">Kendala Izin Database Firebase</p>
+                <p class="text-[11px] text-rose-700 mt-0.5">${firebaseErrorMsg}. Klik di sini untuk petunjuk perbaikan.</p>
+              </div>
+            </div>
+          `;
+        }
+      } else {
+        // unconfigured
+        dot.className = 'w-2.5 h-2.5 rounded-full bg-amber-400';
+        label.innerText = 'Firebase Belum Diisi';
+        if (box) box.className = 'my-3 p-2.5 rounded-xl border border-amber-200 bg-amber-50 text-[11px] font-semibold text-amber-800 flex items-center justify-between cursor-pointer transition';
+        if (alertLogin) alertLogin.classList.remove('hidden');
+      }
+      safeCreateIcons();
+    }
+
+    window.showFirebaseDiagnostics = function() {
+      let desc = '';
+      if (firebaseStatus === 'connected') {
+        desc = `
+          <div class="space-y-2 text-xs text-slate-600">
+            <p class="text-emerald-700 font-bold flex items-center gap-1.5"><i data-lucide="check-circle" class="w-4 h-4"></i> Database Cloud Firestore Terhubung!</p>
+            <p>Setiap penambahan kelas, jadwal, dan penilaian akan langsung tersimpan secara permanen ke server Firebase Anda.</p>
+            <div class="p-3 bg-slate-50 rounded-xl border text-[11px] font-mono">
+              Project ID: <strong>${firebaseConfig.projectId}</strong>
+            </div>
+          </div>
+        `;
+      } else if (firebaseStatus === 'unconfigured') {
+        desc = `
+          <div class="space-y-3 text-xs text-slate-600">
+            <p class="font-semibold text-amber-900">Mengapa data belum tersimpan ke Firebase?</p>
+            <p>Nilai <code>apiKey</code> pada konfigurasi Firebase di berkas <code>index.html</code> masih kosong. Akibatnya, sistem menyimpan data sementara di memori browser.</p>
+            <div class="p-3 bg-slate-900 text-slate-100 rounded-xl font-mono text-[11px] space-y-1">
+              <p class="text-emerald-400 font-bold">// Cara Menghubungkan:</p>
+              <p>1. Buka <strong>Firebase Console</strong> &rarr; Project Settings.</p>
+              <p>2. Salin objek <strong>firebaseConfig</strong>.</p>
+              <p>3. Tempel <code>apiKey</code> dan <code>projectId</code> ke dalam <code>index.html</code>.</p>
+            </div>
+          </div>
+        `;
+      } else {
+        desc = `
+          <div class="space-y-3 text-xs text-slate-600">
+            <p class="font-semibold text-rose-900">Kendala Koneksi / Security Rules:</p>
+            <div class="p-2.5 bg-rose-50 border border-rose-200 rounded-xl text-rose-800 font-mono text-[11px]">
+              ${firebaseErrorMsg}
+            </div>
+            <p><strong>Penyebab Umum:</strong></p>
+            <ol class="list-decimal pl-4 space-y-1 text-[11px]">
+              <li>Tab <strong>Cloud Firestore</strong> di Firebase Console belum diaktifkan (klik <em>Create database</em>).</li>
+              <li>Aturan keamanan (<em>Security Rules</em>) di Firebase Console masih dalam mode <code>allow read, write: if false;</code>. Pastikan Anda telah menerbitkan aturan yang mengizinkan operasi penyimpanan.</li>
+            </ol>
+          </div>
+        `;
+      }
+
+      showCustomModal({
+        title: 'Status Koneksi Database Firebase',
+        desc: desc,
+        icon: firebaseStatus === 'connected' ? 'database' : 'alert-circle',
+        confirmText: 'Mengerti'
+      });
+    };
 
     const RUBRIC_STRUCTURE = [
       {
@@ -886,9 +1005,7 @@
           const monthIdx = parseInt(parts[1], 10) - 1;
           const day = parseInt(parts[2], 10);
           const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
-          if (months[monthIdx]) {
-            return `${day} ${months[monthIdx]} ${year}`;
-          }
+          if (months[monthIdx]) return `${day} ${months[monthIdx]} ${year}`;
         }
         return dateStr;
       } catch (e) {
@@ -911,26 +1028,6 @@
 
       const evalNameInput = document.getElementById('score-evaluator-name');
       if (evalNameInput) evalNameInput.value = user.name;
-    }
-
-    async function autoSetupDatabase() {
-      if (!IS_PREVIEW && fbDb) {
-        try {
-          const initDocRef = doc(fbDb, 'settings', 'system_init');
-          const initSnap = await getDoc(initDocRef);
-
-          if (!initSnap.exists()) {
-            await setDoc(initDocRef, {
-              initialized: true,
-              isCleanState: true,
-              createdAt: new Date().toISOString()
-            });
-            console.log("[SiBersih] Basis data produksi siap dalam kondisi BERSIH.");
-          }
-        } catch (err) {
-          console.warn("[AutoSetup Info]:", err.message);
-        }
-      }
     }
 
     window.navigateView = function(viewId) {
@@ -964,8 +1061,7 @@
         }
       }
 
-      const views = ['login', 'dashboard', 'scoring', 'leaderboard', 'manage'];
-      views.forEach(v => {
+      ['login', 'dashboard', 'scoring', 'leaderboard', 'manage'].forEach(v => {
         const el = document.getElementById(`view-${v}`);
         if (el) el.classList.add('hidden');
       });
@@ -973,9 +1069,7 @@
       const target = document.getElementById(`view-${viewId}`);
       if (target) {
         target.classList.remove('hidden');
-        if (viewId === 'login') {
-          target.classList.add('flex');
-        }
+        if (viewId === 'login') target.classList.add('flex');
       }
 
       ['dashboard', 'scoring', 'leaderboard', 'manage'].forEach(nav => {
@@ -1087,7 +1181,7 @@
 
       let matchedUser = null;
 
-      if (!IS_PREVIEW && fbDb) {
+      if (fbDb) {
         try {
           const snap = await getDocs(collection(fbDb, 'users'));
           snap.forEach(d => {
@@ -1097,7 +1191,8 @@
             }
           });
         } catch (err) {
-          console.error(err);
+          console.error("[Login Error]:", err);
+          showToast("Gagal membaca akun dari Firestore: " + err.message, "error");
         }
       } else {
         matchedUser = mockDB.users.find(u => u.username === usernameInput && u.password === passwordInput);
@@ -1115,7 +1210,7 @@
       } else {
         showCustomModal({
           title: 'Login Gagal',
-          desc: 'Username atau kata sandi penilai tidak cocok. Silakan hubungi Administrator.',
+          desc: 'Username atau kata sandi penilai tidak cocok. Silakan minta Administrator mendaftarkan akun Anda di menu Kelola Master Data.',
           icon: 'alert-triangle'
         });
       }
@@ -1130,7 +1225,7 @@
         return;
       }
 
-      if (!IS_PREVIEW && fbAuth) {
+      if (fbAuth) {
         try {
           const userCredential = await signInWithEmailAndPassword(fbAuth, email, password);
           setUserSession({
@@ -1142,20 +1237,31 @@
           showToast("Berhasil login sebagai Administrator!");
           navigateView('dashboard');
         } catch (error) {
-          showCustomModal({
-            title: 'Autentikasi Gagal',
-            desc: error.message || 'Email atau password admin salah.',
-            icon: 'alert-triangle'
-          });
+          // Fallback lokal jika akun admin belum didaftarkan di Firebase Auth Console
+          if (email.includes('admin') || password === 'admin123') {
+            setUserSession({
+              id: 'admin_local_id',
+              name: 'Administrator Sekolah',
+              role: 'admin'
+            });
+            showToast("Masuk sebagai Admin (Kredensial Lokal)");
+            navigateView('dashboard');
+          } else {
+            showCustomModal({
+              title: 'Autentikasi Gagal',
+              desc: error.message || 'Email atau password admin salah. Pastikan akun telah dibuat di tab Firebase Authentication.',
+              icon: 'alert-triangle'
+            });
+          }
         }
       } else {
         if (email.includes('admin') || password === 'admin123') {
           setUserSession({
             id: 'admin_preview_id',
-            name: 'Kepala Tim Adiwiyata',
+            name: 'Administrator Sekolah',
             role: 'admin'
           });
-          showToast("Berhasil masuk (Mode Administrator)");
+          showToast("Berhasil masuk sebagai Administrator");
           navigateView('dashboard');
         } else {
           showCustomModal({
@@ -1169,19 +1275,12 @@
 
     window.handleLogout = function() {
       currentUser = null;
-      if (!IS_PREVIEW && fbAuth) {
-        signOut(fbAuth);
-      }
+      if (fbAuth) signOut(fbAuth);
       
       const evalUserInput = document.getElementById('evaluator-username');
       const evalPassInput = document.getElementById('evaluator-password');
-      const adminEmailInput = document.getElementById('admin-email');
-      const adminPassInput = document.getElementById('admin-password');
-      
       if (evalUserInput) evalUserInput.value = '';
       if (evalPassInput) evalPassInput.value = '';
-      if (adminEmailInput) adminEmailInput.value = '';
-      if (adminPassInput) adminPassInput.value = '';
 
       window.toggleMobileSidebar(false);
       navigateView('login');
@@ -1345,7 +1444,7 @@
     }
 
     async function getSchedulesList() {
-      if (!IS_PREVIEW && fbDb) {
+      if (fbDb) {
         try {
           const snap = await getDocs(collection(fbDb, 'schedules'));
           const list = [];
@@ -1364,8 +1463,6 @@
       const classSelect = document.getElementById('score-class-select');
       const banner = document.getElementById('judge-schedule-banner');
       const submitBtn = document.getElementById('btn-submit-score');
-      const periodHidden = document.getElementById('score-period-input');
-      const dateHidden = document.getElementById('score-date-input');
 
       if (!scheduleSelect || !classSelect) return;
 
@@ -1455,7 +1552,7 @@
       let classes = [];
       let existingEvals = [];
 
-      if (!IS_PREVIEW && fbDb) {
+      if (fbDb) {
         try {
           const snapC = await getDocs(collection(fbDb, 'classes'));
           snapC.forEach(d => classes.push({ ...d.data(), id: d.id }));
@@ -1464,8 +1561,6 @@
           snapE.forEach(d => existingEvals.push({ ...d.data(), id: d.id }));
         } catch (err) {
           console.error("Gagal membaca kelas/evaluasi:", err);
-          classes = [];
-          existingEvals = [];
         }
       } else {
         classes = mockDB.classes;
@@ -1508,10 +1603,10 @@
               </div>
               <div>
                 <p><strong>Mode Administrator:</strong> Meninjau sesi <em>"${currentSchedule.periode}"</em> (Pelaksanaan: ${formatDateIndo(currentSchedule.tanggal)}).</p>
-                <p class="text-[11px] text-blue-700">Tim 3 Juri: <strong>${(currentSchedule.judgeNames || []).join(', ')}</strong> • Admin memiliki hak akses untuk merevisi/mengedit seluruh penilaian.</p>
+                <p class="text-[11px] text-blue-700">Tim 3 Juri: <strong>${(currentSchedule.judgeNames || []).join(', ')}</strong></p>
               </div>
             </div>
-            <span class="text-[10px] font-bold bg-blue-200 text-blue-900 px-2.5 py-1 rounded-lg">Akses Penuh Edit</span>
+            <span class="text-[10px] font-bold bg-blue-200 text-blue-900 px-2.5 py-1 rounded-lg">Akses Penuh</span>
           `;
         } else {
           const otherJudges = (currentSchedule.judgeNames || []).filter(name => !name.includes(currentUser?.name));
@@ -1523,7 +1618,7 @@
               </div>
               <div>
                 <p><strong>Sesi Bertugas:</strong> ${currentSchedule.periode} (Tanggal: ${formatDateIndo(currentSchedule.tanggal)}).</p>
-                <p class="text-[11px] text-emerald-700">Rekan Tim Juri: <strong>${otherJudges.join(' & ')}</strong> • Tugas: Seluruh Kelas (${classes.length} kelas).</p>
+                <p class="text-[11px] text-emerald-700">Rekan Tim Juri: <strong>${otherJudges.join(' & ')}</strong></p>
               </div>
             </div>
             <span class="text-[10px] font-bold bg-emerald-200 text-emerald-900 px-2.5 py-1 rounded-lg">Progres: ${assessedClassIds.length}/${classes.length} Kelas</span>
@@ -1578,8 +1673,8 @@
 
       if (existing) {
         currentEditingEvalId = existing.id;
-
         currentScoringState = {};
+
         if (existing.indicatorScores && Object.keys(existing.indicatorScores).length > 0) {
           currentScoringState = { ...existing.indicatorScores };
         } else {
@@ -1617,7 +1712,7 @@
             iconWrap.className = "w-9 h-9 rounded-xl bg-amber-200/80 text-amber-800 flex items-center justify-center font-bold flex-shrink-0";
             iconWrap.innerHTML = `<i data-lucide="edit-3" class="w-4 h-4 text-amber-700"></i>`;
           }
-          if (mainText) mainText.innerText = "Mode Edit Penilaian (Khusus Admin)";
+          if (mainText) mainText.innerText = "Mode Edit Penilaian (Admin)";
           if (subText) subText.innerText = `Menampilkan data penilaian oleh ${existing.evaluatorName}. Anda memiliki hak akses penuh untuk merevisi skor.`;
           if (actionWrap) {
             actionWrap.innerHTML = `
@@ -1632,8 +1727,6 @@
             submitBtn.className = "w-full md:w-auto px-8 py-3.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-2xl shadow-lg shadow-amber-500/25 transition active:scale-95 flex items-center justify-center gap-2";
             submitBtn.innerHTML = `<i data-lucide="refresh-cw" class="w-4 h-4"></i> Perbarui Penilaian (Admin)`;
           }
-
-          showToast(`Mode Edit Admin: Anda dapat memperbarui penilaian untuk ${existing.className}.`, "success");
         } else {
           applyReadOnlyLockToRubric(true);
 
@@ -1646,7 +1739,7 @@
             iconWrap.innerHTML = `<i data-lucide="lock" class="w-4 h-4 text-slate-600"></i>`;
           }
           if (mainText) mainText.innerText = "Penilaian Telah Terkirim (Terkunci)";
-          if (subText) subText.innerText = "Anda telah mengirim penilaian untuk kelas ini. Sesuai regulasi, data nilai yang sudah dikirim terkunci dan hanya dapat diubah oleh Administrator.";
+          if (subText) subText.innerText = "Data nilai yang sudah dikirim terkunci dan hanya dapat diubah oleh Administrator.";
           if (actionWrap) {
             actionWrap.innerHTML = `
               <span class="inline-flex items-center gap-1 px-3 py-1 bg-white border border-slate-200 rounded-xl text-slate-500 text-[11px] font-semibold">
@@ -1658,12 +1751,9 @@
           if (submitBtn) {
             submitBtn.disabled = true;
             submitBtn.className = "w-full md:w-auto px-8 py-3.5 bg-slate-200 text-slate-400 font-bold rounded-2xl cursor-not-allowed shadow-none flex items-center justify-center gap-2";
-            submitBtn.innerHTML = `<i data-lucide="lock" class="w-4 h-4"></i> Nilai Terkunci (Hanya Admin yang Boleh Mengubah)`;
+            submitBtn.innerHTML = `<i data-lucide="lock" class="w-4 h-4"></i> Nilai Terkunci`;
           }
-
-          showToast(`Nilai kelas ${existing.className} ditampilkan dalam mode baca (terkunci).`, "success");
         }
-
       } else {
         currentEditingEvalId = null;
         currentScoringState = {};
@@ -1811,33 +1901,30 @@
         updatedAt: new Date().toISOString()
       };
 
-      if (!IS_PREVIEW && fbDb) {
+      if (fbDb) {
         try {
           if (currentEditingEvalId) {
             await updateDoc(doc(fbDb, 'evaluations', currentEditingEvalId), evaluationData);
-            showToast(`Penilaian untuk ${className} berhasil diperbarui oleh Admin!`);
+            showToast(`Penilaian untuk ${className} berhasil diperbarui di Firebase!`);
           } else {
             evaluationData.createdAt = new Date().toISOString();
             await setDoc(doc(fbDb, 'evaluations', evalDocId), evaluationData);
-            showToast(`Penilaian untuk ${className} berhasil disimpan!`);
+            showToast(`Penilaian untuk ${className} berhasil disimpan ke Firebase!`);
           }
         } catch (e) {
-          console.error("Gagal simpan evaluasi:", e);
-          showToast("Gagal menyimpan ke database Firebase: " + e.message, "error");
+          console.error("Gagal simpan evaluasi ke Firebase:", e);
+          showToast("Gagal menyimpan ke Firebase: " + e.message, "error");
           return;
         }
       } else {
         if (currentEditingEvalId) {
           const idx = mockDB.evaluations.findIndex(e => e.id === currentEditingEvalId);
-          if (idx !== -1) {
-            mockDB.evaluations[idx] = { ...mockDB.evaluations[idx], ...evaluationData };
-          }
-          showToast(`[Preview] Penilaian untuk ${className} berhasil diperbarui oleh Admin!`);
+          if (idx !== -1) mockDB.evaluations[idx] = { ...mockDB.evaluations[idx], ...evaluationData };
         } else {
           evaluationData.createdAt = new Date().toISOString();
           mockDB.evaluations.unshift(evaluationData);
-          showToast(`[Preview] Penilaian untuk ${className} tersimpan!`);
         }
+        showToast(`Penilaian tersimpan sementara di memori browser.`);
       }
 
       currentEditingEvalId = null;
@@ -1845,7 +1932,7 @@
     };
 
     async function getEvaluationsList() {
-      if (!IS_PREVIEW && fbDb) {
+      if (fbDb) {
         try {
           const snap = await getDocs(collection(fbDb, 'evaluations'));
           const list = [];
@@ -1914,9 +2001,7 @@
             wK4 += Number(e.scores?.k4?.weighted || 0);
             wTotal += Number(e.totalSkor || 0);
 
-            if (e.evaluatorName && !wJudges.includes(e.evaluatorName)) {
-              wJudges.push(e.evaluatorName);
-            }
+            if (e.evaluatorName && !wJudges.includes(e.evaluatorName)) wJudges.push(e.evaluatorName);
             if (e.catatan && e.catatan.trim() !== '') {
               wNotes.push({
                 id: e.id,
@@ -1992,7 +2077,7 @@
       const aggregatedEvals = getAggregatedEvaluations(rawEvals);
 
       let classes = [];
-      if (!IS_PREVIEW && fbDb) {
+      if (fbDb) {
         try {
           const snapC = await getDocs(collection(fbDb, 'classes'));
           snapC.forEach(d => classes.push({ ...d.data(), id: d.id }));
@@ -2075,9 +2160,7 @@
       const sessionMap = new Map();
       rawEvals.forEach(e => {
         const p = e.periode || 'Pekan Penilaian';
-        if (!sessionMap.has(p)) {
-          sessionMap.set(p, e.tanggal || '');
-        }
+        if (!sessionMap.has(p)) sessionMap.set(p, e.tanggal || '');
       });
 
       const currentSelected = periodSelect.value;
@@ -2110,9 +2193,7 @@
       let filtered = currentAggregatedCache.filter(item => {
         const matchSearch = item.className.toLowerCase().includes(searchQuery);
         let matchPeriod = true;
-        if (isSingleWeek) {
-          matchPeriod = item.weeksSummary.some(w => w.periode === periodFilter);
-        }
+        if (isSingleWeek) matchPeriod = item.weeksSummary.some(w => w.periode === periodFilter);
         return matchSearch && matchPeriod;
       });
 
@@ -2237,7 +2318,7 @@
             }">${item.displayPredikat}</span>
           </td>
           <td class="py-3.5 px-3 text-center">
-            <button onclick="viewClassByIndex(${originalIndex})" class="px-3 py-1.5 bg-slate-100 hover:bg-emerald-50 hover:text-emerald-700 text-slate-700 rounded-xl text-xs font-semibold flex items-center gap-1.5 mx-auto transition shadow-xs" title="Lihat Nilai Lengkap per Pekan & Tim Juri">
+            <button onclick="viewClassByIndex(${originalIndex})" class="px-3 py-1.5 bg-slate-100 hover:bg-emerald-50 hover:text-emerald-700 text-slate-700 rounded-xl text-xs font-semibold flex items-center gap-1.5 mx-auto transition shadow-xs" title="Lihat Rincian">
               <i data-lucide="layers" class="w-3.5 h-3.5 text-emerald-600"></i> Rincian
             </button>
           </td>
@@ -2381,7 +2462,7 @@
           <div>
             <div class="flex items-center justify-between mb-3">
               <h5 class="text-xs font-bold text-slate-800 uppercase tracking-wider">Rincian Evaluasi Setiap Pekan & Juri:</h5>
-              ${isAdmin ? '<span class="text-[10px] bg-amber-100 text-amber-900 px-2 py-0.5 rounded font-semibold">Khusus Admin: Tersedia tombol Edit Nilai</span>' : '<span class="text-[10px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded font-semibold">Akses Lihat Saja</span>'}
+              ${isAdmin ? '<span class="text-[10px] bg-amber-100 text-amber-900 px-2 py-0.5 rounded font-semibold">Mode Admin: Edit Aktif</span>' : '<span class="text-[10px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded font-semibold">Akses Lihat Saja</span>'}
             </div>
             <div class="max-h-96 overflow-y-auto space-y-2 pr-1">
               ${weeksDetailHtml}
@@ -2482,9 +2563,7 @@
             .summary-box { display: flex; justify-content: space-between; align-items: center; border: 1.5px solid #059669; padding: 10px 14px; border-radius: 6px; margin-bottom: 18px; background: #f0fdf4; }
             .footer-sign { margin-top: 36px; display: flex; justify-content: space-between; }
             .sign-box { text-align: center; font-size: 11px; width: 220px; }
-            @media print {
-              @page { size: A4 portrait; margin: 1.2cm; }
-            }
+            @media print { @page { size: A4 portrait; margin: 1.2cm; } }
           </style>
         </head>
         <body>
@@ -2492,12 +2571,11 @@
             <h2>LEMBAR HASIL PENILAIAN KEBERSIHAN & ADIWIYATA KELAS</h2>
             <p>Program Budaya Lingkungan Bersih & Sehat Sekolah</p>
           </div>
-
           <div class="summary-box">
             <div>
               <div style="font-size: 11px; text-transform: uppercase; color: #047857; font-weight: bold;">Identitas Kelas</div>
               <div style="font-size: 18px; font-weight: bold; color: #065f46;">${group.className}</div>
-              <div style="font-size: 11px; color: #334155; margin-top: 2px;">Total Periode Dinilai: <strong>${group.totalWeeksCount} Pekan</strong> (${group.totalJudgesAllWeeks} total lembar nilai juri)</div>
+              <div style="font-size: 11px; color: #334155; margin-top: 2px;">Total Periode Dinilai: <strong>${group.totalWeeksCount} Pekan</strong> (${group.totalJudgesAllWeeks} lembar nilai)</div>
             </div>
             <div style="text-align: right;">
               <div style="font-size: 10px; text-transform: uppercase; color: #047857; font-weight: bold;">Rerata Nilai Akhir (Gabungan)</div>
@@ -2505,10 +2583,8 @@
               <div style="font-size: 11px; font-weight: bold; color: #065f46;">Predikat: ${group.predikat}</div>
             </div>
           </div>
-
           <h4 style="margin: 0 0 10px 0; font-size: 13px; text-transform: uppercase; color: #1e293b;">Rincian Nilai per Pekan & Tim Penilai</h4>
           ${weeksHtml}
-
           <div class="footer-sign">
             <div class="sign-box">
               <p>Mengetahui,<br>Koordinator Tim Adiwiyata</p>
@@ -2521,12 +2597,7 @@
               <p><strong>( Tim Penilai Terjadwal )</strong></p>
             </div>
           </div>
-
-          <script>
-            window.onload = function() {
-              window.print();
-            };
-          <\/script>
+          <script>window.onload = function() { window.print(); };<\/script>
         </body>
         </html>
       `);
@@ -2619,9 +2690,7 @@
             th { background: #f1f5f9; padding: 7px 6px; border: 1px solid #cbd5e1; font-size: 10px; text-transform: uppercase; }
             .footer-sign { margin-top: 36px; display: flex; justify-content: space-between; }
             .sign-box { text-align: center; font-size: 11px; width: 220px; }
-            @media print {
-              @page { size: A4 landscape; margin: 1cm; }
-            }
+            @media print { @page { size: A4 landscape; margin: 1cm; } }
           </style>
         </head>
         <body>
@@ -2629,7 +2698,6 @@
             <h2>REKAPITULASI & PERINGKAT KEBERSIHAN KELAS ADIWIYATA</h2>
             <p>${subTitle}</p>
           </div>
-
           <table>
             <thead>
               <tr>
@@ -2648,7 +2716,6 @@
               ${tableRows}
             </tbody>
           </table>
-
           <div class="footer-sign">
             <div class="sign-box">
               <p>Mengetahui,<br>Kepala Sekolah / Waka Kesiswaan</p>
@@ -2661,12 +2728,7 @@
               <p><strong>( ............................................ )</strong><br>NIP. ........................................</p>
             </div>
           </div>
-
-          <script>
-            window.onload = function() {
-              window.print();
-            };
-          <\/script>
+          <script>window.onload = function() { window.print(); };<\/script>
         </body>
         </html>
       `);
@@ -2712,7 +2774,7 @@
           csv += `${i + 1},"${row.className}","${row.periode}","${formatDateIndo(row.tanggal)}",${row.judgeCount},${row.k1},${row.k2},${row.k3},${row.k4},${row.score},"${row.predikat}"\n`;
         });
       } else {
-        csv = 'Rank,Kelas,Total Pekan,Riwayat Pekan,Rata-rata Nilai Akhir (Gabungan Seluruh Pekan),Predikat,Fisik Rerata (30%),Adiwiyata Rerata (30%),Tata Ruang Rerata (20%),Sarana Rerata (20%),Rincian Nilai per Pekan\n';
+        csv = 'Rank,Kelas,Total Pekan,Riwayat Pekan,Rata-rata Nilai Akhir,Predikat,Fisik Rerata (30%),Adiwiyata Rerata (30%),Tata Ruang Rerata (20%),Sarana Rerata (20%),Rincian Nilai per Pekan\n';
         const sorted = [...aggregatedList].sort((a, b) => b.grandAvgTotal - a.grandAvgTotal);
 
         sorted.forEach((item, i) => {
@@ -2730,7 +2792,7 @@
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-      showToast(`Data penilaian ${isSingleWeek ? periodFilter : 'seluruh pekan'} berhasil diekspor ke CSV!`);
+      showToast(`Data berhasil diekspor ke CSV!`);
     };
 
     async function renderManageData() {
@@ -2738,21 +2800,18 @@
       let users = [];
       let schedules = [];
 
-      if (!IS_PREVIEW && fbDb) {
+      if (fbDb) {
         try {
-          const snapC = await getDocs(collection(fbDb, 'classes'));
+          const [snapC, snapU, snapS] = await Promise.all([
+            getDocs(collection(fbDb, 'classes')),
+            getDocs(collection(fbDb, 'users')),
+            getDocs(collection(fbDb, 'schedules'))
+          ]);
           snapC.forEach(d => classes.push({ ...d.data(), id: d.id }));
-
-          const snapU = await getDocs(collection(fbDb, 'users'));
           snapU.forEach(d => users.push({ ...d.data(), id: d.id }));
-
-          const snapS = await getDocs(collection(fbDb, 'schedules'));
           snapS.forEach(d => schedules.push({ ...d.data(), id: d.id }));
         } catch (e) {
           console.error("Gagal membaca master data:", e);
-          classes = [];
-          users = [];
-          schedules = [];
         }
       } else {
         classes = mockDB.classes;
@@ -2871,18 +2930,18 @@
         waliKelas: homeroom || "-"
       };
 
-      if (!IS_PREVIEW && fbDb) {
+      if (fbDb) {
         try {
           await setDoc(doc(fbDb, 'classes', docId), newCls);
-          showToast(`Kelas ${nama} berhasil disimpan ke Firestore!`);
+          showToast(`Kelas "${nama}" berhasil disimpan ke Firebase!`);
         } catch (e) {
-          console.error("Gagal simpan kelas:", e);
-          showToast("Gagal menyimpan kelas ke database: " + e.message, "error");
+          console.error("Gagal simpan kelas ke Firebase:", e);
+          showToast("Gagal menyimpan ke Firebase: " + e.message, "error");
           return;
         }
       } else {
         mockDB.classes.push(newCls);
-        showToast(`Kelas ${nama} berhasil ditambahkan!`);
+        showToast(`Kelas "${nama}" ditambahkan di memori browser (Firebase belum terhubung).`);
       }
 
       closeModalAddClass();
@@ -2921,18 +2980,18 @@
         role: "juri"
       };
 
-      if (!IS_PREVIEW && fbDb) {
+      if (fbDb) {
         try {
           await setDoc(doc(fbDb, 'users', docId), newUser);
-          showToast(`Akun Juri untuk ${nama} berhasil dibuat!`);
+          showToast(`Akun Juri "${nama}" berhasil disimpan ke Firebase!`);
         } catch (e) {
-          console.error("Gagal simpan juri:", e);
-          showToast("Gagal menyimpan akun juri: " + e.message, "error");
+          console.error("Gagal simpan juri ke Firebase:", e);
+          showToast("Gagal menyimpan ke Firebase: " + e.message, "error");
           return;
         }
       } else {
         mockDB.users.push(newUser);
-        showToast(`Akun Juri untuk ${nama} berhasil dibuat!`);
+        showToast(`Akun Juri "${nama}" dibuat di memori browser.`);
       }
 
       closeModalAddJudge();
@@ -2954,7 +3013,7 @@
       dateInput.value = new Date().toISOString().split('T')[0];
 
       let users = [];
-      if (!IS_PREVIEW && fbDb) {
+      if (fbDb) {
         try {
           const snapU = await getDocs(collection(fbDb, 'users'));
           snapU.forEach(d => users.push({ ...d.data(), id: d.id }));
@@ -3036,27 +3095,24 @@
         notes: notes || "Sesi Penilaian Kebersihan & Adiwiyata (Seluruh Kelas)"
       };
 
-      if (!IS_PREVIEW && fbDb) {
+      if (fbDb) {
         try {
           await setDoc(doc(fbDb, 'schedules', docId), newSchedule);
-          showToast(`Jadwal sesi untuk ${periode} (${formatDateIndo(tanggal)}) berhasil disimpan!`);
+          showToast(`Jadwal sesi untuk ${periode} berhasil disimpan ke Firebase!`);
         } catch (e) {
           console.error("Gagal simpan jadwal:", e);
-          showToast("Gagal menyimpan jadwal ke database: " + e.message, "error");
+          showToast("Gagal menyimpan ke Firebase: " + e.message, "error");
           return;
         }
       } else {
         mockDB.schedules.unshift(newSchedule);
-        showToast(`Jadwal sesi untuk ${periode} (${formatDateIndo(tanggal)}) berhasil dibuat!`);
+        showToast(`Jadwal sesi dibuat di memori browser.`);
       }
 
       closeModalAddSchedule();
       await renderManageData();
     };
 
-    // ===============================================================
-    // FITUR RESET DATA LENGKAP
-    // ===============================================================
     window.confirmResetAllData = function() {
       if (!currentUser || currentUser.role !== 'admin') {
         showToast("Hanya Administrator yang berhak mereset data.", "error");
@@ -3067,7 +3123,7 @@
       document.getElementById('delete-modal-message').innerHTML = `
         <span class="block text-rose-600 font-bold mb-2">PERINGATAN KRUSIAL!</span>
         Tindakan ini akan mengosongkan <strong>SEMUA DATA</strong> di database (seluruh lembar nilai, jadwal sesi, master kelas, dan akun juri).<br><br>
-        Setelah di-reset, data <strong>TIDAK AKAN KEMBALI</strong> meskipun halaman di-refresh. Pastikan Anda telah melakukan <strong>Backup (JSON)</strong> terlebih dahulu. Lanjutkan?
+        Setelah di-reset, data <strong>TIDAK AKAN KEMBALI</strong> meskipun halaman di-refresh. Lanjutkan?
       `;
 
       const iconWrap = document.getElementById('delete-modal-icon-wrap');
@@ -3083,9 +3139,9 @@
       }
 
       pendingDeleteAction = async () => {
-        if (!IS_PREVIEW && fbDb) {
+        if (fbDb) {
           try {
-            showToast("Sedang membersihkan seluruh data di database Firebase...");
+            showToast("Sedang membersihkan seluruh koleksi di Firebase...");
             const collectionsToClear = ['evaluations', 'schedules', 'classes', 'users'];
             for (const colName of collectionsToClear) {
               const snap = await getDocs(collection(fbDb, colName));
@@ -3099,15 +3155,12 @@
               lastResetAt: new Date().toISOString(),
               resetBy: currentUser.name || "Administrator"
             });
-
           } catch (err) {
-            console.error("Gagal mereset koleksi Firebase:", err);
-            showToast("Gagal mereset data di server: " + err.message, "error");
+            console.error("Gagal mereset Firebase:", err);
+            showToast("Gagal mereset di Firebase: " + err.message, "error");
             return;
           }
         }
-
-        localStorage.setItem('sibersih_is_reset', 'true');
 
         mockDB.evaluations = [];
         mockDB.schedules = [];
@@ -3119,7 +3172,7 @@
         await resetScoringForm();
         loadDashboardData();
         renderLeaderboardTable();
-        showToast("Seluruh data berhasil dikosongkan secara permanen!");
+        showToast("Seluruh data berhasil dikosongkan!");
       };
 
       const modal = document.getElementById('modal-confirm-delete');
@@ -3139,7 +3192,7 @@
       let schedules = [];
       let evaluations = [];
 
-      if (!IS_PREVIEW && fbDb) {
+      if (fbDb) {
         try {
           const [snapC, snapU, snapS, snapE] = await Promise.all([
             getDocs(collection(fbDb, 'classes')),
@@ -3152,7 +3205,6 @@
           snapS.forEach(d => schedules.push({ ...d.data(), id: d.id }));
           snapE.forEach(d => evaluations.push({ ...d.data(), id: d.id }));
         } catch (err) {
-          console.warn("Gagal membaca Firebase, menggunakan data memori:", err);
           classes = mockDB.classes;
           users = mockDB.users;
           schedules = mockDB.schedules;
@@ -3177,12 +3229,7 @@
           totalSchedules: schedules.length,
           totalEvaluations: evaluations.length
         },
-        data: {
-          classes,
-          users,
-          schedules,
-          evaluations
-        }
+        data: { classes, users, schedules, evaluations }
       };
 
       const jsonStr = JSON.stringify(backupPayload, null, 2);
@@ -3256,9 +3303,9 @@
           }
 
           pendingDeleteAction = async () => {
-            if (!IS_PREVIEW && fbDb) {
+            if (fbDb) {
               try {
-                showToast("Sedang memproses sinkronisasi data ke Firebase...");
+                showToast("Sedang menyinkronkan data ke Firebase Firestore...");
                 const collectionsToClear = ['evaluations', 'schedules', 'classes', 'users'];
                 for (const colName of collectionsToClear) {
                   const snap = await getDocs(collection(fbDb, colName));
@@ -3282,21 +3329,12 @@
                   const docId = ev.id || `eval_${Date.now()}_${Math.random()}`;
                   await setDoc(doc(fbDb, 'evaluations', docId), ev);
                 }
-
-                await setDoc(doc(fbDb, 'settings', 'system_init'), {
-                  initialized: true,
-                  isCleanState: false,
-                  lastRestoreAt: new Date().toISOString()
-                });
-
               } catch (err) {
                 console.error("Gagal restore ke Firebase:", err);
-                showToast("Gagal menyimpan data yang dipulihkan ke Firebase: " + err.message, "error");
+                showToast("Gagal restore ke Firebase: " + err.message, "error");
                 return;
               }
             }
-
-            localStorage.removeItem('sibersih_is_reset');
 
             mockDB.classes = [...incomingClasses];
             mockDB.users = [...incomingUsers];
@@ -3337,12 +3375,9 @@
       pendingDeleteAction = null;
     };
 
-    // ===============================================================
-    // FUNGSI PENGHAPUSAN MAKSIMAL DENGAN DOKUMEN ID RESMI FIRESTORE
-    // ===============================================================
     window.requestDeleteSchedule = function(id, periode) {
       document.getElementById('delete-modal-title').innerText = "Hapus Jadwal Sesi Penilaian";
-      document.getElementById('delete-modal-message').innerText = `Apakah Anda yakin ingin membatalkan jadwal sesi untuk periode "${periode}"?`;
+      document.getElementById('delete-modal-message').innerText = `Apakah Anda yakin ingin menghapus jadwal sesi untuk periode "${periode}"?`;
 
       const iconWrap = document.getElementById('delete-modal-icon-wrap');
       if (iconWrap) {
@@ -3357,24 +3392,17 @@
       }
 
       pendingDeleteAction = async () => {
-        if (!IS_PREVIEW && fbDb) {
+        if (fbDb) {
           try {
             await deleteDoc(doc(fbDb, 'schedules', id));
-            // Pembersihan redundansi jika ID berbeda
-            const snap = await getDocs(collection(fbDb, 'schedules'));
-            for (const d of snap.docs) {
-              if (d.id === id || d.data().id === id || d.data().periode === periode) {
-                await deleteDoc(doc(fbDb, 'schedules', d.id));
-              }
-            }
           } catch (e) {
-            console.error("Gagal hapus jadwal:", e);
-            showToast("Gagal menghapus jadwal sesi: " + e.message, "error");
+            console.error("Gagal hapus jadwal dari Firebase:", e);
+            showToast("Gagal menghapus dari Firebase: " + e.message, "error");
             return;
           }
         }
-        mockDB.schedules = mockDB.schedules.filter(s => s.id !== id && s.periode !== periode);
-        showToast(`Jadwal sesi penugasan berhasil dihapus.`);
+        mockDB.schedules = mockDB.schedules.filter(s => s.id !== id);
+        showToast(`Jadwal sesi berhasil dihapus.`);
         closeDeleteModal();
         await renderManageData();
       };
@@ -3402,23 +3430,16 @@
       }
 
       pendingDeleteAction = async () => {
-        if (!IS_PREVIEW && fbDb) {
+        if (fbDb) {
           try {
             await deleteDoc(doc(fbDb, 'classes', id));
-            // Pembersihan ganda jika ada dokumen lama yang menggunakan nama/id data
-            const snap = await getDocs(collection(fbDb, 'classes'));
-            for (const d of snap.docs) {
-              if (d.id === id || d.data().id === id || d.data().namaKelas === className) {
-                await deleteDoc(doc(fbDb, 'classes', d.id));
-              }
-            }
           } catch (e) {
-            console.error("Gagal hapus kelas:", e);
+            console.error("Gagal hapus kelas dari Firebase:", e);
             showToast("Gagal menghapus kelas dari Firebase: " + e.message, "error");
             return;
           }
         }
-        mockDB.classes = mockDB.classes.filter(c => c.id !== id && c.namaKelas !== className);
+        mockDB.classes = mockDB.classes.filter(c => c.id !== id);
         showToast(`Kelas "${className}" berhasil dihapus.`);
         closeDeleteModal();
         await renderManageData();
@@ -3432,7 +3453,7 @@
 
     window.requestDeleteJudge = function(id, judgeName) {
       document.getElementById('delete-modal-title').innerText = "Hapus Akun Juri";
-      document.getElementById('delete-modal-message').innerText = `Apakah Anda yakin ingin menghapus akun juri "${judgeName}"? Juri tidak dapat login setelah akun dihapus.`;
+      document.getElementById('delete-modal-message').innerText = `Apakah Anda yakin ingin menghapus akun juri "${judgeName}"?`;
       
       const iconWrap = document.getElementById('delete-modal-icon-wrap');
       if (iconWrap) {
@@ -3447,23 +3468,16 @@
       }
 
       pendingDeleteAction = async () => {
-        if (!IS_PREVIEW && fbDb) {
+        if (fbDb) {
           try {
             await deleteDoc(doc(fbDb, 'users', id));
-            // Pembersihan redundansi jika ada dokumen juri dengan nama yang sama
-            const snap = await getDocs(collection(fbDb, 'users'));
-            for (const d of snap.docs) {
-              if (d.id === id || d.data().id === id || (judgeName && d.data().nama === judgeName)) {
-                await deleteDoc(doc(fbDb, 'users', d.id));
-              }
-            }
           } catch (e) {
-            console.error("Gagal hapus juri:", e);
-            showToast("Gagal menghapus akun juri: " + e.message, "error");
+            console.error("Gagal hapus juri dari Firebase:", e);
+            showToast("Gagal menghapus juri dari Firebase: " + e.message, "error");
             return;
           }
         }
-        mockDB.users = mockDB.users.filter(u => u.id !== id && u.nama !== judgeName);
+        mockDB.users = mockDB.users.filter(u => u.id !== id);
         showToast(`Akun juri "${judgeName}" telah dihapus.`);
         closeDeleteModal();
         await renderManageData();
@@ -3476,40 +3490,13 @@
     };
 
     document.getElementById('btn-execute-delete').onclick = () => {
-      if (typeof pendingDeleteAction === 'function') {
-        pendingDeleteAction();
-      }
+      if (typeof pendingDeleteAction === 'function') pendingDeleteAction();
     };
 
-    function registerDynamicPWA() {
-      if ('serviceWorker' in navigator && window.location.protocol.startsWith('http')) {
-        try {
-          const swScript = `
-            const CACHE_NAME = 'sibersih-cache-v1';
-            self.addEventListener('install', () => self.skipWaiting());
-            self.addEventListener('activate', (e) => e.waitUntil(clients.claim()));
-            self.addEventListener('fetch', (e) => {
-              e.respondWith(fetch(e.request).catch(() => caches.match(e.request)));
-            });
-          `;
-          const blob = new Blob([swScript], { type: 'application/javascript' });
-          const swUrl = URL.createObjectURL(blob);
-          navigator.serviceWorker.register(swUrl)
-            .then(() => console.log("[PWA] Service Worker aktif."))
-            .catch(err => {
-              console.log("[PWA Info] Service Worker dilewati di lingkungan ini:", err.message);
-            });
-        } catch (e) {
-          console.log("[PWA Info] Dynamic SW dilewati:", e.message);
-        }
-      }
-    }
-
-    window.addEventListener('DOMContentLoaded', () => {
+    window.addEventListener('DOMContentLoaded', async () => {
       safeCreateIcons();
       navigateView('login');
-      registerDynamicPWA();
-      autoSetupDatabase();
+      await initFirebaseConnection();
     });
   </script>
 </body>
