@@ -1757,11 +1757,11 @@
             iconWrap.innerHTML = `<i data-lucide="edit-3" class="w-4 h-4 text-amber-700"></i>`;
           }
           if (mainText) mainText.innerText = "Mode Edit Penilaian (Admin)";
-          if (subText) subText.innerText = `Menampilkan data penilaian oleh ${existing.evaluatorName}. Anda memiliki hak akses penuh untuk merevisi skor di Firestore.`;
+          if (subText) subText.innerText = `Menampilkan data penilaian oleh ${existing.evaluatorName}. Anda memiliki hak akses penuh untuk merevisi skor atau mereset form menjadi 0.`;
           if (actionWrap) {
             actionWrap.innerHTML = `
-              <button type="button" onclick="cancelEditMode()" class="px-3 py-1.5 bg-white border border-amber-300 hover:bg-amber-100 text-amber-900 rounded-xl text-xs font-semibold flex items-center gap-1 transition shadow-xs">
-                <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> Reset Form
+              <button type="button" onclick="cancelEditMode()" class="px-3.5 py-1.5 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 transition shadow-sm">
+                <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> Reset Form (Kembalikan ke 0)
               </button>
             `;
           }
@@ -1818,25 +1818,75 @@
     };
 
     window.cancelEditMode = function() {
-      currentEditingEvalId = null;
-      currentScoringState = {};
-      clearScoringButtonHighlights();
-      applyReadOnlyLockToRubric(false);
-      const notesEl = document.getElementById('score-notes');
-      if (notesEl) notesEl.value = '';
-      calculateLiveScores();
+      const classSelect = document.getElementById('score-class-select');
+      const selectedOption = classSelect?.options[classSelect.selectedIndex];
+      const className = selectedOption ? selectedOption.text.split(' (')[0] : 'kelas ini';
 
-      const editBanner = document.getElementById('edit-mode-indicator');
-      if (editBanner) editBanner.classList.add('hidden');
+      if (!currentEditingEvalId) {
+        // Jika belum ada dokumen yang sedang diedit, cukup kosongkan form
+        currentScoringState = {};
+        clearScoringButtonHighlights();
+        applyReadOnlyLockToRubric(false);
+        const notesEl = document.getElementById('score-notes');
+        if (notesEl) notesEl.value = '';
+        calculateLiveScores();
 
-      const submitBtn = document.getElementById('btn-submit-score');
-      if (submitBtn) {
-        submitBtn.disabled = false;
-        submitBtn.className = "w-full md:w-auto px-8 py-3.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold rounded-2xl shadow-lg shadow-emerald-500/25 transition active:scale-95";
-        submitBtn.innerHTML = "Simpan Penilaian";
+        const editBanner = document.getElementById('edit-mode-indicator');
+        if (editBanner) editBanner.classList.add('hidden');
+        showToast("Form penilaian dikosongkan.");
+        safeCreateIcons();
+        return;
       }
-      showToast("Form penilaian dikosongkan.");
-      safeCreateIcons();
+
+      // Dialog konfirmasi penghapusan/reset penilaian oleh Admin
+      showCustomModal({
+        title: "Reset Penilaian ke 0 & Batalkan Penilaian",
+        desc: `Apakah Anda ingin mereset seluruh nilai <strong>${className}</strong> kembali ke 0?<br><br>
+               Tindakan ini akan <strong>menghapus penilaian kelas ini dari daftar rekapitulasi</strong> sehingga juri yang bertugas dapat menilai kembali kelas tersebut dari awal.`,
+        icon: "alert-triangle",
+        confirmText: "Ya, Reset & Hapus dari Rekap",
+        onConfirm: async () => {
+          const evalIdToDelete = currentEditingEvalId;
+
+          if (fbDb) {
+            try {
+              await deleteDoc(doc(fbDb, 'evaluations', evalIdToDelete));
+              showToast(`Penilaian untuk ${className} telah direset ke 0 dan dihapus dari rekap.`);
+            } catch (err) {
+              console.error("Gagal menghapus penilaian dari Firestore:", err);
+              showToast("Gagal mereset di Firebase: " + err.message, "error");
+              return;
+            }
+          } else {
+            mockDB.evaluations = mockDB.evaluations.filter(e => e.id !== evalIdToDelete);
+            showToast(`Penilaian untuk ${className} telah direset ke 0.`);
+          }
+
+          // Kosongkan form dan reset skor tampilan ke 0
+          currentEditingEvalId = null;
+          currentScoringState = {};
+          clearScoringButtonHighlights();
+          applyReadOnlyLockToRubric(false);
+          
+          const notesEl = document.getElementById('score-notes');
+          if (notesEl) notesEl.value = '';
+          calculateLiveScores();
+
+          const editBanner = document.getElementById('edit-mode-indicator');
+          if (editBanner) editBanner.classList.add('hidden');
+
+          const submitBtn = document.getElementById('btn-submit-score');
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.className = "w-full md:w-auto px-8 py-3.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold rounded-2xl shadow-lg shadow-emerald-500/25 transition active:scale-95";
+            submitBtn.innerHTML = "Simpan Penilaian";
+          }
+
+          // Perbarui dropdown kelas agar tanda (✓ Sudah Dinilai) hilang
+          await handleScheduleChange();
+          safeCreateIcons();
+        }
+      });
     };
 
     window.resetScoringForm = async function() {
