@@ -762,131 +762,32 @@
 
     // PASTE FIREBASE CONFIG ANDA DI SINI
     const firebaseConfig = {
-  apiKey: "AIzaSyAamuE83Ae136RCH5OrHnjZ2e4Lxs0jJks",
-  authDomain: "sibersih-6f323.firebaseapp.com",
-  projectId: "sibersih-6f323",
-  storageBucket: "sibersih-6f323.firebasestorage.app",
-  messagingSenderId: "153733624871",
-  appId: "1:153733624871:web:25cfa2ec21ff679f5a8a02"
+      apiKey: "",
+      authDomain: "kebersihan-kelas-adiwiyata.firebaseapp.com",
+      projectId: "kebersihan-kelas-adiwiyata",
+      storageBucket: "kebersihan-kelas-adiwiyata.appspot.com",
+      messagingSenderId: "123456789",
+      appId: "1:123456789:web:abcdef123456"
     };
-
-    // Helper Generator Penilaian Dummy (Hanya dipakai saat IS_PREVIEW == true)
-    function createDummyEval(id, schedId, period, date, classId, className, judgeId, judgeName, scoresK, note) {
-      const { c1, c2, c3, c4 } = scoresK;
-      const raw1 = c1.reduce((a, b) => a + b, 0);
-      const raw2 = c2.reduce((a, b) => a + b, 0);
-      const raw3 = c3.reduce((a, b) => a + b, 0);
-      const raw4 = c4.reduce((a, b) => a + b, 0);
-
-      const w1 = Number(((raw1 / 20) * 30).toFixed(2));
-      const w2 = Number(((raw2 / 25) * 30).toFixed(2));
-      const w3 = Number(((raw3 / 15) * 20).toFixed(2));
-      const w4 = Number(((raw4 / 25) * 20).toFixed(2));
-
-      const total = Number((w1 + w2 + w3 + w4).toFixed(2));
-
-      let predikat = "Cukup Bersih (C)";
-      if (total >= 90) predikat = "Sangat Bersih (A)";
-      else if (total >= 80) predikat = "Bersih (B)";
-      else if (total < 70) predikat = "Kurang Bersih (D)";
-
-      const indicatorScores = {};
-      c1.forEach((v, i) => indicatorScores[`c1_i${i}`] = v);
-      c2.forEach((v, i) => indicatorScores[`c2_i${i}`] = v);
-      c3.forEach((v, i) => indicatorScores[`c3_i${i}`] = v);
-      c4.forEach((v, i) => indicatorScores[`c4_i${i}`] = v);
-
-      return {
-        id,
-        scheduleId: schedId,
-        periode: period,
-        tanggal: date,
-        classId,
-        className,
-        evaluatorId: judgeId,
-        evaluatorName: judgeName,
-        indicatorScores,
-        scores: {
-          k1: { nama: "Kebersihan Fisik", raw: raw1, maxRaw: 20, weighted: w1 },
-          k2: { nama: "Aspek Adiwiyata", raw: raw2, maxRaw: 25, weighted: w2 },
-          k3: { nama: "Tata Ruang & Administrasi", raw: raw3, maxRaw: 15, weighted: w3 },
-          k4: { nama: "Sarana & Inovasi", raw: raw4, maxRaw: 25, weighted: w4 }
-        },
-        totalSkor: total,
-        predikat,
-        catatan: note,
-        createdAt: `${date}T08:30:00.000Z`
-      };
-    }
 
     // In-memory Database: Hanya terisi dummy jika IS_PREVIEW = true DAN belum pernah di-reset
     const isLocalReset = localStorage.getItem('sibersih_is_reset') === 'true';
 
     let mockDB = {
       settings: {
-        activePeriod: "Pekan 3 Oktober 2026"
+        activePeriod: "Pekan 1 Oktober 2026"
       },
-      classes: (!IS_PREVIEW || isLocalReset) ? [] : [
-        { id: "cls_1", namaKelas: "X MIPA 1", waliKelas: "Drs. Ahmad Fauzi" },
-        { id: "cls_2", namaKelas: "X MIPA 2", waliKelas: "Siti Rahmawati, S.Pd" },
-        { id: "cls_3", namaKelas: "XI IPS 1", waliKelas: "Budi Santoso, M.Pd" },
-        { id: "cls_4", namaKelas: "XII RPL 1", waliKelas: "Maya Indah, S.Kom" }
-      ],
-      users: (!IS_PREVIEW || isLocalReset) ? [] : [
-        { id: "usr_1", nama: "Ibu Nurul (Tim Adiwiyata)", username: "penilai_a", password: "password123", role: "juri" },
-        { id: "usr_2", nama: "Pak Hendra (Guru Piket)", username: "penilai_b", password: "password123", role: "juri" },
-        { id: "usr_3", nama: "Pak Suwarno (Guru BK)", username: "penilai_c", password: "password123", role: "juri" },
-        { id: "usr_4", nama: "Ibu Ratna (Guru Biologi)", username: "penilai_d", password: "password123", role: "juri" },
-        { id: "usr_5", nama: "Pak Bambang (Waka Kesiswaan)", username: "penilai_e", password: "password123", role: "juri" },
-        { id: "usr_6", nama: "Ibu Dewi (Guru Kimia)", username: "penilai_f", password: "password123", role: "juri" },
-        { id: "usr_7", nama: "Pak Joko (Guru PJOK)", username: "penilai_g", password: "password123", role: "juri" }
-      ],
-      schedules: (!IS_PREVIEW || isLocalReset) ? [] : [
-        {
-          id: "sch_1",
-          periode: "Pekan 1 Oktober 2026",
-          tanggal: "2026-10-02",
-          judgeIds: ["usr_1", "usr_2", "usr_3"],
-          judgeNames: ["Ibu Nurul (Tim Adiwiyata)", "Pak Hendra (Guru Piket)", "Pak Suwarno (Guru BK)"],
-          targetAllClasses: true,
-          notes: "Penilaian perdana kebersihan triwulan & kesiapan tempat sampah 3 pilah."
-        },
-        {
-          id: "sch_2",
-          periode: "Pekan 2 Oktober 2026",
-          tanggal: "2026-10-09",
-          judgeIds: ["usr_4", "usr_5", "usr_6"],
-          judgeNames: ["Ibu Ratna (Guru Biologi)", "Pak Bambang (Waka Kesiswaan)", "Ibu Dewi (Guru Kimia)"],
-          targetAllClasses: true,
-          notes: "Fokus audit tanaman Green Corner berlabel latin, drainase depan kelas, dan stiker hemat energi."
-        },
-        {
-          id: "sch_3",
-          periode: "Pekan 3 Oktober 2026",
-          tanggal: "2026-10-16",
-          judgeIds: ["usr_1", "usr_5", "usr_7"],
-          judgeNames: ["Ibu Nurul (Tim Adiwiyata)", "Pak Bambang (Waka Kesiswaan)", "Pak Joko (Guru PJOK)"],
-          targetAllClasses: true,
-          notes: "Evaluasi inovasi 3R limbah bekas, kerapian pojok baca, dan penyimpanan alat kebersihan."
-        }
-      ],
-      evaluations: (!IS_PREVIEW || isLocalReset) ? [] : [
-        createDummyEval("ev_p1_c1_j1", "sch_1", "Pekan 1 Oktober 2026", "2026-10-02", "cls_1", "X MIPA 1", "usr_1", "Ibu Nurul (Tim Adiwiyata)",
-          { c1: [5, 5, 5, 4], c2: [5, 5, 5, 5, 4], c3: [5, 5, 4], c4: [5, 5, 4, 5, 4] }, "Lantai sangat bersih, tempat pemilahan sampah 3 jenis tersedia lengkap."),
-        createDummyEval("ev_p1_c1_j2", "sch_1", "Pekan 1 Oktober 2026", "2026-10-02", "cls_1", "X MIPA 1", "usr_2", "Pak Hendra (Guru Piket)",
-          { c1: [5, 4, 5, 4], c2: [5, 4, 5, 5, 4], c3: [5, 5, 5], c4: [4, 5, 4, 5, 4] }, "Green corner asri, tanaman indoor sehat berlabel latin."),
-        createDummyEval("ev_p1_c1_j3", "sch_1", "Pekan 1 Oktober 2026", "2026-10-02", "cls_1", "X MIPA 1", "usr_3", "Pak Suwarno (Guru BK)",
-          { c1: [5, 5, 5, 4], c2: [5, 4, 4, 5, 4], c3: [5, 5, 4], c4: [5, 5, 4, 5, 4] }, "Pojok baca rapi dan buku ditata dengan baik."),
-        createDummyEval("ev_p1_c4_j1", "sch_1", "Pekan 1 Oktober 2026", "2026-10-02", "cls_4", "XII RPL 1", "usr_1", "Ibu Nurul (Tim Adiwiyata)",
-          { c1: [5, 5, 5, 5], c2: [5, 5, 5, 5, 5], c3: [5, 5, 5], c4: [5, 5, 5, 5, 5] }, "Luar biasa! Sangat bersih, bank sampah digital kelas berjalan aktif.")
-      ]
+      classes: [],
+      users: [],
+      schedules: [],
+      evaluations: []
     };
 
     // Firebase Module Imports
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
     import { getAuth, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
     import { 
-      getFirestore, collection, doc, getDoc, getDocs, setDoc, addDoc, updateDoc, deleteDoc 
+      getFirestore, collection, doc, getDoc, getDocs, setDoc, updateDoc, deleteDoc 
     } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
     let fbApp, fbAuth, fbDb;
@@ -1012,28 +913,19 @@
       if (evalNameInput) evalNameInput.value = user.name;
     }
 
-    // ===============================================================
-    // FUNGSI AUTO SETUP: DIPERBAIKI SECARA AMAN
-    // Tidak akan lagi meng-inject data dummy jika:
-    // 1. IS_PREVIEW == false (Mode Deploy Asli)
-    // 2. Sistem sudah pernah diinisialisasi / di-reset oleh Admin
-    // ===============================================================
     async function autoSetupDatabase() {
-      // Jika mode deploy produksi (Firebase Asli), JANGAN masukkan data dummy!
       if (!IS_PREVIEW && fbDb) {
         try {
-          // Cek dokumen penanda status sistem
           const initDocRef = doc(fbDb, 'settings', 'system_init');
           const initSnap = await getDoc(initDocRef);
 
           if (!initSnap.exists()) {
-            // Pertama kali database dibuat: cukup buat penanda sistem kosong
             await setDoc(initDocRef, {
               initialized: true,
               isCleanState: true,
               createdAt: new Date().toISOString()
             });
-            console.log("[SiBersih] Basis data produksi siap dalam kondisi BERSIH (tanpa data dummy).");
+            console.log("[SiBersih] Basis data produksi siap dalam kondisi BERSIH.");
           }
         } catch (err) {
           console.warn("[AutoSetup Info]:", err.message);
@@ -1201,7 +1093,7 @@
           snap.forEach(d => {
             const data = d.data();
             if (data.username === usernameInput && data.password === passwordInput) {
-              matchedUser = { id: d.id, ...data };
+              matchedUser = { ...data, id: d.id };
             }
           });
         } catch (err) {
@@ -1457,10 +1349,10 @@
         try {
           const snap = await getDocs(collection(fbDb, 'schedules'));
           const list = [];
-          snap.forEach(d => list.push({ id: d.id, ...d.data() }));
+          snap.forEach(d => list.push({ ...d.data(), id: d.id }));
           return list;
         } catch (err) {
-          console.error(err);
+          console.error("Gagal membaca schedules:", err);
           return [];
         }
       }
@@ -1566,11 +1458,12 @@
       if (!IS_PREVIEW && fbDb) {
         try {
           const snapC = await getDocs(collection(fbDb, 'classes'));
-          snapC.forEach(d => classes.push({ id: d.id, ...d.data() }));
+          snapC.forEach(d => classes.push({ ...d.data(), id: d.id }));
 
           const snapE = await getDocs(collection(fbDb, 'evaluations'));
-          snapE.forEach(d => existingEvals.push({ id: d.id, ...d.data() }));
+          snapE.forEach(d => existingEvals.push({ ...d.data(), id: d.id }));
         } catch (err) {
+          console.error("Gagal membaca kelas/evaluasi:", err);
           classes = [];
           existingEvals = [];
         }
@@ -1900,7 +1793,9 @@
       else if (totalSkor >= 70) predikat = "Cukup Bersih (C)";
       else predikat = "Kurang Bersih (D)";
 
+      const evalDocId = currentEditingEvalId || `eval_${Date.now()}`;
       const evaluationData = {
+        id: evalDocId,
         scheduleId: selectedScheduleId,
         classId: classId,
         className: className,
@@ -1923,12 +1818,12 @@
             showToast(`Penilaian untuk ${className} berhasil diperbarui oleh Admin!`);
           } else {
             evaluationData.createdAt = new Date().toISOString();
-            await addDoc(collection(fbDb, 'evaluations'), evaluationData);
+            await setDoc(doc(fbDb, 'evaluations', evalDocId), evaluationData);
             showToast(`Penilaian untuk ${className} berhasil disimpan!`);
           }
         } catch (e) {
-          console.error(e);
-          showToast("Gagal menyimpan ke database Firebase.", "error");
+          console.error("Gagal simpan evaluasi:", e);
+          showToast("Gagal menyimpan ke database Firebase: " + e.message, "error");
           return;
         }
       } else {
@@ -1939,7 +1834,6 @@
           }
           showToast(`[Preview] Penilaian untuk ${className} berhasil diperbarui oleh Admin!`);
         } else {
-          evaluationData.id = `eval_${Date.now()}`;
           evaluationData.createdAt = new Date().toISOString();
           mockDB.evaluations.unshift(evaluationData);
           showToast(`[Preview] Penilaian untuk ${className} tersimpan!`);
@@ -1955,10 +1849,10 @@
         try {
           const snap = await getDocs(collection(fbDb, 'evaluations'));
           const list = [];
-          snap.forEach(d => list.push({ id: d.id, ...d.data() }));
+          snap.forEach(d => list.push({ ...d.data(), id: d.id }));
           return list;
         } catch (err) {
-          console.error(err);
+          console.error("Gagal membaca evaluasi:", err);
           return [];
         }
       }
@@ -2101,7 +1995,7 @@
       if (!IS_PREVIEW && fbDb) {
         try {
           const snapC = await getDocs(collection(fbDb, 'classes'));
-          snapC.forEach(d => classes.push(d.data()));
+          snapC.forEach(d => classes.push({ ...d.data(), id: d.id }));
         } catch (e) {
           classes = [];
         }
@@ -2847,14 +2741,15 @@
       if (!IS_PREVIEW && fbDb) {
         try {
           const snapC = await getDocs(collection(fbDb, 'classes'));
-          snapC.forEach(d => classes.push({ id: d.id, ...d.data() }));
+          snapC.forEach(d => classes.push({ ...d.data(), id: d.id }));
 
           const snapU = await getDocs(collection(fbDb, 'users'));
-          snapU.forEach(d => users.push({ id: d.id, ...d.data() }));
+          snapU.forEach(d => users.push({ ...d.data(), id: d.id }));
 
           const snapS = await getDocs(collection(fbDb, 'schedules'));
-          snapS.forEach(d => schedules.push({ id: d.id, ...d.data() }));
+          snapS.forEach(d => schedules.push({ ...d.data(), id: d.id }));
         } catch (e) {
+          console.error("Gagal membaca master data:", e);
           classes = [];
           users = [];
           schedules = [];
@@ -2969,19 +2864,20 @@
 
       if (!nama) return;
 
+      const docId = `cls_${Date.now()}`;
       const newCls = {
-        id: `cls_${Date.now()}`,
+        id: docId,
         namaKelas: nama,
         waliKelas: homeroom || "-"
       };
 
       if (!IS_PREVIEW && fbDb) {
         try {
-          await addDoc(collection(fbDb, 'classes'), newCls);
+          await setDoc(doc(fbDb, 'classes', docId), newCls);
           showToast(`Kelas ${nama} berhasil disimpan ke Firestore!`);
         } catch (e) {
-          console.error(e);
-          showToast("Gagal menyimpan kelas ke database.", "error");
+          console.error("Gagal simpan kelas:", e);
+          showToast("Gagal menyimpan kelas ke database: " + e.message, "error");
           return;
         }
       } else {
@@ -2990,7 +2886,7 @@
       }
 
       closeModalAddClass();
-      renderManageData();
+      await renderManageData();
     };
 
     window.openModalAddJudge = function() {
@@ -3016,8 +2912,9 @@
 
       if (!nama || !username || !password) return;
 
+      const docId = `usr_${Date.now()}`;
       const newUser = {
-        id: `usr_${Date.now()}`,
+        id: docId,
         nama: nama,
         username: username,
         password: password,
@@ -3026,11 +2923,11 @@
 
       if (!IS_PREVIEW && fbDb) {
         try {
-          await addDoc(collection(fbDb, 'users'), newUser);
+          await setDoc(doc(fbDb, 'users', docId), newUser);
           showToast(`Akun Juri untuk ${nama} berhasil dibuat!`);
         } catch (e) {
-          console.error(e);
-          showToast("Gagal menyimpan akun juri.", "error");
+          console.error("Gagal simpan juri:", e);
+          showToast("Gagal menyimpan akun juri: " + e.message, "error");
           return;
         }
       } else {
@@ -3039,7 +2936,7 @@
       }
 
       closeModalAddJudge();
-      renderManageData();
+      await renderManageData();
     };
 
     window.openModalAddSchedule = async function() {
@@ -3060,7 +2957,7 @@
       if (!IS_PREVIEW && fbDb) {
         try {
           const snapU = await getDocs(collection(fbDb, 'users'));
-          snapU.forEach(d => users.push({ id: d.id, ...d.data() }));
+          snapU.forEach(d => users.push({ ...d.data(), id: d.id }));
         } catch (e) {
           users = [];
         }
@@ -3128,8 +3025,9 @@
       const name2 = j2.options[j2.selectedIndex].text.split(' (')[0];
       const name3 = j3.options[j3.selectedIndex].text.split(' (')[0];
 
+      const docId = `sch_${Date.now()}`;
       const newSchedule = {
-        id: `sch_${Date.now()}`,
+        id: docId,
         periode,
         tanggal,
         judgeIds: [id1, id2, id3],
@@ -3140,11 +3038,11 @@
 
       if (!IS_PREVIEW && fbDb) {
         try {
-          await addDoc(collection(fbDb, 'schedules'), newSchedule);
+          await setDoc(doc(fbDb, 'schedules', docId), newSchedule);
           showToast(`Jadwal sesi untuk ${periode} (${formatDateIndo(tanggal)}) berhasil disimpan!`);
         } catch (e) {
-          console.error(e);
-          showToast("Gagal menyimpan jadwal ke database.", "error");
+          console.error("Gagal simpan jadwal:", e);
+          showToast("Gagal menyimpan jadwal ke database: " + e.message, "error");
           return;
         }
       } else {
@@ -3153,12 +3051,11 @@
       }
 
       closeModalAddSchedule();
-      renderManageData();
+      await renderManageData();
     };
 
     // ===============================================================
-    // FITUR RESET DATA: DIPERBAIKI SECARA PERMANEN
-    // Menghapus seluruh koleksi dan menetapkan flag agar refresh tidak memunculkan dummy
+    // FITUR RESET DATA LENGKAP
     // ===============================================================
     window.confirmResetAllData = function() {
       if (!currentUser || currentUser.role !== 'admin') {
@@ -3196,7 +3093,6 @@
               await Promise.all(deletePromises);
             }
 
-            // Tulis dokumen flag permanen di settings bahwa data telah di-reset
             await setDoc(doc(fbDb, 'settings', 'system_init'), {
               initialized: true,
               isCleanState: true,
@@ -3211,7 +3107,6 @@
           }
         }
 
-        // Tandai localStorage agar saat di-refresh dalam kondisi preview pun tidak memuat dummy
         localStorage.setItem('sibersih_is_reset', 'true');
 
         mockDB.evaluations = [];
@@ -3220,11 +3115,11 @@
         mockDB.users = [];
 
         closeDeleteModal();
-        renderManageData();
+        await renderManageData();
         await resetScoringForm();
         loadDashboardData();
         renderLeaderboardTable();
-        showToast("Seluruh data berhasil dikosongkan secara permanen! Database kini benar-benar bersih.");
+        showToast("Seluruh data berhasil dikosongkan secara permanen!");
       };
 
       const modal = document.getElementById('modal-confirm-delete');
@@ -3252,10 +3147,10 @@
             getDocs(collection(fbDb, 'schedules')),
             getDocs(collection(fbDb, 'evaluations'))
           ]);
-          snapC.forEach(d => classes.push({ id: d.id, ...d.data() }));
-          snapU.forEach(d => users.push({ id: d.id, ...d.data() }));
-          snapS.forEach(d => schedules.push({ id: d.id, ...d.data() }));
-          snapE.forEach(d =>  evaluations.push({ id: d.id, ...d.data() }));
+          snapC.forEach(d => classes.push({ ...d.data(), id: d.id }));
+          snapU.forEach(d => users.push({ ...d.data(), id: d.id }));
+          snapS.forEach(d => schedules.push({ ...d.data(), id: d.id }));
+          snapE.forEach(d => evaluations.push({ ...d.data(), id: d.id }));
         } catch (err) {
           console.warn("Gagal membaca Firebase, menggunakan data memori:", err);
           classes = mockDB.classes;
@@ -3409,7 +3304,7 @@
             mockDB.evaluations = [...incomingEvaluations];
 
             closeDeleteModal();
-            renderManageData();
+            await renderManageData();
             await resetScoringForm();
             loadDashboardData();
             renderLeaderboardTable();
@@ -3433,6 +3328,18 @@
       reader.readAsText(file);
     };
 
+    let pendingDeleteAction = null;
+
+    window.closeDeleteModal = function() {
+      const modal = document.getElementById('modal-confirm-delete');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+      pendingDeleteAction = null;
+    };
+
+    // ===============================================================
+    // FUNGSI PENGHAPUSAN MAKSIMAL DENGAN DOKUMEN ID RESMI FIRESTORE
+    // ===============================================================
     window.requestDeleteSchedule = function(id, periode) {
       document.getElementById('delete-modal-title').innerText = "Hapus Jadwal Sesi Penilaian";
       document.getElementById('delete-modal-message').innerText = `Apakah Anda yakin ingin membatalkan jadwal sesi untuk periode "${periode}"?`;
@@ -3453,29 +3360,29 @@
         if (!IS_PREVIEW && fbDb) {
           try {
             await deleteDoc(doc(fbDb, 'schedules', id));
+            // Pembersihan redundansi jika ID berbeda
+            const snap = await getDocs(collection(fbDb, 'schedules'));
+            for (const d of snap.docs) {
+              if (d.id === id || d.data().id === id || d.data().periode === periode) {
+                await deleteDoc(doc(fbDb, 'schedules', d.id));
+              }
+            }
           } catch (e) {
-            console.error(e);
+            console.error("Gagal hapus jadwal:", e);
+            showToast("Gagal menghapus jadwal sesi: " + e.message, "error");
+            return;
           }
         }
-        mockDB.schedules = mockDB.schedules.filter(s => s.id !== id);
+        mockDB.schedules = mockDB.schedules.filter(s => s.id !== id && s.periode !== periode);
         showToast(`Jadwal sesi penugasan berhasil dihapus.`);
         closeDeleteModal();
-        renderManageData();
+        await renderManageData();
       };
 
       const modal = document.getElementById('modal-confirm-delete');
       modal.classList.remove('hidden');
       modal.classList.add('flex');
       safeCreateIcons();
-    };
-
-    let pendingDeleteAction = null;
-
-    window.closeDeleteModal = function() {
-      const modal = document.getElementById('modal-confirm-delete');
-      modal.classList.add('hidden');
-      modal.classList.remove('flex');
-      pendingDeleteAction = null;
     };
 
     window.requestDeleteClass = function(id, className) {
@@ -3498,14 +3405,23 @@
         if (!IS_PREVIEW && fbDb) {
           try {
             await deleteDoc(doc(fbDb, 'classes', id));
+            // Pembersihan ganda jika ada dokumen lama yang menggunakan nama/id data
+            const snap = await getDocs(collection(fbDb, 'classes'));
+            for (const d of snap.docs) {
+              if (d.id === id || d.data().id === id || d.data().namaKelas === className) {
+                await deleteDoc(doc(fbDb, 'classes', d.id));
+              }
+            }
           } catch (e) {
-            console.error(e);
+            console.error("Gagal hapus kelas:", e);
+            showToast("Gagal menghapus kelas dari Firebase: " + e.message, "error");
+            return;
           }
         }
-        mockDB.classes = mockDB.classes.filter(c => c.id !== id);
+        mockDB.classes = mockDB.classes.filter(c => c.id !== id && c.namaKelas !== className);
         showToast(`Kelas "${className}" berhasil dihapus.`);
         closeDeleteModal();
-        renderManageData();
+        await renderManageData();
       };
 
       const modal = document.getElementById('modal-confirm-delete');
@@ -3534,14 +3450,23 @@
         if (!IS_PREVIEW && fbDb) {
           try {
             await deleteDoc(doc(fbDb, 'users', id));
+            // Pembersihan redundansi jika ada dokumen juri dengan nama yang sama
+            const snap = await getDocs(collection(fbDb, 'users'));
+            for (const d of snap.docs) {
+              if (d.id === id || d.data().id === id || (judgeName && d.data().nama === judgeName)) {
+                await deleteDoc(doc(fbDb, 'users', d.id));
+              }
+            }
           } catch (e) {
-            console.error(e);
+            console.error("Gagal hapus juri:", e);
+            showToast("Gagal menghapus akun juri: " + e.message, "error");
+            return;
           }
         }
-        mockDB.users = mockDB.users.filter(u => u.id !== id);
+        mockDB.users = mockDB.users.filter(u => u.id !== id && u.nama !== judgeName);
         showToast(`Akun juri "${judgeName}" telah dihapus.`);
         closeDeleteModal();
-        renderManageData();
+        await renderManageData();
       };
 
       const modal = document.getElementById('modal-confirm-delete');
