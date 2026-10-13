@@ -85,7 +85,7 @@
     </div>
   </div>
 
-  <!-- Modal Dialog Tambah Kelas -->
+  <!-- Modal Dialog Tambah / Edit Kelas -->
   <div id="modal-add-class" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm hidden items-center justify-center p-4">
     <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-100">
       <div class="flex items-center gap-3 mb-4">
@@ -93,11 +93,12 @@
           <i data-lucide="school" class="w-5 h-5"></i>
         </div>
         <div>
-          <h3 class="text-base font-bold text-slate-900">Tambah Kelas Baru</h3>
-          <p class="text-xs text-slate-400">Masukkan identitas kelas yang akan dinilai</p>
+          <h3 id="modal-class-title" class="text-base font-bold text-slate-900">Tambah Kelas Baru</h3>
+          <p id="modal-class-desc" class="text-xs text-slate-400">Masukkan identitas kelas yang akan dinilai</p>
         </div>
       </div>
       <form id="form-modal-add-class" onsubmit="event.preventDefault(); submitAddClass();" class="space-y-3.5">
+        <input type="hidden" id="input-class-id" value="">
         <div>
           <label class="block text-xs font-semibold text-slate-700 mb-1">Nama Kelas *</label>
           <input type="text" id="input-class-name" required placeholder="Contoh: X AK 1" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none">
@@ -109,14 +110,14 @@
         <div class="flex justify-end gap-2 pt-3 border-t border-slate-100">
           <button type="button" onclick="closeModalAddClass()" class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-100 transition">Batal</button>
           <button type="submit" id="btn-submit-class" class="px-5 py-2 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white shadow-md shadow-emerald-600/20 transition flex items-center gap-1.5">
-            <span>Simpan Kelas</span>
+            <span id="label-submit-class">Simpan Kelas</span>
           </button>
         </div>
       </form>
     </div>
   </div>
 
-  <!-- Modal Dialog Tambah Akun Juri -->
+  <!-- Modal Dialog Tambah / Edit Akun Juri -->
   <div id="modal-add-judge" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm hidden items-center justify-center p-4">
     <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-100">
       <div class="flex items-center gap-3 mb-4">
@@ -124,11 +125,12 @@
           <i data-lucide="user-plus" class="w-5 h-5"></i>
         </div>
         <div>
-          <h3 class="text-base font-bold text-slate-900">Tambah Akun Juri / Penilai</h3>
-          <p class="text-xs text-slate-400">Buat kredensial login penilai lapangan</p>
+          <h3 id="modal-judge-title" class="text-base font-bold text-slate-900">Tambah Akun Juri / Penilai</h3>
+          <p id="modal-judge-desc" class="text-xs text-slate-400">Buat kredensial login penilai lapangan</p>
         </div>
       </div>
       <form id="form-modal-add-judge" onsubmit="event.preventDefault(); submitAddJudge();" class="space-y-3.5">
+        <input type="hidden" id="input-judge-id" value="">
         <div>
           <label class="block text-xs font-semibold text-slate-700 mb-1">Nama Lengkap Penilai *</label>
           <input type="text" id="input-judge-name" required placeholder="Contoh: MUSTAPA, S.Pd., M.Ak." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
@@ -144,7 +146,7 @@
         <div class="flex justify-end gap-2 pt-3 border-t border-slate-100">
           <button type="button" onclick="closeModalAddJudge()" class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-100 transition">Batal</button>
           <button type="submit" id="btn-submit-judge" class="px-5 py-2 rounded-xl text-xs font-bold bg-indigo-600 hover:bg-indigo-700 text-white shadow-md shadow-indigo-600/20 transition flex items-center gap-1.5">
-            <span>Simpan Akun Juri</span>
+            <span id="label-submit-judge">Simpan Akun Juri</span>
           </button>
         </div>
       </form>
@@ -166,19 +168,20 @@
     </div>
   </div>
 
-  <!-- Modal Dialog Tambah Jadwal Sesi Tim 3 Juri -->
+  <!-- Modal Dialog Tambah / Edit Jadwal Sesi & Pembagian Komponen per Juri -->
   <div id="modal-add-schedule" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm hidden items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-100">
+    <div class="bg-white rounded-3xl max-w-xl w-full p-6 md:p-7 shadow-2xl border border-slate-100 max-h-[92vh] overflow-y-auto">
       <div class="flex items-center gap-3 mb-4">
-        <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center">
-          <i data-lucide="users-2" class="w-5 h-5"></i>
+        <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center flex-shrink-0">
+          <i data-lucide="calendar-range" class="w-5 h-5"></i>
         </div>
         <div>
-          <h3 class="text-base font-bold text-slate-900">Buat Jadwal Sesi (Tim 3 Juri)</h3>
-          <p class="text-xs text-slate-400">Tentukan periode pekan dan tanggal pelaksanaan penilaian</p>
+          <h3 id="modal-schedule-title" class="text-base font-bold text-slate-900">Jadwal Sesi & Pembagian Komponen Juri</h3>
+          <p id="modal-schedule-desc" class="text-xs text-slate-400">Atur periode pekan, tanggal, dan tetapkan 1 juri untuk setiap komponen</p>
         </div>
       </div>
-      <form id="form-modal-add-schedule" onsubmit="event.preventDefault(); submitAddSchedule();" class="space-y-3.5">
+      <form id="form-modal-add-schedule" onsubmit="event.preventDefault(); submitAddSchedule();" class="space-y-4">
+        <input type="hidden" id="input-schedule-id" value="">
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
             <label class="block text-xs font-semibold text-slate-700 mb-1">Pekan / Periode Penilaian *</label>
@@ -190,40 +193,82 @@
           </div>
         </div>
 
-        <div class="p-3.5 bg-amber-50/60 rounded-2xl border border-amber-200/80 space-y-2.5">
+        <!-- Pemilihan 1 Juri Khusus per Masing-Masing Komponen -->
+        <div class="p-4 bg-amber-50/70 rounded-2xl border border-amber-200/90 space-y-3">
           <div class="flex items-center justify-between">
-            <label class="block text-xs font-bold text-amber-900">Pilih Tim 3 Juri Penilai *</label>
-            <span class="text-[10px] bg-amber-200/80 text-amber-800 px-2 py-0.5 rounded font-semibold">Wajib 3 Orang Berbeda</span>
+            <label class="block text-xs font-bold text-amber-950 flex items-center gap-1.5">
+              <i data-lucide="shield-check" class="w-4 h-4 text-amber-700"></i> Pembagian Tugas Juri per Komponen
+            </label>
+            <span class="text-[10px] bg-amber-200 text-amber-900 px-2 py-0.5 rounded-md font-semibold">1 Komponen = 1 Juri</span>
           </div>
-          <div>
-            <label class="block text-[11px] font-medium text-slate-600 mb-0.5">Juri 1</label>
-            <select id="input-schedule-judge-1" required class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-amber-500 focus:outline-none bg-white">
-              <option value="">-- Pilih Juri 1 --</option>
+          <p class="text-[11px] text-amber-800 leading-tight">Juri yang ditugaskan hanya akan memiliki akses menilai komponen miliknya dan tidak dapat menilai komponen lainnya.</p>
+
+          <!-- Komponen 1 -->
+          <div class="bg-white p-3 rounded-xl border border-amber-200/60 space-y-1">
+            <div class="flex items-center justify-between text-xs">
+              <span class="font-bold text-slate-800 flex items-center gap-1.5">
+                <span class="w-4 h-4 rounded-full bg-emerald-600 text-white text-[10px] font-bold flex items-center justify-center">1</span>
+                Kebersihan Fisik
+              </span>
+              <span class="text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">Bobot 30%</span>
+            </div>
+            <select id="input-schedule-judge-1" required class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-amber-500 focus:outline-none bg-white font-medium text-slate-800">
+              <option value="">-- Pilih Juri Komponen 1 --</option>
             </select>
           </div>
-          <div>
-            <label class="block text-[11px] font-medium text-slate-600 mb-0.5">Juri 2</label>
-            <select id="input-schedule-judge-2" required class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-amber-500 focus:outline-none bg-white">
-              <option value="">-- Pilih Juri 2 --</option>
+
+          <!-- Komponen 2 -->
+          <div class="bg-white p-3 rounded-xl border border-amber-200/60 space-y-1">
+            <div class="flex items-center justify-between text-xs">
+              <span class="font-bold text-slate-800 flex items-center gap-1.5">
+                <span class="w-4 h-4 rounded-full bg-teal-600 text-white text-[10px] font-bold flex items-center justify-center">2</span>
+                Aspek Adiwiyata
+              </span>
+              <span class="text-[10px] font-semibold text-teal-700 bg-teal-50 px-2 py-0.5 rounded border border-teal-200">Bobot 30%</span>
+            </div>
+            <select id="input-schedule-judge-2" required class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-amber-500 focus:outline-none bg-white font-medium text-slate-800">
+              <option value="">-- Pilih Juri Komponen 2 --</option>
             </select>
           </div>
-          <div>
-            <label class="block text-[11px] font-medium text-slate-600 mb-0.5">Juri 3</label>
-            <select id="input-schedule-judge-3" required class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-amber-500 focus:outline-none bg-white">
-              <option value="">-- Pilih Juri 3 --</option>
+
+          <!-- Komponen 3 -->
+          <div class="bg-white p-3 rounded-xl border border-amber-200/60 space-y-1">
+            <div class="flex items-center justify-between text-xs">
+              <span class="font-bold text-slate-800 flex items-center gap-1.5">
+                <span class="w-4 h-4 rounded-full bg-sky-600 text-white text-[10px] font-bold flex items-center justify-center">3</span>
+                Tata Ruang & Administrasi
+              </span>
+              <span class="text-[10px] font-semibold text-sky-700 bg-sky-50 px-2 py-0.5 rounded border border-sky-200">Bobot 20%</span>
+            </div>
+            <select id="input-schedule-judge-3" required class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-amber-500 focus:outline-none bg-white font-medium text-slate-800">
+              <option value="">-- Pilih Juri Komponen 3 --</option>
+            </select>
+          </div>
+
+          <!-- Komponen 4 -->
+          <div class="bg-white p-3 rounded-xl border border-amber-200/60 space-y-1">
+            <div class="flex items-center justify-between text-xs">
+              <span class="font-bold text-slate-800 flex items-center gap-1.5">
+                <span class="w-4 h-4 rounded-full bg-indigo-600 text-white text-[10px] font-bold flex items-center justify-center">4</span>
+                Sarana & Inovasi
+              </span>
+              <span class="text-[10px] font-semibold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded border border-indigo-200">Bobot 20%</span>
+            </div>
+            <select id="input-schedule-judge-4" required class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-amber-500 focus:outline-none bg-white font-medium text-slate-800">
+              <option value="">-- Pilih Juri Komponen 4 --</option>
             </select>
           </div>
         </div>
 
         <div>
-          <label class="block text-xs font-semibold text-slate-700 mb-1">Catatan Khusus Sesi (Opsional)</label>
-          <input type="text" id="input-schedule-notes" placeholder="Contoh: Fokus kebersihan lantai, drainase, dan 3R limbah" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none">
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Catatan Instruksi Sesi (Opsional)</label>
+          <input type="text" id="input-schedule-notes" placeholder="Contoh: Fokus pada pemilahan sampah organik dan kebersihan teras" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none">
         </div>
 
         <div class="flex justify-end gap-2 pt-3 border-t border-slate-100">
           <button type="button" onclick="closeModalAddSchedule()" class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-100 transition">Batal</button>
           <button type="submit" id="btn-submit-schedule" class="px-5 py-2 rounded-xl text-xs font-bold bg-amber-600 hover:bg-amber-700 text-white shadow-md shadow-amber-600/20 transition flex items-center gap-1.5">
-            <span>Simpan Jadwal Sesi</span>
+            <span id="label-submit-schedule">Simpan Jadwal Sesi</span>
           </button>
         </div>
       </form>
@@ -329,10 +374,10 @@
 
         <!-- Mode Toggle -->
         <div class="grid grid-cols-2 p-1 bg-slate-100 rounded-2xl mb-6">
-          <button type="button" id="tab-login-evaluator" onclick="switchLoginMode('evaluator')" class="py-2 text-xs font-bold rounded-xl bg-white text-emerald-700 shadow-sm transition">
+          <button type="button" id="tab-login-evaluator" onclick="switchLoginMode('evaluator')" class="py-2.5 text-xs font-bold rounded-xl bg-white text-emerald-700 shadow-sm transition">
             Juri / Penilai
           </button>
-          <button type="button" id="tab-login-admin" onclick="switchLoginMode('admin')" class="py-2 text-xs font-bold rounded-xl text-slate-500 hover:text-slate-900 transition">
+          <button type="button" id="tab-login-admin" onclick="switchLoginMode('admin')" class="py-2.5 text-xs font-bold rounded-xl text-slate-500 hover:text-slate-900 transition">
             Admin (Auth)
           </button>
         </div>
@@ -462,7 +507,7 @@
                   <th class="pb-3 font-semibold">Kelas</th>
                   <th class="pb-3 font-semibold">Penilai</th>
                   <th class="pb-3 font-semibold">Pelaksanaan</th>
-                  <th class="pb-3 font-semibold text-right">Skor Akhir</th>
+                  <th class="pb-3 font-semibold text-right">Skor</th>
                 </tr>
               </thead>
               <tbody id="recent-eval-tbody" class="divide-y divide-slate-100 text-slate-700"></tbody>
@@ -478,7 +523,7 @@
         <div class="border-b border-slate-100 pb-5 mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <h2 class="text-2xl font-black text-slate-900">Formulir Penilaian Kebersihan & Adiwiyata</h2>
-            <p class="text-xs md:text-sm text-slate-500 mt-1">Gunakan rubrik standar (Skala 1 - 5) untuk setiap indikator spesifik.</p>
+            <p class="text-xs md:text-sm text-slate-500 mt-1">Setiap juri menilai komponen spesifik yang ditugaskan oleh Administrator.</p>
           </div>
         </div>
 
@@ -524,11 +569,26 @@
           </div>
 
           <!-- Banner Status Penjadwalan & Kunci Akses Tanggal -->
-          <div id="judge-schedule-banner" class="mb-8 p-3.5 rounded-2xl border text-xs flex items-center justify-between gap-3"></div>
+          <div id="judge-schedule-banner" class="mb-6 p-3.5 rounded-2xl border text-xs flex items-center justify-between gap-3"></div>
 
-          <!-- RUBRIK CONTAINER -->
+          <!-- Banner Penugasan Komponen Juri -->
+          <div id="judge-component-assignment-banner" class="mb-6 p-4 rounded-2xl border bg-emerald-50/70 border-emerald-200 text-emerald-950 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold flex-shrink-0">
+                <i data-lucide="target" class="w-4 h-4"></i>
+              </div>
+              <div>
+                <p class="font-bold text-emerald-900 text-sm" id="assigned-component-title">Komponen yang Ditugaskan</p>
+                <p class="text-[11px] text-emerald-700" id="assigned-component-desc">Hanya komponen ini yang dapat Anda nilai sesuai jadwal resmi Administrator.</p>
+              </div>
+            </div>
+            <span id="assigned-component-badge" class="px-3 py-1 bg-white border border-emerald-300 rounded-xl text-emerald-800 font-extrabold text-xs self-start sm:self-auto">Bobot: -</span>
+          </div>
+
+          <!-- RUBRIK CONTAINER (4 PILAR KOMPONEN STANDAR) -->
           <div class="space-y-8" id="rubric-container">
-            <div class="rounded-2xl border border-emerald-100 overflow-hidden bg-white shadow-sm">
+            <!-- Komponen 1: Kebersihan Fisik (30%) -->
+            <div id="wrapper-component-1" class="component-card rounded-2xl border border-emerald-100 overflow-hidden bg-white shadow-sm transition-all duration-300">
               <div class="bg-emerald-800 text-white p-4 flex flex-wrap items-center justify-between gap-2">
                 <div class="flex items-center gap-2">
                   <span class="w-7 h-7 rounded-lg bg-emerald-700 flex items-center justify-center font-bold text-sm">1</span>
@@ -542,7 +602,8 @@
               <div class="p-4 md:p-6 divide-y divide-slate-100" id="section-rubric-1"></div>
             </div>
 
-            <div class="rounded-2xl border border-teal-100 overflow-hidden bg-white shadow-sm">
+            <!-- Komponen 2: Aspek Adiwiyata (30%) -->
+            <div id="wrapper-component-2" class="component-card rounded-2xl border border-teal-100 overflow-hidden bg-white shadow-sm transition-all duration-300">
               <div class="bg-teal-800 text-white p-4 flex flex-wrap items-center justify-between gap-2">
                 <div class="flex items-center gap-2">
                   <span class="w-7 h-7 rounded-lg bg-teal-700 flex items-center justify-center font-bold text-sm">2</span>
@@ -556,7 +617,8 @@
               <div class="p-4 md:p-6 divide-y divide-slate-100" id="section-rubric-2"></div>
             </div>
 
-            <div class="rounded-2xl border border-sky-100 overflow-hidden bg-white shadow-sm">
+            <!-- Komponen 3: Tata Ruang & Administrasi (20%) -->
+            <div id="wrapper-component-3" class="component-card rounded-2xl border border-sky-100 overflow-hidden bg-white shadow-sm transition-all duration-300">
               <div class="bg-sky-800 text-white p-4 flex flex-wrap items-center justify-between gap-2">
                 <div class="flex items-center gap-2">
                   <span class="w-7 h-7 rounded-lg bg-sky-700 flex items-center justify-center font-bold text-sm">3</span>
@@ -567,10 +629,11 @@
                   <span id="badge-subtotal-3" class="text-xs bg-white text-sky-900 font-extrabold px-3 py-1 rounded-full">Nilai: 0.00 / 20</span>
                 </div>
               </div>
-              <div class="p-4 md:p-6 divide-y divide-slate-100" id="section-rubric-4"></div>
+              <div class="p-4 md:p-6 divide-y divide-slate-100" id="section-rubric-3"></div>
             </div>
 
-            <div class="rounded-2xl border border-indigo-100 overflow-hidden bg-white shadow-sm">
+            <!-- Komponen 4: Sarana & Inovasi (20%) -->
+            <div id="wrapper-component-4" class="component-card rounded-2xl border border-indigo-100 overflow-hidden bg-white shadow-sm transition-all duration-300">
               <div class="bg-indigo-800 text-white p-4 flex flex-wrap items-center justify-between gap-2">
                 <div class="flex items-center gap-2">
                   <span class="w-7 h-7 rounded-lg bg-indigo-700 flex items-center justify-center font-bold text-sm">4</span>
@@ -588,17 +651,17 @@
           <!-- Total Calculation -->
           <div class="mt-8 p-6 bg-slate-900 text-white rounded-3xl flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl">
             <div>
-              <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider">Perhitungan Nilai Akhir</p>
+              <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider" id="score-summary-title">Subtotal Nilai Komponen Anda</p>
               <div class="flex items-baseline gap-2 mt-1">
                 <span id="live-total-score" class="text-4xl md:text-5xl font-black text-emerald-400">0.00</span>
-                <span class="text-slate-400 text-sm font-semibold">/ 100 Poin</span>
+                <span class="text-slate-400 text-sm font-semibold" id="score-max-target-label">/ 30 Poin</span>
               </div>
-              <p id="live-predikat" class="text-xs text-slate-300 mt-1">Predikat: Belum Lengkap Dinilai</p>
+              <p id="live-predikat" class="text-xs text-slate-300 mt-1">Status: Belum Lengkap</p>
             </div>
             
             <div class="w-full md:w-1/2">
               <label class="block text-xs font-medium text-slate-300 mb-1">Catatan Tambahan / Rekomendasi Juri</label>
-              <textarea id="score-notes" rows="2" placeholder="Tuliskan catatan apresiasi atau bagian yang perlu dibersihkan..." class="w-full p-2.5 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-emerald-400"></textarea>
+              <textarea id="score-notes" rows="2" placeholder="Tuliskan catatan apresiasi atau evaluasi untuk kelas ini..." class="w-full p-2.5 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-emerald-400"></textarea>
             </div>
 
             <div class="flex w-full md:w-auto">
@@ -616,7 +679,7 @@
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h2 class="text-2xl font-black text-slate-900">Rekapitulasi & Peringkat Kebersihan</h2>
-          <p class="text-xs md:text-sm text-slate-500">Nilai diakumulasikan (rata-rata) per kelas dan terintegrasi dengan pekan serta tanggal pelaksanaan penilaian.</p>
+          <p class="text-xs md:text-sm text-slate-500">Nilai dari masing-masing 4 juri komponen digabungkan menjadi nilai utuh kelas per pekan.</p>
         </div>
         <div class="flex items-center gap-2 no-print">
           <button onclick="printLeaderboardPDF()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-semibold flex items-center gap-2 shadow-sm transition">
@@ -672,7 +735,7 @@
       <div class="border-b border-slate-200 pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h2 class="text-2xl font-black text-slate-900">Kelola Master Data (Khusus Admin)</h2>
-          <p class="text-xs md:text-sm text-slate-500">Kelola kelas, akun juri, jadwal sesi 3 juri, backup & restore, serta reset data.</p>
+          <p class="text-xs md:text-sm text-slate-500">Kelola master kelas, akun juri, pembagian tugas juri per komponen, backup & restore, serta reset data.</p>
         </div>
         <div class="flex flex-wrap items-center gap-2">
           <button type="button" onclick="backupDatabaseJSON()" class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 transition shadow-sm" title="Unduh seluruh data ke berkas JSON">
@@ -694,9 +757,9 @@
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
           <div>
             <h3 class="font-bold text-slate-900 text-base flex items-center gap-2">
-              <i data-lucide="calendar-check" class="w-5 h-5 text-amber-600"></i> Jadwal Penilaian Sesi (Tim 3 Juri)
+              <i data-lucide="calendar-check" class="w-5 h-5 text-amber-600"></i> Jadwal Penilaian Sesi & Pembagian Komponen
             </h3>
-            <p class="text-xs text-slate-500 mt-0.5">Pekan dan tanggal pelaksanaan yang dibuat di sini akan terhubung langsung ke form juri dan rekapitulasi nilai.</p>
+            <p class="text-xs text-slate-500 mt-0.5">Admin menetapkan 1 juri untuk setiap komponen (Fisik, Adiwiyata, Tata Ruang, dan Sarana).</p>
           </div>
           <button onclick="openModalAddSchedule()" class="px-3.5 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-xl text-xs font-semibold flex items-center gap-1.5 transition shadow-sm">
             <i data-lucide="calendar-plus" class="w-4 h-4"></i> Buat Jadwal Sesi Baru
@@ -706,12 +769,12 @@
           <table class="w-full text-left text-xs">
             <thead class="bg-slate-50 text-[11px] font-bold text-slate-500 uppercase tracking-wider border-b border-slate-100">
               <tr>
-                <th class="py-3 px-4">Pekan & Tanggal Pelaksanaan</th>
-                <th class="py-3 px-4">Status Jadwal</th>
-                <th class="py-3 px-4">Tim 3 Juri yang Bertugas</th>
-                <th class="py-3 px-4">Cakupan Penilaian</th>
+                <th class="py-3 px-4">Pekan & Tanggal</th>
+                <th class="py-3 px-4">Status</th>
+                <th class="py-3 px-4">Pembagian Juri per Komponen</th>
+                <th class="py-3 px-4">Cakupan</th>
                 <th class="py-3 px-4">Catatan Instruksi</th>
-                <th class="py-3 px-4 text-center w-20">Aksi</th>
+                <th class="py-3 px-4 text-center w-28">Aksi</th>
               </tr>
             </thead>
             <tbody id="list-master-schedules" class="divide-y border-slate-100 text-slate-700"></tbody>
@@ -764,7 +827,7 @@
       appId: "1:153733624871:web:25cfa2ec21ff679f5a8a02"
     };
 
-    // Database Fallback In-Memory (digunakan sementara hanya jika offline/kendala jaringan)
+    // Database Fallback In-Memory
     let mockDB = {
       settings: { activePeriod: "Pekan 1 Oktober 2026" },
       classes: [],
@@ -773,7 +836,6 @@
       evaluations: []
     };
 
-    // Helper tanggal hari ini (Format YYYY-MM-DD lokal)
     function getTodayDateStr() {
       const now = new Date();
       const year = now.getFullYear();
@@ -782,7 +844,6 @@
       return `${year}-${month}-${day}`;
     }
 
-    // Import Firebase SDK v11
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
     import { getAuth, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
     import { 
@@ -792,10 +853,9 @@
     let fbApp = null;
     let fbAuth = null;
     let fbDb = null;
-    let firebaseStatus = 'unconfigured'; // 'connected' | 'error' | 'unconfigured'
+    let firebaseStatus = 'unconfigured';
     let firebaseErrorMsg = '';
 
-    // Inisialisasi Firebase & Cek Koneksi
     async function initFirebaseConnection() {
       const isApiKeyProvided = Boolean(firebaseConfig.apiKey && firebaseConfig.apiKey.trim() !== "");
       
@@ -811,7 +871,6 @@
         fbAuth = getAuth(fbApp);
         fbDb = getFirestore(fbApp);
 
-        // Uji coba baca dokumen penanda untuk verifikasi koneksi & rules
         const pingRef = doc(fbDb, 'settings', 'system_init');
         await getDoc(pingRef);
 
@@ -871,7 +930,7 @@
             </div>
             <p><strong>Penyebab Umum:</strong></p>
             <ol class="list-decimal pl-4 space-y-1 text-[11px]">
-              <li>Tab <strong>Firestore Database</strong> di Firebase Console belum diaktifkan (klik menu <em>Firestore Database</em> di menu kiri &rarr; <em>Create database</em>).</li>
+              <li>Tab <strong>Firestore Database</strong> di Firebase Console belum diaktifkan (klik menu <em>Firestore Database</em> &rarr; <em>Create database</em>).</li>
               <li>Tab <strong>Rules</strong> di Firestore masih menolak akses. Pastikan Anda telah menempelkan aturan dari berkas <code>firestore.rules</code> lalu klik <strong>Publish</strong>.</li>
             </ol>
           </div>
@@ -892,6 +951,7 @@
       });
     };
 
+    // 4 Komponen Rubrik Resmi Adiwiyata
     const RUBRIC_STRUCTURE = [
       {
         id: 1,
@@ -945,6 +1005,7 @@
     let currentEditingEvalId = null;
     let isFormReadOnly = false;
     let isScheduleLockedByDate = false;
+    let assignedComponentId = null; // Menyimpan ID komponen yang ditugaskan ke juri aktif (1, 2, 3, atau 4)
 
     function safeCreateIcons() {
       if (window.lucide && typeof window.lucide.createIcons === 'function') {
@@ -1130,15 +1191,15 @@
       const formAdmin = document.getElementById('form-login-admin');
 
       if (mode === 'evaluator') {
-        tabEval.className = 'py-2 text-xs font-bold rounded-xl bg-white text-emerald-700 shadow-sm transition';
-        tabAdmin.className = 'py-2 text-xs font-bold rounded-xl text-slate-500 hover:text-slate-900 transition';
+        tabEval.className = 'py-2.5 text-xs font-bold rounded-xl bg-white text-emerald-700 shadow-sm transition';
+        tabAdmin.className = 'py-2.5 text-xs font-bold rounded-xl text-slate-500 hover:text-slate-900 transition';
         formEval.classList.remove('hidden');
         formAdmin.classList.add('hidden');
       } else {
-        tabAdmin.className = 'py-2 text-xs font-bold rounded-xl bg-white text-slate-900 shadow-sm transition';
-        tabEval.className = 'py-2 text-xs font-bold rounded-xl text-slate-500 hover:text-slate-900 transition';
-        formAdmin.classList.remove('hidden');
+        tabAdmin.className = 'py-2.5 text-xs font-bold rounded-xl bg-white text-slate-900 shadow-sm transition';
+        tabEval.className = 'py-2.5 text-xs font-bold rounded-xl text-slate-500 hover:text-slate-900 transition';
         formEval.classList.add('hidden');
+        formAdmin.classList.remove('hidden');
       }
       safeCreateIcons();
     };
@@ -1305,6 +1366,12 @@
         return;
       }
 
+      const isAdmin = currentUser && currentUser.role === 'admin';
+      if (!isAdmin && assignedComponentId && compId !== assignedComponentId) {
+        showToast(`Anda hanya memiliki izin menilai Komponen ${assignedComponentId}.`, "error");
+        return;
+      }
+
       currentScoringState[itemKey] = value;
 
       for (let i = 1; i <= 5; i++) {
@@ -1324,49 +1391,77 @@
     };
 
     function calculateLiveScores() {
-      let grandTotal = 0;
+      const isAdmin = currentUser && currentUser.role === 'admin';
+      const targetComps = (isAdmin || !assignedComponentId) 
+        ? RUBRIC_STRUCTURE 
+        : RUBRIC_STRUCTURE.filter(c => c.id === assignedComponentId);
+
+      let totalWeighted = 0;
       let totalFilled = 0;
       let totalQuestions = 0;
 
       RUBRIC_STRUCTURE.forEach(comp => {
         let compRawSum = 0;
+        let compFilledCount = 0;
         const totalItemsInComp = comp.indicators.length;
-        totalQuestions += totalItemsInComp;
 
         comp.indicators.forEach((_, idx) => {
           const key = `c${comp.id}_i${idx}`;
           if (currentScoringState[key] !== undefined) {
             compRawSum += currentScoringState[key];
-            totalFilled++;
+            compFilledCount++;
           }
         });
 
         const maxRaw = totalItemsInComp * 5;
         const weightedScore = maxRaw > 0 ? (compRawSum / maxRaw) * comp.weight : 0;
-        grandTotal += weightedScore;
 
         const subtotalBadge = document.getElementById(`badge-subtotal-${comp.id}`);
         if (subtotalBadge) {
           subtotalBadge.innerText = `Nilai: ${weightedScore.toFixed(2)} / ${comp.weight}`;
         }
+
+        if (targetComps.some(tc => tc.id === comp.id)) {
+          totalQuestions += totalItemsInComp;
+          totalFilled += compFilledCount;
+          totalWeighted += weightedScore;
+        }
       });
 
       const totalDisplay = document.getElementById('live-total-score');
       const predikatDisplay = document.getElementById('live-predikat');
+      const maxTargetLabel = document.getElementById('score-max-target-label');
+      const summaryTitle = document.getElementById('score-summary-title');
 
-      if (totalDisplay) totalDisplay.innerText = grandTotal.toFixed(2);
+      if (totalDisplay) totalDisplay.innerText = totalWeighted.toFixed(2);
 
-      let predikat = "Belum Lengkap";
-      if (totalFilled === totalQuestions) {
-        if (grandTotal >= 90) predikat = "Predikat: Sangat Bersih & Adiwiyata (A)";
-        else if (grandTotal >= 80) predikat = "Predikat: Bersih (B)";
-        else if (grandTotal >= 70) predikat = "Predikat: Cukup (C)";
-        else predikat = "Kurang Bersih (D)";
+      if (!isAdmin && assignedComponentId) {
+        const activeComp = RUBRIC_STRUCTURE.find(c => c.id === assignedComponentId);
+        const maxPts = activeComp ? activeComp.weight : 30;
+        if (maxTargetLabel) maxTargetLabel.innerText = `/ ${maxPts} Poin (${activeComp?.name || ''})`;
+        if (summaryTitle) summaryTitle.innerText = `Subtotal Nilai Komponen Anda (Komponen ${assignedComponentId})`;
+        
+        let status = "Belum Lengkap";
+        if (totalFilled === totalQuestions) {
+          status = `Lengkap (${totalFilled}/${totalQuestions} kriteria dinilai)`;
+        } else {
+          status = `Terisi ${totalFilled} dari ${totalQuestions} kriteria`;
+        }
+        if (predikatDisplay) predikatDisplay.innerText = `Status: ${status}`;
       } else {
-        predikat = `Terisi ${totalFilled} dari ${totalQuestions} indikator`;
+        if (maxTargetLabel) maxTargetLabel.innerText = `/ 100 Poin`;
+        if (summaryTitle) summaryTitle.innerText = `Total Nilai Keseluruhan Kelas`;
+        let pred = "Belum Lengkap";
+        if (totalFilled === totalQuestions) {
+          if (totalWeighted >= 90) pred = "Predikat: Sangat Bersih (A)";
+          else if (totalWeighted >= 80) pred = "Predikat: Bersih (B)";
+          else if (totalWeighted >= 70) pred = "Predikat: Cukup (C)";
+          else pred = "Kurang Bersih (D)";
+        } else {
+          pred = `Terisi ${totalFilled} dari ${totalQuestions} indikator`;
+        }
+        if (predikatDisplay) predikatDisplay.innerText = pred;
       }
-
-      if (predikatDisplay) predikatDisplay.innerText = predikat;
     }
 
     function clearScoringButtonHighlights() {
@@ -1455,6 +1550,12 @@
         availableSchedules = schedules;
       } else {
         availableSchedules = schedules.filter(s => {
+          if (s.componentAssignments && typeof s.componentAssignments === 'object') {
+            return Object.values(s.componentAssignments).some(asg => 
+              asg.judgeId === currentUser?.id || 
+              (asg.judgeName && asg.judgeName.toLowerCase() === currentUser?.name.toLowerCase())
+            );
+          }
           const inIds = Array.isArray(s.judgeIds) && s.judgeIds.includes(currentUser?.id);
           const inNames = Array.isArray(s.judgeNames) && s.judgeNames.some(name => 
             name.toLowerCase().includes(currentUser?.name.toLowerCase()) || 
@@ -1477,7 +1578,7 @@
 
         if (banner) {
           if (isAdmin) {
-            banner.className = "mb-8 p-3.5 rounded-2xl border border-amber-200 bg-amber-50 text-amber-900 text-xs flex items-center justify-between";
+            banner.className = "mb-6 p-3.5 rounded-2xl border border-amber-200 bg-amber-50 text-amber-900 text-xs flex items-center justify-between";
             banner.innerHTML = `
               <div class="flex items-center gap-2">
                 <i data-lucide="alert-circle" class="w-4 h-4 text-amber-600"></i>
@@ -1486,7 +1587,7 @@
               <button type="button" onclick="navigateView('manage')" class="px-2.5 py-1 bg-amber-600 text-white rounded-lg font-bold text-[10px]">Ke Menu Kelola</button>
             `;
           } else {
-            banner.className = "mb-8 p-3.5 rounded-2xl border border-rose-200 bg-rose-50 text-rose-800 text-xs flex items-center gap-2";
+            banner.className = "mb-6 p-3.5 rounded-2xl border border-rose-200 bg-rose-50 text-rose-800 text-xs flex items-center gap-2";
             banner.innerHTML = `
               <i data-lucide="alert-octagon" class="w-4 h-4 text-rose-600 flex-shrink-0"></i>
               <span>Anda belum ditugaskan dalam jadwal sesi penilaian manapun oleh Administrator.</span>
@@ -1520,6 +1621,67 @@
       await handleScheduleChange();
     }
 
+    // Mengisolasi tampilan rubrik agar juri HANYA melihat komponen miliknya
+    function updateComponentVisibility(currentSchedule) {
+      const isAdmin = currentUser && currentUser.role === 'admin';
+      const assignBanner = document.getElementById('judge-component-assignment-banner');
+      const titleEl = document.getElementById('assigned-component-title');
+      const descEl = document.getElementById('assigned-component-desc');
+      const badgeEl = document.getElementById('assigned-component-badge');
+
+      assignedComponentId = null;
+
+      if (!isAdmin && currentSchedule && currentSchedule.componentAssignments) {
+        for (let compId = 1; compId <= 4; compId++) {
+          const asg = currentSchedule.componentAssignments[compId];
+          if (asg && (asg.judgeId === currentUser?.id || asg.judgeName?.toLowerCase() === currentUser?.name?.toLowerCase())) {
+            assignedComponentId = compId;
+            break;
+          }
+        }
+      }
+
+      for (let compId = 1; compId <= 4; compId++) {
+        const card = document.getElementById(`wrapper-component-${compId}`);
+        if (!card) continue;
+
+        if (isAdmin) {
+          card.classList.remove('hidden');
+        } else if (assignedComponentId) {
+          if (compId === assignedComponentId) {
+            card.classList.remove('hidden');
+          } else {
+            card.classList.add('hidden');
+          }
+        } else {
+          card.classList.remove('hidden');
+        }
+      }
+
+      if (assignBanner && titleEl && descEl && badgeEl) {
+        if (isAdmin) {
+          assignBanner.className = "mb-6 p-4 rounded-2xl border bg-blue-50/70 border-blue-200 text-blue-950 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs";
+          titleEl.innerText = "Mode Administrator: Akses Seluruh 4 Komponen";
+          descEl.innerText = "Anda memiliki hak akses penuh untuk meninjau atau merevisi seluruh komponen penilaian.";
+          badgeEl.className = "px-3 py-1 bg-white border border-blue-300 rounded-xl text-blue-900 font-extrabold text-xs self-start sm:self-auto";
+          badgeEl.innerText = "Total Bobot: 100%";
+        } else if (assignedComponentId) {
+          const comp = RUBRIC_STRUCTURE.find(c => c.id === assignedComponentId);
+          assignBanner.className = "mb-6 p-4 rounded-2xl border bg-emerald-50/80 border-emerald-200 text-emerald-950 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs";
+          titleEl.innerHTML = `<span class="inline-flex items-center gap-1.5"><i data-lucide="check-circle" class="w-4 h-4 text-emerald-600"></i> Tugas Anda: Komponen ${assignedComponentId} - ${comp?.name}</span>`;
+          descEl.innerText = `Sesuai penugasan Admin, Anda hanya menilai kriteria ${comp?.name}. Komponen lainnya dinilai oleh rekan tim juri Anda.`;
+          badgeEl.className = "px-3 py-1 bg-white border border-emerald-300 rounded-xl text-emerald-800 font-extrabold text-xs self-start sm:self-auto";
+          badgeEl.innerText = `Bobot: ${comp?.weight}%`;
+        } else {
+          assignBanner.className = "mb-6 p-4 rounded-2xl border border-amber-200 bg-amber-50 text-amber-900 text-xs flex items-center gap-3";
+          titleEl.innerText = "Peringatan Penugasan";
+          descEl.innerText = "Akun Anda belum dipetakan ke komponen spesifik dalam jadwal ini.";
+          badgeEl.innerText = "-";
+        }
+      }
+      safeCreateIcons();
+    }
+
     window.handleScheduleChange = async function() {
       const scheduleSelect = document.getElementById('score-schedule-select');
       const classSelect = document.getElementById('score-class-select');
@@ -1547,6 +1709,8 @@
       } else {
         isScheduleLockedByDate = false;
       }
+
+      updateComponentVisibility(currentSchedule);
 
       if (schedBadge) {
         if (isDateMatched) {
@@ -1585,7 +1749,8 @@
       const myEvaluationsThisSchedule = existingEvals.filter(e => {
         const matchEvaluator = (e.evaluatorId === currentUser?.id || e.evaluatorName === currentUser?.name);
         const matchSchedule = (e.scheduleId === currentSchedule.id) || (e.periode?.trim().toLowerCase() === currentSchedule.periode.trim().toLowerCase());
-        return matchEvaluator && matchSchedule;
+        const matchComp = assignedComponentId ? (e.componentId === assignedComponentId) : true;
+        return matchEvaluator && matchSchedule && matchComp;
       });
 
       const assessedClassIds = myEvaluationsThisSchedule.map(e => e.classId);
@@ -1600,7 +1765,7 @@
 
       if (banner) {
         if (isAdmin) {
-          banner.className = "mb-8 p-3.5 rounded-2xl border border-blue-200 bg-blue-50 text-blue-900 text-xs flex items-center justify-between";
+          banner.className = "mb-6 p-3.5 rounded-2xl border border-blue-200 bg-blue-50 text-blue-900 text-xs flex items-center justify-between";
           banner.innerHTML = `
             <div class="flex items-center gap-2.5">
               <div class="w-7 h-7 rounded-lg bg-blue-600 text-white flex items-center justify-center font-bold">
@@ -1608,14 +1773,14 @@
               </div>
               <div>
                 <p><strong>Mode Administrator:</strong> Meninjau sesi <em>"${currentSchedule.periode}"</em> (Pelaksanaan: ${formatDateIndo(currentSchedule.tanggal)}).</p>
-                <p class="text-[11px] text-blue-700">Tim 3 Juri: <strong>${(currentSchedule.judgeNames || []).join(', ')}</strong> • Akses bebas tanggal.</p>
+                <p class="text-[11px] text-blue-700">Akses bebas tanggal & dapat meninjau/merubah semua komponen.</p>
               </div>
             </div>
             <span class="text-[10px] font-bold bg-blue-200 text-blue-900 px-2.5 py-1 rounded-lg">Akses Penuh</span>
           `;
         } else if (isScheduleLockedByDate) {
           const isFuture = scheduleDateStr > todayStr;
-          banner.className = "mb-8 p-3.5 rounded-2xl border border-rose-200 bg-rose-50 text-rose-900 text-xs flex items-center justify-between";
+          banner.className = "mb-6 p-3.5 rounded-2xl border border-rose-200 bg-rose-50 text-rose-900 text-xs flex items-center justify-between";
           banner.innerHTML = `
             <div class="flex items-center gap-2.5">
               <div class="w-7 h-7 rounded-lg bg-rose-600 text-white flex items-center justify-center font-bold">
@@ -1623,14 +1788,13 @@
               </div>
               <div>
                 <p><strong>Akses Penilaian Terkunci:</strong> Jadwal sesi ini ditetapkan untuk tanggal <strong>${formatDateIndo(scheduleDateStr)}</strong>.</p>
-                <p class="text-[11px] text-rose-700 mt-0.5">Hari ini adalah <strong>${formatDateIndo(todayStr)}</strong> (${isFuture ? 'Jadwal belum tiba' : 'Jadwal telah lewat'}). Juri hanya dapat menginput nilai pada tanggal pelaksanaan yang telah ditentukan.</p>
+                <p class="text-[11px] text-rose-700 mt-0.5">Hari ini adalah <strong>${formatDateIndo(todayStr)}</strong> (${isFuture ? 'Jadwal belum tiba' : 'Jadwal telah lewat'}).</p>
               </div>
             </div>
             <span class="text-[10px] font-bold bg-rose-200 text-rose-900 px-2.5 py-1 rounded-lg">Terkunci</span>
           `;
         } else {
-          const otherJudges = (currentSchedule.judgeNames || []).filter(name => !name.includes(currentUser?.name));
-          banner.className = "mb-8 p-3.5 rounded-2xl border border-emerald-200 bg-emerald-50 text-emerald-950 text-xs flex items-center justify-between";
+          banner.className = "mb-6 p-3.5 rounded-2xl border border-emerald-200 bg-emerald-50 text-emerald-950 text-xs flex items-center justify-between";
           banner.innerHTML = `
             <div class="flex items-center gap-2.5">
               <div class="w-7 h-7 rounded-lg bg-emerald-600 text-white flex items-center justify-center font-bold">
@@ -1638,7 +1802,7 @@
               </div>
               <div>
                 <p><strong>Sesi Bertugas Hari Ini:</strong> ${currentSchedule.periode} (Tanggal: ${formatDateIndo(currentSchedule.tanggal)}).</p>
-                <p class="text-[11px] text-emerald-700">Rekan Tim Juri: <strong>${otherJudges.join(' & ')}</strong></p>
+                <p class="text-[11px] text-emerald-700">Silakan pilih kelas dan masukkan nilai untuk komponen yang ditugaskan.</p>
               </div>
             </div>
             <span class="text-[10px] font-bold bg-emerald-200 text-emerald-900 px-2.5 py-1 rounded-lg">Progres: ${assessedClassIds.length}/${classes.length} Kelas</span>
@@ -1709,10 +1873,15 @@
 
       const existing = rawEvals.find(e => {
         const matchClass = (e.classId === classId);
-        const matchEvaluator = isAdmin ? true : (e.evaluatorId === currentUser?.id || e.evaluatorName === currentUser?.name);
         const matchPeriodOrSched = (e.scheduleId && currentScheduleId && e.scheduleId === currentScheduleId) || 
                                    (e.periode?.trim().toLowerCase() === period.toLowerCase());
-        return matchClass && matchEvaluator && matchPeriodOrSched;
+        if (isAdmin) {
+          return matchClass && matchPeriodOrSched;
+        } else {
+          const matchEvaluator = (e.evaluatorId === currentUser?.id || e.evaluatorName === currentUser?.name);
+          const matchComp = assignedComponentId ? (e.componentId === assignedComponentId) : true;
+          return matchClass && matchPeriodOrSched && matchEvaluator && matchComp;
+        }
       });
 
       if (existing) {
@@ -1721,14 +1890,6 @@
 
         if (existing.indicatorScores && Object.keys(existing.indicatorScores).length > 0) {
           currentScoringState = { ...existing.indicatorScores };
-        } else {
-          RUBRIC_STRUCTURE.forEach(comp => {
-            const compData = existing.scores?.[`k${comp.id}`];
-            const avg = compData && compData.raw ? Math.min(5, Math.max(1, Math.round(compData.raw / comp.indicators.length))) : 4;
-            comp.indicators.forEach((_, idx) => {
-              currentScoringState[`c${comp.id}_i${idx}`] = avg;
-            });
-          });
         }
 
         clearScoringButtonHighlights();
@@ -1757,11 +1918,11 @@
             iconWrap.innerHTML = `<i data-lucide="edit-3" class="w-4 h-4 text-amber-700"></i>`;
           }
           if (mainText) mainText.innerText = "Mode Edit Penilaian (Admin)";
-          if (subText) subText.innerText = `Menampilkan data penilaian oleh ${existing.evaluatorName}. Anda memiliki hak akses penuh untuk merevisi skor atau mereset form menjadi 0.`;
+          if (subText) subText.innerText = `Menampilkan data penilaian oleh ${existing.evaluatorName}. Anda memiliki hak akses penuh untuk merevisi skor atau mereset form.`;
           if (actionWrap) {
             actionWrap.innerHTML = `
               <button type="button" onclick="cancelEditMode()" class="px-3.5 py-1.5 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 transition shadow-sm">
-                <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> Reset Form (Kembalikan ke 0)
+                <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> Reset Form (Hapus dari Rekap)
               </button>
             `;
           }
@@ -1782,12 +1943,12 @@
             iconWrap.className = "w-9 h-9 rounded-xl bg-slate-200 text-slate-700 flex items-center justify-center font-bold flex-shrink-0";
             iconWrap.innerHTML = `<i data-lucide="lock" class="w-4 h-4 text-slate-600"></i>`;
           }
-          if (mainText) mainText.innerText = "Penilaian Telah Terkirim (Terkunci)";
-          if (subText) subText.innerText = "Data nilai yang sudah tersimpan di Firebase terkunci dan hanya dapat diubah oleh Administrator.";
+          if (mainText) mainText.innerText = `Komponen ${assignedComponentId || ''} Telah Dinilai (Terkunci)`;
+          if (subText) subText.innerText = "Data nilai komponen yang sudah tersimpan di Firebase terkunci dan hanya dapat diubah oleh Administrator.";
           if (actionWrap) {
             actionWrap.innerHTML = `
               <span class="inline-flex items-center gap-1 px-3 py-1 bg-white border border-slate-200 rounded-xl text-slate-500 text-[11px] font-semibold">
-                <i data-lucide="check-check" class="w-3.5 h-3.5 text-emerald-600"></i> Tersimpan di Firestore
+                <i data-lucide="check-check" class="w-3.5 h-3.5 text-emerald-600"></i> Tersimpan
               </span>
             `;
           }
@@ -1823,7 +1984,6 @@
       const className = selectedOption ? selectedOption.text.split(' (')[0] : 'kelas ini';
 
       if (!currentEditingEvalId) {
-        // Jika belum ada dokumen yang sedang diedit, cukup kosongkan form
         currentScoringState = {};
         clearScoringButtonHighlights();
         applyReadOnlyLockToRubric(false);
@@ -1838,20 +1998,19 @@
         return;
       }
 
-      // Dialog konfirmasi penghapusan/reset penilaian oleh Admin
       showCustomModal({
         title: "Reset Penilaian ke 0 & Batalkan Penilaian",
-        desc: `Apakah Anda ingin mereset seluruh nilai <strong>${className}</strong> kembali ke 0?<br><br>
-               Tindakan ini akan <strong>menghapus penilaian kelas ini dari daftar rekapitulasi</strong> sehingga juri yang bertugas dapat menilai kembali kelas tersebut dari awal.`,
+        desc: `Apakah Anda ingin mereset penilaian <strong>${className}</strong>?<br><br>
+               Tindakan ini akan <strong>menghapus lembar penilaian komponen ini</strong> sehingga juri yang bertugas dapat menilai kembali kelas tersebut dari awal.`,
         icon: "alert-triangle",
-        confirmText: "Ya, Reset & Hapus dari Rekap",
+        confirmText: "Ya, Reset & Hapus",
         onConfirm: async () => {
           const evalIdToDelete = currentEditingEvalId;
 
           if (fbDb) {
             try {
               await deleteDoc(doc(fbDb, 'evaluations', evalIdToDelete));
-              showToast(`Penilaian untuk ${className} telah direset ke 0 dan dihapus dari rekap.`);
+              showToast(`Penilaian untuk ${className} telah direset dan dihapus.`);
             } catch (err) {
               console.error("Gagal menghapus penilaian dari Firestore:", err);
               showToast("Gagal mereset di Firebase: " + err.message, "error");
@@ -1859,10 +2018,9 @@
             }
           } else {
             mockDB.evaluations = mockDB.evaluations.filter(e => e.id !== evalIdToDelete);
-            showToast(`Penilaian untuk ${className} telah direset ke 0.`);
+            showToast(`Penilaian untuk ${className} telah direset.`);
           }
 
-          // Kosongkan form dan reset skor tampilan ke 0
           currentEditingEvalId = null;
           currentScoringState = {};
           clearScoringButtonHighlights();
@@ -1882,7 +2040,6 @@
             submitBtn.innerHTML = "Simpan Penilaian";
           }
 
-          // Perbarui dropdown kelas agar tanda (✓ Sudah Dinilai) hilang
           await handleScheduleChange();
           safeCreateIcons();
         }
@@ -1944,17 +2101,23 @@
         return;
       }
 
-      let totalQuestions = 0;
-      RUBRIC_STRUCTURE.forEach(c => totalQuestions += c.indicators.length);
-      const filledCount = Object.keys(currentScoringState).length;
+      // Validasi kelengkapan pengisian untuk komponen yang ditugaskan
+      const targetComps = (isAdmin || !assignedComponentId) 
+        ? RUBRIC_STRUCTURE 
+        : RUBRIC_STRUCTURE.filter(c => c.id === assignedComponentId);
 
-      if (filledCount < totalQuestions) {
-        showCustomModal({
-          title: 'Rubrik Belum Lengkap',
-          desc: `Anda baru mengisi ${filledCount} dari ${totalQuestions} indikator. Harap beri skor 1-5 pada seluruh indikator sebelum menyimpan.`,
-          icon: 'alert-triangle'
-        });
-        return;
+      for (const comp of targetComps) {
+        for (let idx = 0; idx < comp.indicators.length; idx++) {
+          const key = `c${comp.id}_i${idx}`;
+          if (currentScoringState[key] === undefined) {
+            showCustomModal({
+              title: 'Rubrik Belum Lengkap',
+              desc: `Harap berikan skor 1-5 pada seluruh kriteria ${comp.name} sebelum menyimpan.`,
+              icon: 'alert-triangle'
+            });
+            return;
+          }
+        }
       }
 
       const componentBreakdown = {};
@@ -1963,7 +2126,7 @@
       RUBRIC_STRUCTURE.forEach(comp => {
         let rawSum = 0;
         comp.indicators.forEach((_, idx) => {
-          rawSum += currentScoringState[`c${comp.id}_i${idx}`];
+          rawSum += (currentScoringState[`c${comp.id}_i${idx}`] || 0);
         });
         const maxRaw = comp.indicators.length * 5;
         const weighted = (rawSum / maxRaw) * comp.weight;
@@ -1988,7 +2151,10 @@
       else if (totalSkor >= 70) predikat = "Cukup Bersih (C)";
       else predikat = "Kurang Bersih (D)";
 
-      const evalDocId = currentEditingEvalId || `eval_${Date.now()}`;
+      // Dokumen ID spesifik per jadwal, per kelas, dan per komponen
+      const compSuffix = (!isAdmin && assignedComponentId) ? `_c${assignedComponentId}` : `_all`;
+      const evalDocId = currentEditingEvalId || `eval_${selectedScheduleId}_${classId}${compSuffix}_${Date.now()}`;
+
       const evaluationData = {
         id: evalDocId,
         scheduleId: selectedScheduleId,
@@ -1996,6 +2162,7 @@
         className: className,
         evaluatorId: currentUser.id,
         evaluatorName: currentUser.name,
+        componentId: (!isAdmin && assignedComponentId) ? assignedComponentId : null,
         tanggal: tanggalPelaksanaan,
         periode: periode,
         indicatorScores: { ...currentScoringState },
@@ -2014,7 +2181,7 @@
           } else {
             evaluationData.createdAt = new Date().toISOString();
             await setDoc(doc(fbDb, 'evaluations', evalDocId), evaluationData);
-            showToast(`Penilaian untuk ${className} berhasil disimpan ke Firestore!`);
+            showToast(`Penilaian ${(!isAdmin && assignedComponentId) ? 'Komponen ' + assignedComponentId : ''} untuk ${className} berhasil disimpan!`);
           }
         } catch (e) {
           console.error("Gagal simpan evaluasi ke Firebase:", e);
@@ -2051,6 +2218,7 @@
       return mockDB.evaluations;
     }
 
+    // Menggabungkan 4 komponen dari juri-juri yang berbeda menjadi 1 nilai utuh per kelas
     function getAggregatedEvaluations(evalsList) {
       const classMap = new Map();
 
@@ -2092,37 +2260,62 @@
         let totalJudgesAllWeeks = 0;
 
         sortedWeeks.forEach(w => {
-          const count = w.evals.length;
-          totalJudgesAllWeeks += count;
-
-          let wK1 = 0, wK2 = 0, wK3 = 0, wK4 = 0, wTotal = 0;
+          let wK1 = 0, wK2 = 0, wK3 = 0, wK4 = 0;
+          let hasK1 = false, hasK2 = false, hasK3 = false, hasK4 = false;
+          let k1Judge = '-', k2Judge = '-', k3Judge = '-', k4Judge = '-';
           const wJudges = [];
           const wNotes = [];
 
           w.evals.forEach(e => {
-            wK1 += Number(e.scores?.k1?.weighted || 0);
-            wK2 += Number(e.scores?.k2?.weighted || 0);
-            wK3 += Number(e.scores?.k3?.weighted || 0);
-            wK4 += Number(e.scores?.k4?.weighted || 0);
-            wTotal += Number(e.totalSkor || 0);
+            if (e.evaluatorName && !wJudges.includes(e.evaluatorName)) {
+              wJudges.push(e.evaluatorName);
+            }
 
-            if (e.evaluatorName && !wJudges.includes(e.evaluatorName)) wJudges.push(e.evaluatorName);
             if (e.catatan && e.catatan.trim() !== '') {
               wNotes.push({
                 id: e.id,
                 evaluator: e.evaluatorName,
+                componentId: e.componentId,
                 tanggal: e.tanggal,
                 catatan: e.catatan
               });
             }
+
+            // Jika penilaian per komponen spesifik
+            if (e.componentId) {
+              if (e.componentId === 1) {
+                wK1 = Number(e.scores?.k1?.weighted || 0);
+                hasK1 = true;
+                k1Judge = e.evaluatorName;
+              } else if (e.componentId === 2) {
+                wK2 = Number(e.scores?.k2?.weighted || 0);
+                hasK2 = true;
+                k2Judge = e.evaluatorName;
+              } else if (e.componentId === 3) {
+                wK3 = Number(e.scores?.k3?.weighted || 0);
+                hasK3 = true;
+                k3Judge = e.evaluatorName;
+              } else if (e.componentId === 4) {
+                wK4 = Number(e.scores?.k4?.weighted || 0);
+                hasK4 = true;
+                k4Judge = e.evaluatorName;
+              }
+            } else {
+              // Backward-compatibility jika evaluasi menyeluruh
+              if (e.scores?.k1?.weighted !== undefined) { wK1 = Number(e.scores.k1.weighted); hasK1 = true; k1Judge = e.evaluatorName; }
+              if (e.scores?.k2?.weighted !== undefined) { wK2 = Number(e.scores.k2.weighted); hasK2 = true; k2Judge = e.evaluatorName; }
+              if (e.scores?.k3?.weighted !== undefined) { wK3 = Number(e.scores.k3.weighted); hasK3 = true; k3Judge = e.evaluatorName; }
+              if (e.scores?.k4?.weighted !== undefined) { wK4 = Number(e.scores.k4.weighted); hasK4 = true; k4Judge = e.evaluatorName; }
+            }
           });
 
-          const avgWK1 = Number((wK1 / count).toFixed(2));
-          const avgWK2 = Number((wK2 / count).toFixed(2));
-          const avgWK3 = Number((wK3 / count).toFixed(2));
-          const avgWK4 = Number((wK4 / count).toFixed(2));
-          const avgWTotal = Number((wTotal / count).toFixed(2));
+          const avgWK1 = Number(wK1.toFixed(2));
+          const avgWK2 = Number(wK2.toFixed(2));
+          const avgWK3 = Number(wK3.toFixed(2));
+          const avgWK4 = Number(wK4.toFixed(2));
+          const avgWTotal = Number((avgWK1 + avgWK2 + avgWK3 + avgWK4).toFixed(2));
 
+          totalJudgesAllWeeks += wJudges.length;
           sumK1 += avgWK1;
           sumK2 += avgWK2;
           sumK3 += avgWK3;
@@ -2137,8 +2330,9 @@
             avgWK3,
             avgWK4,
             avgWTotal,
-            judgeCount: count,
+            judgeCount: wJudges.length,
             judges: wJudges,
+            judgeDetails: { k1Judge, k2Judge, k3Judge, k4Judge },
             notes: wNotes,
             rawEvaluations: w.evals
           });
@@ -2241,9 +2435,10 @@
       rawEvals.slice(0, 5).forEach(ev => {
         const tr = document.createElement('tr');
         tr.className = 'hover:bg-slate-50/60 transition';
+        const compLabel = ev.componentId ? ` [K${ev.componentId}]` : '';
         tr.innerHTML = `
           <td class="py-3 font-semibold text-slate-800">${ev.className}</td>
-          <td class="py-3 text-slate-500 text-xs">${ev.evaluatorName || '-'}</td>
+          <td class="py-3 text-slate-500 text-xs">${ev.evaluatorName || '-'}${compLabel}</td>
           <td class="py-3 text-slate-500 text-xs font-medium">${formatDateIndo(ev.tanggal)}</td>
           <td class="py-3 font-black text-right text-emerald-600">${ev.totalSkor.toFixed(1)}</td>
         `;
@@ -2369,10 +2564,10 @@
           weekScoreBadges = `
             <div class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 border border-emerald-200 rounded-xl text-xs shadow-2xs">
               <span class="font-black text-emerald-800 text-xs">${w.avgWTotal.toFixed(2)}</span>
-              <span class="text-[10px] text-emerald-600">(${w.judgeCount} tim juri)</span>
+              <span class="text-[10px] text-emerald-600">(${w.judgeCount} juri)</span>
             </div>
           `;
-          weekSubtitleText = `Dinilai oleh ${w.judgeCount} juri pada ${formatDateIndo(w.tanggal)}`;
+          weekSubtitleText = `Dinilai oleh ${w.judgeCount} juri komponen pada ${formatDateIndo(w.tanggal)}`;
         } else {
           weekHistoryBadges = item.weeksSummary.map(w => `
             <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-amber-50 text-amber-900 border border-amber-200 text-[10px] font-semibold mr-1 mb-1">
@@ -2390,7 +2585,7 @@
               </div>
             `;
           }).join('');
-          weekSubtitleText = `Total ${item.totalWeeksCount} pekan penilaian (${item.totalJudgesAllWeeks} total lembar nilai juri)`;
+          weekSubtitleText = `Total ${item.totalWeeksCount} pekan penilaian (${item.totalJudgesAllWeeks} penilaian komponen)`;
         }
 
         const originalIndex = currentAggregatedCache.findIndex(c => c.classId === item.classId);
@@ -2472,30 +2667,30 @@
       const isAdmin = currentUser && currentUser.role === 'admin';
 
       const weeksDetailHtml = group.weeksSummary.map((w, wIdx) => {
-        const judgeRows = w.rawEvaluations.map((ev, i) => {
-          const adminActionBtn = isAdmin ? `
-            <td class="py-2 px-2 text-center">
-              <button onclick="adminEditEvaluation('${ev.id}')" class="px-2.5 py-1 bg-amber-100 hover:bg-amber-200 text-amber-900 rounded-lg text-[10px] font-bold inline-flex items-center gap-1 transition shadow-xs" title="Edit Nilai Penilai Ini">
-                <i data-lucide="edit-2" class="w-3 h-3 text-amber-800"></i> Edit
-              </button>
-            </td>
-          ` : '';
+        const jd = w.judgeDetails || {};
+        const compRows = [
+          { num: 1, name: "Kebersihan Fisik", weight: 30, score: w.avgWK1, judge: jd.k1Judge || '-' },
+          { num: 2, name: "Aspek Adiwiyata", weight: 30, score: w.avgWK2, judge: jd.k2Judge || '-' },
+          { num: 3, name: "Tata Ruang & Administrasi", weight: 20, score: w.avgWK3, judge: jd.k3Judge || '-' },
+          { num: 4, name: "Sarana & Inovasi", weight: 20, score: w.avgWK4, judge: jd.k4Judge || '-' }
+        ];
 
-          return `
-            <tr class="border-b border-slate-100 text-xs">
-              <td class="py-2.5 px-3 font-semibold text-slate-800">${i + 1}. ${ev.evaluatorName}</td>
-              <td class="py-2.5 px-2 text-center text-slate-600">${ev.scores?.k1?.weighted ?? '-'}</td>
-              <td class="py-2.5 px-2 text-center text-slate-600">${ev.scores?.k2?.weighted ?? '-'}</td>
-              <td class="py-2.5 px-2 text-center text-slate-600">${ev.scores?.k3?.weighted ?? '-'}</td>
-              <td class="py-2.5 px-2 text-center text-slate-600">${ev.scores?.k4?.weighted ?? '-'}</td>
-              <td class="py-2.5 px-2 text-center font-bold text-emerald-600">${Number(ev.totalSkor || 0).toFixed(2)}</td>
-              ${adminActionBtn}
-            </tr>
-          `;
-        }).join('');
+        const compRowsHtml = compRows.map(cr => `
+          <tr class="border-b border-slate-100 text-xs">
+            <td class="py-2.5 px-3 font-semibold text-slate-800">
+              <span class="inline-flex items-center gap-1.5">
+                <span class="w-4 h-4 rounded bg-slate-100 text-slate-600 font-bold text-[10px] flex items-center justify-center">${cr.num}</span>
+                ${cr.name}
+              </span>
+            </td>
+            <td class="py-2.5 px-2 text-center text-slate-500 font-medium">${cr.weight}%</td>
+            <td class="py-2.5 px-3 text-slate-700 font-semibold">${cr.judge}</td>
+            <td class="py-2.5 px-2 text-center font-bold text-emerald-700">${cr.score.toFixed(2)}</td>
+          </tr>
+        `).join('');
 
         const notesList = w.notes.length > 0 
-          ? w.notes.map(n => `<div class="p-2 bg-slate-50 rounded-lg border border-slate-200/80 text-[11px] text-slate-700"><strong class="text-slate-900">${n.evaluator}:</strong> "${n.catatan}"</div>`).join('')
+          ? w.notes.map(n => `<div class="p-2 bg-slate-50 rounded-lg border border-slate-200/80 text-[11px] text-slate-700"><strong class="text-slate-900">${n.evaluator} (Komponen ${n.componentId || '-'}):</strong> "${n.catatan}"</div>`).join('')
           : '<p class="text-[11px] text-slate-400 italic">Tidak ada catatan pada pekan ini.</p>';
 
         return `
@@ -2505,11 +2700,11 @@
                 <span class="w-6 h-6 rounded-lg bg-amber-100 text-amber-800 font-black text-xs flex items-center justify-center">${wIdx + 1}</span>
                 <div>
                   <h6 class="font-bold text-slate-900 text-xs">${w.periode}</h6>
-                  <p class="text-[10px] text-slate-500">Tanggal: ${formatDateIndo(w.tanggal)} • ${w.judgeCount} Tim Penilai</p>
+                  <p class="text-[10px] text-slate-500">Tanggal: ${formatDateIndo(w.tanggal)} • Dinilai oleh 4 Juri Komponen</p>
                 </div>
               </div>
               <div class="text-right">
-                <span class="text-sm font-black text-emerald-700">Rerata Pekan: ${w.avgWTotal.toFixed(2)}</span>
+                <span class="text-sm font-black text-emerald-700">Total Pekan: ${w.avgWTotal.toFixed(2)}</span>
               </div>
             </div>
 
@@ -2517,32 +2712,24 @@
               <table class="w-full text-left">
                 <thead class="bg-slate-50 text-[10px] text-slate-500 uppercase font-bold border-b border-slate-200">
                   <tr>
-                    <th class="py-2 px-3">Penilai</th>
-                    <th class="py-2 px-2 text-center">Fisik (30)</th>
-                    <th class="py-2 px-2 text-center">Adiwiyata (30)</th>
-                    <th class="py-2 px-2 text-center">Ruang (20)</th>
-                    <th class="py-2 px-2 text-center">Sarana (20)</th>
-                    <th class="py-2 px-2 text-center">Total</th>
-                    ${isAdmin ? '<th class="py-2 px-2 text-center">Aksi Admin</th>' : ''}
+                    <th class="py-2 px-3">Komponen Penilaian</th>
+                    <th class="py-2 px-2 text-center">Bobot</th>
+                    <th class="py-2 px-3">Juri Penilai yang Bertugas</th>
+                    <th class="py-2 px-2 text-center">Nilai Terkumpul</th>
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100">
-                  ${judgeRows}
-                  <tr class="bg-amber-50/50 font-bold text-xs text-slate-900">
-                    <td class="py-2 px-3 text-amber-900">Rerata Pekan ${wIdx + 1}</td>
-                    <td class="py-2 px-2 text-center text-amber-900">${w.avgWK1}</td>
-                    <td class="py-2 px-2 text-center text-amber-900">${w.avgWK2}</td>
-                    <td class="py-2 px-2 text-center text-amber-900">${w.avgWK3}</td>
-                    <td class="py-2 px-2 text-center text-amber-900">${w.avgWK4}</td>
-                    <td class="py-2 px-2 text-center text-emerald-700 font-black">${w.avgWTotal.toFixed(2)}</td>
-                    ${isAdmin ? '<td></td>' : ''}
+                  ${compRowsHtml}
+                  <tr class="bg-emerald-50/50 font-bold text-xs text-slate-900">
+                    <td colspan="3" class="py-2.5 px-3 text-emerald-900">Total Nilai Gabungan Pekan ${wIdx + 1}</td>
+                    <td class="py-2.5 px-2 text-center text-emerald-700 font-black">${w.avgWTotal.toFixed(2)}</td>
                   </tr>
                 </tbody>
               </table>
             </div>
 
             <div>
-              <p class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Catatan Penilai Pekan Ini:</p>
+              <p class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Catatan Evaluasi Juri Pekan Ini:</p>
               <div class="space-y-1.5">${notesList}</div>
             </div>
           </div>
@@ -2566,8 +2753,7 @@
 
           <div>
             <div class="flex items-center justify-between mb-3">
-              <h5 class="text-xs font-bold text-slate-800 uppercase tracking-wider">Rincian Evaluasi Setiap Pekan & Juri:</h5>
-              ${isAdmin ? '<span class="text-[10px] bg-amber-100 text-amber-900 px-2 py-0.5 rounded font-semibold">Mode Admin: Edit Aktif</span>' : '<span class="text-[10px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded font-semibold">Akses Lihat Saja</span>'}
+              <h5 class="text-xs font-bold text-slate-800 uppercase tracking-wider">Rincian Komponen dari Setiap Juri:</h5>
             </div>
             <div class="max-h-96 overflow-y-auto space-y-2 pr-1">
               ${weeksDetailHtml}
@@ -2603,46 +2789,46 @@
       }
 
       let weeksHtml = group.weeksSummary.map((w, idx) => {
-        let rows = w.rawEvaluations.map((ev, i) => `
+        const jd = w.judgeDetails || {};
+        const compRows = [
+          { num: 1, name: "Kebersihan Fisik", weight: "30%", judge: jd.k1Judge || '-', score: w.avgWK1 },
+          { num: 2, name: "Aspek Adiwiyata", weight: "30%", judge: jd.k2Judge || '-', score: w.avgWK2 },
+          { num: 3, name: "Tata Ruang & Administrasi", weight: "20%", judge: jd.k3Judge || '-', score: w.avgWK3 },
+          { num: 4, name: "Sarana & Inovasi", weight: "20%", judge: jd.k4Judge || '-', score: w.avgWK4 }
+        ];
+
+        let rows = compRows.map(cr => `
           <tr>
-            <td style="padding: 6px 8px; border: 1px solid #cbd5e1; font-size: 11px;">${i + 1}. ${ev.evaluatorName}</td>
-            <td style="padding: 6px 8px; border: 1px solid #cbd5e1; text-align: center; font-size: 11px;">${ev.scores?.k1?.weighted ?? '-'}</td>
-            <td style="padding: 6px 8px; border: 1px solid #cbd5e1; text-align: center; font-size: 11px;">${ev.scores?.k2?.weighted ?? '-'}</td>
-            <td style="padding: 6px 8px; border: 1px solid #cbd5e1; text-align: center; font-size: 11px;">${ev.scores?.k3?.weighted ?? '-'}</td>
-            <td style="padding: 6px 8px; border: 1px solid #cbd5e1; text-align: center; font-size: 11px;">${ev.scores?.k4?.weighted ?? '-'}</td>
-            <td style="padding: 6px 8px; border: 1px solid #cbd5e1; text-align: center; font-weight: bold; font-size: 11px;">${Number(ev.totalSkor || 0).toFixed(2)}</td>
+            <td style="padding: 6px 8px; border: 1px solid #cbd5e1; font-size: 11px;">${cr.num}. ${cr.name}</td>
+            <td style="padding: 6px 8px; border: 1px solid #cbd5e1; text-align: center; font-size: 11px;">${cr.weight}</td>
+            <td style="padding: 6px 8px; border: 1px solid #cbd5e1; font-size: 11px;">${cr.judge}</td>
+            <td style="padding: 6px 8px; border: 1px solid #cbd5e1; text-align: center; font-weight: bold; font-size: 11px;">${cr.score.toFixed(2)}</td>
           </tr>
         `).join('');
 
         let notes = w.notes.length > 0 
-          ? w.notes.map(n => `<div style="font-size: 10px; margin-bottom: 3px;"><strong>${n.evaluator}:</strong> <em>"${n.catatan}"</em></div>`).join('')
+          ? w.notes.map(n => `<div style="font-size: 10px; margin-bottom: 3px;"><strong>${n.evaluator} (K${n.componentId || '-'}):</strong> <em>"${n.catatan}"</em></div>`).join('')
           : '<div style="font-size: 10px; color: #64748b;">Tidak ada catatan khusus.</div>';
 
         return `
           <div style="margin-bottom: 16px;">
             <div style="background: #f1f5f9; padding: 6px 10px; font-weight: bold; font-size: 12px; border: 1px solid #cbd5e1; border-bottom: none; display: flex; justify-content: space-between;">
               <span>${w.periode} (Tanggal: ${formatDateIndo(w.tanggal)})</span>
-              <span>Rerata Pekan: ${w.avgWTotal.toFixed(2)}</span>
+              <span>Total Pekan: ${w.avgWTotal.toFixed(2)}</span>
             </div>
             <table style="width: 100%; border-collapse: collapse; text-align: left;">
               <thead>
                 <tr style="background: #f8fafc; font-size: 10px; text-transform: uppercase;">
-                  <th style="padding: 6px 8px; border: 1px solid #cbd5e1;">Penilai / Juri</th>
-                  <th style="padding: 6px 8px; border: 1px solid #cbd5e1; text-align: center;">Fisik (30%)</th>
-                  <th style="padding: 6px 8px; border: 1px solid #cbd5e1; text-align: center;">Adiwiyata (30%)</th>
-                  <th style="padding: 6px 8px; border: 1px solid #cbd5e1; text-align: center;">Tata Ruang (20%)</th>
-                  <th style="padding: 6px 8px; border: 1px solid #cbd5e1; text-align: center;">Sarana (20%)</th>
-                  <th style="padding: 6px 8px; border: 1px solid #cbd5e1; text-align: center;">Total</th>
+                  <th style="padding: 6px 8px; border: 1px solid #cbd5e1;">Komponen</th>
+                  <th style="padding: 6px 8px; border: 1px solid #cbd5e1; text-align: center;">Bobot</th>
+                  <th style="padding: 6px 8px; border: 1px solid #cbd5e1;">Juri yang Bertugas</th>
+                  <th style="padding: 6px 8px; border: 1px solid #cbd5e1; text-align: center;">Nilai</th>
                 </tr>
               </thead>
               <tbody>
                 ${rows}
                 <tr style="background: #ecfdf5; font-weight: bold; font-size: 11px;">
-                  <td style="padding: 6px 8px; border: 1px solid #cbd5e1; color: #065f46;">Rerata Sesi ${idx + 1}</td>
-                  <td style="padding: 6px 8px; border: 1px solid #cbd5e1; text-align: center; color: #065f46;">${w.avgWK1}</td>
-                  <td style="padding: 6px 8px; border: 1px solid #cbd5e1; text-align: center; color: #065f46;">${w.avgWK2}</td>
-                  <td style="padding: 6px 8px; border: 1px solid #cbd5e1; text-align: center; color: #065f46;">${w.avgWK3}</td>
-                  <td style="padding: 6px 8px; border: 1px solid #cbd5e1; text-align: center; color: #065f46;">${w.avgWK4}</td>
+                  <td colspan="3" style="padding: 6px 8px; border: 1px solid #cbd5e1; color: #065f46;">Total Nilai Pekan ${idx + 1}</td>
                   <td style="padding: 6px 8px; border: 1px solid #cbd5e1; text-align: center; color: #065f46;">${w.avgWTotal.toFixed(2)}</td>
                 </tr>
               </tbody>
@@ -2680,7 +2866,7 @@
             <div>
               <div style="font-size: 11px; text-transform: uppercase; color: #047857; font-weight: bold;">Identitas Kelas</div>
               <div style="font-size: 18px; font-weight: bold; color: #065f46;">${group.className}</div>
-              <div style="font-size: 11px; color: #334155; margin-top: 2px;">Total Periode Dinilai: <strong>${group.totalWeeksCount} Pekan</strong> (${group.totalJudgesAllWeeks} lembar nilai)</div>
+              <div style="font-size: 11px; color: #334155; margin-top: 2px;">Total Periode Dinilai: <strong>${group.totalWeeksCount} Pekan</strong></div>
             </div>
             <div style="text-align: right;">
               <div style="font-size: 10px; text-transform: uppercase; color: #047857; font-weight: bold;">Rerata Nilai Akhir (Gabungan)</div>
@@ -2688,7 +2874,7 @@
               <div style="font-size: 11px; font-weight: bold; color: #065f46;">Predikat: ${group.predikat}</div>
             </div>
           </div>
-          <h4 style="margin: 0 0 10px 0; font-size: 13px; text-transform: uppercase; color: #1e293b;">Rincian Nilai per Pekan & Tim Penilai</h4>
+          <h4 style="margin: 0 0 10px 0; font-size: 13px; text-transform: uppercase; color: #1e293b;">Rincian Komponen per Pekan & Tim Penilai</h4>
           ${weeksHtml}
           <div class="footer-sign">
             <div class="sign-box">
@@ -2697,9 +2883,9 @@
               <p><strong>( ............................................ )</strong><br>NIP. ........................................</p>
             </div>
             <div class="sign-box">
-              <p>Dicetak Pada: ${new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}<br>Tim Penilai / Juri</p>
+              <p>Dicetak Pada: ${new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}<br>Tim Penilai Terjadwal</p>
               <div style="height: 55px;"></div>
-              <p><strong>( Tim Penilai Terjadwal )</strong></p>
+              <p><strong>( Tim Penilai Komponen )</strong></p>
             </div>
           </div>
           <script>window.onload = function() { window.print(); };<\/script>
@@ -2924,6 +3110,7 @@
         schedules = mockDB.schedules;
       }
 
+      // Render Kelas
       const classListEl = document.getElementById('list-master-classes');
       classListEl.innerHTML = '';
       if (classes.length === 0) {
@@ -2937,14 +3124,20 @@
               <p class="text-xs font-bold text-slate-800">${c.namaKelas}</p>
               <p class="text-[11px] text-slate-400">Wali: ${c.waliKelas || '-'}</p>
             </div>
-            <button onclick="requestDeleteClass('${c.id}', '${c.namaKelas}')" class="p-1.5 text-rose-500 hover:bg-rose-50 rounded-lg transition" title="Hapus Kelas">
-              <i data-lucide="trash-2" class="w-4 h-4"></i>
-            </button>
+            <div class="flex items-center gap-1">
+              <button onclick="openModalEditClass('${c.id}')" class="p-1.5 text-amber-600 hover:bg-amber-50 rounded-lg transition" title="Edit Kelas">
+                <i data-lucide="edit-2" class="w-4 h-4"></i>
+              </button>
+              <button onclick="requestDeleteClass('${c.id}', '${c.namaKelas}')" class="p-1.5 text-rose-500 hover:bg-rose-50 rounded-lg transition" title="Hapus Kelas">
+                <i data-lucide="trash-2" class="w-4 h-4"></i>
+              </button>
+            </div>
           `;
           classListEl.appendChild(div);
         });
       }
 
+      // Render Juri
       const judgeListEl = document.getElementById('list-master-judges');
       judgeListEl.innerHTML = '';
       if (users.length === 0) {
@@ -2958,14 +3151,20 @@
               <p class="text-xs font-bold text-slate-800">${u.nama}</p>
               <p class="text-[11px] text-slate-400">Username: <span class="font-mono text-emerald-600 font-semibold">${u.username}</span> • Sandi: ••••••••</p>
             </div>
-            <button onclick="requestDeleteJudge('${u.id}', '${u.nama}')" class="p-1.5 text-rose-500 hover:bg-rose-50 rounded-lg transition" title="Hapus Juri">
-              <i data-lucide="trash-2" class="w-4 h-4"></i>
-            </button>
+            <div class="flex items-center gap-1">
+              <button onclick="openModalEditJudge('${u.id}')" class="p-1.5 text-amber-600 hover:bg-amber-50 rounded-lg transition" title="Edit Akun Juri">
+                <i data-lucide="edit-2" class="w-4 h-4"></i>
+              </button>
+              <button onclick="requestDeleteJudge('${u.id}', '${u.nama}')" class="p-1.5 text-rose-500 hover:bg-rose-50 rounded-lg transition" title="Hapus Juri">
+                <i data-lucide="trash-2" class="w-4 h-4"></i>
+              </button>
+            </div>
           `;
           judgeListEl.appendChild(div);
         });
       }
 
+      // Render Jadwal Sesi dengan Pembagian Komponen
       const schedTbody = document.getElementById('list-master-schedules');
       if (schedTbody) {
         schedTbody.innerHTML = '';
@@ -2976,10 +3175,6 @@
           schedules.forEach(s => {
             const tr = document.createElement('tr');
             tr.className = 'hover:bg-slate-50 transition border-b border-slate-100';
-            
-            const judgesBadges = Array.isArray(s.judgeNames) 
-              ? s.judgeNames.map((name, i) => `<span class="inline-block px-2 py-0.5 bg-amber-50 text-amber-900 border border-amber-200 rounded-md text-[10px] font-semibold mr-1 mb-1">${i + 1}. ${name}</span>`).join('')
-              : (s.judgeName || '-');
 
             let statusBadge = '';
             if (s.tanggal === todayStr) {
@@ -2988,6 +3183,23 @@
               statusBadge = `<span class="px-2.5 py-1 bg-blue-100 text-blue-800 rounded-full text-[10px] font-bold w-fit">Akan Datang</span>`;
             } else {
               statusBadge = `<span class="px-2.5 py-1 bg-slate-100 text-slate-600 rounded-full text-[10px] font-semibold w-fit">Telah Selesai</span>`;
+            }
+
+            let componentListHtml = '';
+            if (s.componentAssignments) {
+              const ca = s.componentAssignments;
+              componentListHtml = `
+                <div class="space-y-1 my-1">
+                  <div class="text-[11px]"><span class="font-bold text-emerald-700">1. Fisik:</span> ${ca[1]?.judgeName || '-'}</div>
+                  <div class="text-[11px]"><span class="font-bold text-teal-700">2. Adiwiyata:</span> ${ca[2]?.judgeName || '-'}</div>
+                  <div class="text-[11px]"><span class="font-bold text-sky-700">3. Tata Ruang:</span> ${ca[3]?.judgeName || '-'}</div>
+                  <div class="text-[11px]"><span class="font-bold text-indigo-700">4. Sarana:</span> ${ca[4]?.judgeName || '-'}</div>
+                </div>
+              `;
+            } else if (Array.isArray(s.judgeNames)) {
+              componentListHtml = s.judgeNames.map((name, i) => `<span class="inline-block px-2 py-0.5 bg-amber-50 text-amber-900 border border-amber-200 rounded-md text-[10px] font-semibold mr-1 mb-1">${i + 1}. ${name}</span>`).join('');
+            } else {
+              componentListHtml = s.judgeName || '-';
             }
 
             tr.innerHTML = `
@@ -2999,15 +3211,20 @@
                 </div>
               </td>
               <td class="py-3 px-4">${statusBadge}</td>
-              <td class="py-3 px-4">${judgesBadges}</td>
+              <td class="py-3 px-4">${componentListHtml}</td>
               <td class="py-3 px-4 font-semibold text-emerald-700">
-                <span class="flex items-center gap-1.5"><i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-emerald-600"></i> Seluruh Kelas Aktif</span>
+                <span class="flex items-center gap-1.5"><i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-emerald-600"></i> Seluruh Kelas</span>
               </td>
               <td class="py-3 px-4 text-slate-500">${s.notes || '-'}</td>
               <td class="py-3 px-4 text-center">
-                <button onclick="requestDeleteSchedule('${s.id}', '${s.periode}')" class="p-1.5 text-rose-500 hover:bg-rose-50 rounded-lg transition" title="Hapus Jadwal Sesi">
-                  <i data-lucide="trash-2" class="w-4 h-4"></i>
-                </button>
+                <div class="flex items-center justify-center gap-1">
+                  <button onclick="openModalEditSchedule('${s.id}')" class="p-1.5 text-amber-600 hover:bg-amber-50 rounded-lg transition" title="Edit Jadwal Sesi">
+                    <i data-lucide="edit-2" class="w-4 h-4"></i>
+                  </button>
+                  <button onclick="requestDeleteSchedule('${s.id}', '${s.periode}')" class="p-1.5 text-rose-500 hover:bg-rose-50 rounded-lg transition" title="Hapus Jadwal Sesi">
+                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                  </button>
+                </div>
               </td>
             `;
             schedTbody.appendChild(tr);
@@ -3018,9 +3235,49 @@
       safeCreateIcons();
     }
 
+    // Modal Tambah / Edit Kelas
     window.openModalAddClass = function() {
+      document.getElementById('input-class-id').value = '';
       document.getElementById('input-class-name').value = '';
       document.getElementById('input-class-homeroom').value = '';
+      document.getElementById('modal-class-title').innerText = 'Tambah Kelas Baru';
+      document.getElementById('modal-class-desc').innerText = 'Masukkan identitas kelas yang akan dinilai';
+      document.getElementById('label-submit-class').innerText = 'Simpan Kelas';
+      const modal = document.getElementById('modal-add-class');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      safeCreateIcons();
+    };
+
+    window.openModalEditClass = async function(id) {
+      let targetClass = null;
+      if (fbDb) {
+        try {
+          const docRef = doc(fbDb, 'classes', id);
+          const docSnap = await getDoc(docRef);
+          if (docSnap.exists()) {
+            targetClass = { ...docSnap.data(), id: docSnap.id };
+          }
+        } catch (e) {
+          console.error("Gagal membaca data kelas:", e);
+        }
+      }
+      if (!targetClass) {
+        targetClass = mockDB.classes.find(c => c.id === id);
+      }
+
+      if (!targetClass) {
+        showToast("Data kelas tidak ditemukan.", "error");
+        return;
+      }
+
+      document.getElementById('input-class-id').value = targetClass.id;
+      document.getElementById('input-class-name').value = targetClass.namaKelas || '';
+      document.getElementById('input-class-homeroom').value = (targetClass.waliKelas === '-' ? '' : targetClass.waliKelas) || '';
+      document.getElementById('modal-class-title').innerText = 'Edit Identitas Kelas';
+      document.getElementById('modal-class-desc').innerText = 'Perbarui nama kelas atau wali kelas';
+      document.getElementById('label-submit-class').innerText = 'Perbarui Kelas';
+      
       const modal = document.getElementById('modal-add-class');
       modal.classList.remove('hidden');
       modal.classList.add('flex');
@@ -3034,40 +3291,93 @@
     };
 
     window.submitAddClass = async function() {
+      const id = document.getElementById('input-class-id').value.trim();
       const nama = document.getElementById('input-class-name').value.trim();
       const homeroom = document.getElementById('input-class-homeroom').value.trim();
 
       if (!nama) return;
 
-      const docId = `cls_${Date.now()}`;
-      const newCls = {
+      const isEdit = Boolean(id);
+      const docId = isEdit ? id : `cls_${Date.now()}`;
+      const classData = {
         id: docId,
         namaKelas: nama,
-        waliKelas: homeroom || "-"
+        waliKelas: homeroom || "-",
+        updatedAt: new Date().toISOString()
       };
+
+      if (!isEdit) {
+        classData.createdAt = new Date().toISOString();
+      }
 
       if (fbDb) {
         try {
-          await setDoc(doc(fbDb, 'classes', docId), newCls);
-          showToast(`Kelas "${nama}" berhasil disimpan ke Firestore!`);
+          await setDoc(doc(fbDb, 'classes', docId), classData, { merge: true });
+          showToast(`Kelas "${nama}" berhasil ${isEdit ? 'diperbarui' : 'disimpan'} ke Firestore!`);
         } catch (e) {
           console.error("Gagal simpan kelas ke Firebase:", e);
           showToast("Gagal menyimpan ke Firebase: " + e.message, "error");
           return;
         }
       } else {
-        mockDB.classes.push(newCls);
-        showToast(`Kelas "${nama}" ditambahkan di memori sementara.`);
+        if (isEdit) {
+          const idx = mockDB.classes.findIndex(c => c.id === docId);
+          if (idx !== -1) mockDB.classes[idx] = { ...mockDB.classes[idx], ...classData };
+        } else {
+          mockDB.classes.push(classData);
+        }
+        showToast(`Kelas "${nama}" berhasil ${isEdit ? 'diperbarui' : 'ditambahkan'}.`);
       }
 
       closeModalAddClass();
       await renderManageData();
     };
 
+    // Modal Tambah / Edit Juri
     window.openModalAddJudge = function() {
+      document.getElementById('input-judge-id').value = '';
       document.getElementById('input-judge-name').value = '';
       document.getElementById('input-judge-username').value = `juri_${Math.floor(Math.random() * 900 + 100)}`;
       document.getElementById('input-judge-password').value = 'password123';
+      document.getElementById('modal-judge-title').innerText = 'Tambah Akun Juri / Penilai';
+      document.getElementById('modal-judge-desc').innerText = 'Buat kredensial login penilai lapangan';
+      document.getElementById('label-submit-judge').innerText = 'Simpan Akun Juri';
+      const modal = document.getElementById('modal-add-judge');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      safeCreateIcons();
+    };
+
+    window.openModalEditJudge = async function(id) {
+      let targetJudge = null;
+      if (fbDb) {
+        try {
+          const docRef = doc(fbDb, 'users', id);
+          const docSnap = await getDoc(docRef);
+          if (docSnap.exists()) {
+            targetJudge = { ...docSnap.data(), id: docSnap.id };
+          }
+        } catch (e) {
+          console.error("Gagal membaca data juri:", e);
+        }
+      }
+      if (!targetJudge) {
+        targetJudge = mockDB.users.find(u => u.id === id);
+      }
+
+      if (!targetJudge) {
+        showToast("Data juri tidak ditemukan.", "error");
+        return;
+      }
+
+      document.getElementById('input-judge-id').value = targetJudge.id;
+      document.getElementById('input-judge-name').value = targetJudge.nama || '';
+      document.getElementById('input-judge-username').value = targetJudge.username || '';
+      document.getElementById('input-judge-password').value = targetJudge.password || '';
+      document.getElementById('modal-judge-title').innerText = 'Edit Akun Juri / Penilai';
+      document.getElementById('modal-judge-desc').innerText = 'Perbarui nama lengkap, username, atau kata sandi';
+      document.getElementById('label-submit-judge').innerText = 'Perbarui Akun Juri';
+
       const modal = document.getElementById('modal-add-judge');
       modal.classList.remove('hidden');
       modal.classList.add('flex');
@@ -3081,52 +3391,73 @@
     };
 
     window.submitAddJudge = async function() {
+      const id = document.getElementById('input-judge-id').value.trim();
       const nama = document.getElementById('input-judge-name').value.trim();
       const username = document.getElementById('input-judge-username').value.trim();
       const password = document.getElementById('input-judge-password').value.trim();
 
       if (!nama || !username || !password) return;
 
-      const docId = `usr_${Date.now()}`;
-      const newUser = {
+      const isEdit = Boolean(id);
+      const docId = isEdit ? id : `usr_${Date.now()}`;
+      const userData = {
         id: docId,
         nama: nama,
         username: username,
         password: password,
-        role: "juri"
+        role: "juri",
+        updatedAt: new Date().toISOString()
       };
+
+      if (!isEdit) {
+        userData.createdAt = new Date().toISOString();
+      }
 
       if (fbDb) {
         try {
-          await setDoc(doc(fbDb, 'users', docId), newUser);
-          showToast(`Akun Juri "${nama}" berhasil disimpan ke Firestore!`);
+          await setDoc(doc(fbDb, 'users', docId), userData, { merge: true });
+          showToast(`Akun Juri "${nama}" berhasil ${isEdit ? 'diperbarui' : 'disimpan'} ke Firestore!`);
         } catch (e) {
           console.error("Gagal simpan juri ke Firebase:", e);
           showToast("Gagal menyimpan ke Firebase: " + e.message, "error");
           return;
         }
       } else {
-        mockDB.users.push(newUser);
-        showToast(`Akun Juri "${nama}" dibuat di memori sementara.`);
+        if (isEdit) {
+          const idx = mockDB.users.findIndex(u => u.id === docId);
+          if (idx !== -1) mockDB.users[idx] = { ...mockDB.users[idx], ...userData };
+        } else {
+          mockDB.users.push(userData);
+        }
+        showToast(`Akun Juri "${nama}" berhasil ${isEdit ? 'diperbarui' : 'dibuat'}.`);
       }
 
       closeModalAddJudge();
       await renderManageData();
     };
 
+    // Modal Tambah / Edit Jadwal Sesi & Pembagian Komponen
     window.openModalAddSchedule = async function() {
       const j1 = document.getElementById('input-schedule-judge-1');
       const j2 = document.getElementById('input-schedule-judge-2');
       const j3 = document.getElementById('input-schedule-judge-3');
+      const j4 = document.getElementById('input-schedule-judge-4');
       const periodInput = document.getElementById('input-schedule-period');
       const dateInput = document.getElementById('input-schedule-date');
       const notesInput = document.getElementById('input-schedule-notes');
 
-      [j1, j2, j3].forEach(sel => sel.innerHTML = '<option value="">-- Pilih Juri --</option>');
+      document.getElementById('input-schedule-id').value = '';
+      [j1, j2, j3, j4].forEach((sel, idx) => {
+        sel.innerHTML = `<option value="">-- Pilih Juri Komponen ${idx + 1} --</option>`;
+      });
       notesInput.value = '';
 
       periodInput.value = "Pekan 1 Oktober 2026";
-      dateInput.value = new Date().toISOString().split('T')[0];
+      dateInput.value = getTodayDateStr();
+
+      document.getElementById('modal-schedule-title').innerText = 'Jadwal Sesi & Pembagian Komponen Juri';
+      document.getElementById('modal-schedule-desc').innerText = 'Atur periode pekan, tanggal, dan tetapkan 1 juri untuk setiap komponen';
+      document.getElementById('label-submit-schedule').innerText = 'Simpan Jadwal Sesi';
 
       let users = [];
       if (fbDb) {
@@ -3141,7 +3472,7 @@
       }
 
       users.forEach((u) => {
-        [j1, j2, j3].forEach(sel => {
+        [j1, j2, j3, j4].forEach(sel => {
           const opt = document.createElement('option');
           opt.value = u.id;
           opt.textContent = `${u.nama} (${u.username})`;
@@ -3149,11 +3480,95 @@
         });
       });
 
-      if (users.length >= 3) {
+      if (users.length >= 4) {
         j1.selectedIndex = 1;
         j2.selectedIndex = 2;
         j3.selectedIndex = 3;
+        j4.selectedIndex = 4;
       }
+
+      const modal = document.getElementById('modal-add-schedule');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      safeCreateIcons();
+    };
+
+    window.openModalEditSchedule = async function(id) {
+      const j1 = document.getElementById('input-schedule-judge-1');
+      const j2 = document.getElementById('input-schedule-judge-2');
+      const j3 = document.getElementById('input-schedule-judge-3');
+      const j4 = document.getElementById('input-schedule-judge-4');
+      const periodInput = document.getElementById('input-schedule-period');
+      const dateInput = document.getElementById('input-schedule-date');
+      const notesInput = document.getElementById('input-schedule-notes');
+
+      [j1, j2, j3, j4].forEach((sel, idx) => {
+        sel.innerHTML = `<option value="">-- Pilih Juri Komponen ${idx + 1} --</option>`;
+      });
+
+      let users = [];
+      if (fbDb) {
+        try {
+          const snapU = await getDocs(collection(fbDb, 'users'));
+          snapU.forEach(d => users.push({ ...d.data(), id: d.id }));
+        } catch (e) {
+          users = [];
+        }
+      } else {
+        users = mockDB.users;
+      }
+
+      users.forEach((u) => {
+        [j1, j2, j3, j4].forEach(sel => {
+          const opt = document.createElement('option');
+          opt.value = u.id;
+          opt.textContent = `${u.nama} (${u.username})`;
+          sel.appendChild(opt);
+        });
+      });
+
+      let targetSchedule = null;
+      if (fbDb) {
+        try {
+          const docRef = doc(fbDb, 'schedules', id);
+          const docSnap = await getDoc(docRef);
+          if (docSnap.exists()) {
+            targetSchedule = { ...docSnap.data(), id: docSnap.id };
+          }
+        } catch (e) {
+          console.error("Gagal membaca jadwal:", e);
+        }
+      }
+      if (!targetSchedule) {
+        targetSchedule = mockDB.schedules.find(s => s.id === id);
+      }
+
+      if (!targetSchedule) {
+        showToast("Data jadwal tidak ditemukan.", "error");
+        return;
+      }
+
+      document.getElementById('input-schedule-id').value = targetSchedule.id;
+      periodInput.value = targetSchedule.periode || '';
+      dateInput.value = targetSchedule.tanggal || getTodayDateStr();
+      notesInput.value = targetSchedule.notes || '';
+
+      if (targetSchedule.componentAssignments) {
+        const ca = targetSchedule.componentAssignments;
+        if (ca[1]?.judgeId) j1.value = ca[1].judgeId;
+        if (ca[2]?.judgeId) j2.value = ca[2].judgeId;
+        if (ca[3]?.judgeId) j3.value = ca[3].judgeId;
+        if (ca[4]?.judgeId) j4.value = ca[4].judgeId;
+      } else if (Array.isArray(targetSchedule.judgeIds)) {
+        if (targetSchedule.judgeIds[0]) j1.value = targetSchedule.judgeIds[0];
+        if (targetSchedule.judgeIds[1]) j2.value = targetSchedule.judgeIds[1];
+        if (targetSchedule.judgeIds[2]) j3.value = targetSchedule.judgeIds[2];
+        if (targetSchedule.judgeIds[3]) j4.value = targetSchedule.judgeIds[3];
+      }
+
+      document.getElementById('modal-schedule-title').innerText = 'Edit Jadwal Sesi & Pembagian Komponen';
+      document.getElementById('modal-schedule-desc').innerText = 'Perbarui periode, tanggal pelaksanaan, atau juri yang bertugas';
+      document.getElementById('label-submit-schedule').innerText = 'Perbarui Jadwal Sesi';
 
       const modal = document.getElementById('modal-add-schedule');
       modal.classList.remove('hidden');
@@ -3168,9 +3583,11 @@
     };
 
     window.submitAddSchedule = async function() {
+      const id = document.getElementById('input-schedule-id').value.trim();
       const j1 = document.getElementById('input-schedule-judge-1');
       const j2 = document.getElementById('input-schedule-judge-2');
       const j3 = document.getElementById('input-schedule-judge-3');
+      const j4 = document.getElementById('input-schedule-judge-4');
       const periodInput = document.getElementById('input-schedule-period');
       const dateInput = document.getElementById('input-schedule-date');
       const notesInput = document.getElementById('input-schedule-notes');
@@ -3178,51 +3595,67 @@
       const id1 = j1.value;
       const id2 = j2.value;
       const id3 = j3.value;
+      const id4 = j4.value;
       const periode = periodInput.value.trim();
       const tanggal = dateInput.value;
       const notes = notesInput.value.trim();
 
-      if (!id1 || !id2 || !id3 || !periode || !tanggal) {
-        showToast("Harap pilih 3 juri, tanggal pelaksanaan, dan pekan periode.", "error");
-        return;
-      }
-
-      if (id1 === id2 || id1 === id3 || id2 === id3) {
-        showCustomModal({
-          title: "Pilihan Juri Harus Berbeda",
-          desc: "Setiap sesi penilaian memerlukan 3 juri yang berbeda. Harap pastikan Juri 1, Juri 2, dan Juri 3 tidak memilih orang yang sama.",
-          icon: "alert-triangle"
-        });
+      if (!id1 || !id2 || !id3 || !id4 || !periode || !tanggal) {
+        showToast("Harap tentukan juri untuk seluruh 4 komponen serta tanggal pelaksanaan.", "error");
         return;
       }
 
       const name1 = j1.options[j1.selectedIndex].text.split(' (')[0];
       const name2 = j2.options[j2.selectedIndex].text.split(' (')[0];
       const name3 = j3.options[j3.selectedIndex].text.split(' (')[0];
+      const name4 = j4.options[j4.selectedIndex].text.split(' (')[0];
 
-      const docId = `sch_${Date.now()}`;
-      const newSchedule = {
+      const isEdit = Boolean(id);
+      const docId = isEdit ? id : `sch_${Date.now()}`;
+      
+      const componentAssignments = {
+        1: { judgeId: id1, judgeName: name1, componentName: "Kebersihan Fisik", weight: 30 },
+        2: { judgeId: id2, judgeName: name2, componentName: "Aspek Adiwiyata", weight: 30 },
+        3: { judgeId: id3, judgeName: name3, componentName: "Tata Ruang & Administrasi", weight: 20 },
+        4: { judgeId: id4, judgeName: name4, componentName: "Sarana & Inovasi", weight: 20 }
+      };
+
+      const uniqueJudgeIds = Array.from(new Set([id1, id2, id3, id4]));
+      const uniqueJudgeNames = Array.from(new Set([name1, name2, name3, name4]));
+
+      const scheduleData = {
         id: docId,
         periode,
         tanggal,
-        judgeIds: [id1, id2, id3],
-        judgeNames: [name1, name2, name3],
+        componentAssignments,
+        judgeIds: uniqueJudgeIds,
+        judgeNames: uniqueJudgeNames,
         targetAllClasses: true,
-        notes: notes || "Sesi Penilaian Kebersihan & Adiwiyata (Seluruh Kelas)"
+        notes: notes || "Sesi Penilaian Kebersihan & Adiwiyata Kelas",
+        updatedAt: new Date().toISOString()
       };
+
+      if (!isEdit) {
+        scheduleData.createdAt = new Date().toISOString();
+      }
 
       if (fbDb) {
         try {
-          await setDoc(doc(fbDb, 'schedules', docId), newSchedule);
-          showToast(`Jadwal sesi untuk ${periode} berhasil disimpan ke Firestore!`);
+          await setDoc(doc(fbDb, 'schedules', docId), scheduleData, { merge: true });
+          showToast(`Jadwal sesi untuk ${periode} berhasil ${isEdit ? 'diperbarui' : 'disimpan'} ke Firestore!`);
         } catch (e) {
           console.error("Gagal simpan jadwal:", e);
           showToast("Gagal menyimpan ke Firebase: " + e.message, "error");
           return;
         }
       } else {
-        mockDB.schedules.unshift(newSchedule);
-        showToast(`Jadwal sesi dibuat di memori sementara.`);
+        if (isEdit) {
+          const idx = mockDB.schedules.findIndex(s => s.id === docId);
+          if (idx !== -1) mockDB.schedules[idx] = { ...mockDB.schedules[idx], ...scheduleData };
+        } else {
+          mockDB.schedules.unshift(scheduleData);
+        }
+        showToast(`Jadwal sesi berhasil ${isEdit ? 'diperbarui' : 'dibuat'}.`);
       }
 
       closeModalAddSchedule();
