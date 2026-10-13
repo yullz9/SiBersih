@@ -168,7 +168,7 @@
     </div>
   </div>
 
-  <!-- Modal Dialog Tambah / Edit Jadwal Sesi & Pembagian Komponen per Juri -->
+  <!-- Modal Dialog Tambah / Edit Jadwal Sesi (Interval Tanggal & Pembagian Komponen) -->
   <div id="modal-add-schedule" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm hidden items-center justify-center p-4">
     <div class="bg-white rounded-3xl max-w-xl w-full p-6 md:p-7 shadow-2xl border border-slate-100 max-h-[92vh] overflow-y-auto">
       <div class="flex items-center gap-3 mb-4">
@@ -176,20 +176,33 @@
           <i data-lucide="calendar-range" class="w-5 h-5"></i>
         </div>
         <div>
-          <h3 id="modal-schedule-title" class="text-base font-bold text-slate-900">Jadwal Sesi & Pembagian Komponen Juri</h3>
-          <p id="modal-schedule-desc" class="text-xs text-slate-400">Atur periode pekan, tanggal, dan tetapkan 1 juri untuk setiap komponen</p>
+          <h3 id="modal-schedule-title" class="text-base font-bold text-slate-900">Jadwal Sesi & Rentang Pelaksanaan</h3>
+          <p id="modal-schedule-desc" class="text-xs text-slate-400">Atur periode pekan, rentang tanggal aktif, dan tetapkan juri per komponen</p>
         </div>
       </div>
       <form id="form-modal-add-schedule" onsubmit="event.preventDefault(); submitAddSchedule();" class="space-y-4">
         <input type="hidden" id="input-schedule-id" value="">
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div>
-            <label class="block text-xs font-semibold text-slate-700 mb-1">Pekan / Periode Penilaian *</label>
-            <input type="text" id="input-schedule-period" required placeholder="Contoh: Pekan 1 Oktober 2026" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none bg-white">
-          </div>
-          <div>
-            <label class="block text-xs font-semibold text-slate-700 mb-1">Tanggal Pelaksanaan *</label>
-            <input type="date" id="input-schedule-date" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none bg-white">
+        
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Pekan / Periode Penilaian *</label>
+          <input type="text" id="input-schedule-period" required placeholder="Contoh: Pekan 1 Oktober 2026" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none bg-white">
+        </div>
+
+        <!-- Rentang Interval Tanggal (Dari s.d. Sampai) -->
+        <div class="p-3.5 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-2">
+          <label class="block text-xs font-bold text-slate-800 flex items-center gap-1.5">
+            <i data-lucide="clock" class="w-4 h-4 text-amber-600"></i> Rentang Tanggal Akses Penilaian (Interval) *
+          </label>
+          <p class="text-[11px] text-slate-500">Juri hanya dapat menilai selama tanggal hari ini berada di antara tanggal mulai dan tanggal selesai.</p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+            <div>
+              <span class="block text-[11px] font-semibold text-slate-600 mb-1">Dari Tanggal (Mulai) *</span>
+              <input type="date" id="input-schedule-start-date" required class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-amber-500 focus:outline-none bg-white font-medium">
+            </div>
+            <div>
+              <span class="block text-[11px] font-semibold text-slate-600 mb-1">Sampai Tanggal (Selesai) *</span>
+              <input type="date" id="input-schedule-end-date" required class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-amber-500 focus:outline-none bg-white font-medium">
+            </div>
           </div>
         </div>
 
@@ -523,7 +536,7 @@
         <div class="border-b border-slate-100 pb-5 mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <h2 class="text-2xl font-black text-slate-900">Formulir Penilaian Kebersihan & Adiwiyata</h2>
-            <p class="text-xs md:text-sm text-slate-500 mt-1">Setiap juri menilai komponen spesifik yang ditugaskan oleh Administrator.</p>
+            <p class="text-xs md:text-sm text-slate-500 mt-1">Setiap juri menilai komponen spesifik yang ditugaskan dalam interval rentang jadwal resmi.</p>
           </div>
         </div>
 
@@ -543,9 +556,9 @@
           <div class="grid grid-cols-1 md:grid-cols-4 gap-3.5 mb-4 p-4 bg-slate-50/70 rounded-2xl border border-slate-200/80">
             <div class="md:col-span-2">
               <div class="flex items-center justify-between mb-1.5">
-                <label class="block text-xs font-bold text-slate-700">Jadwal Sesi & Tanggal Pelaksanaan *</label>
+                <label class="block text-xs font-bold text-slate-700">Jadwal Sesi & Interval Tanggal *</label>
                 <span id="schedule-status-badge" class="text-[10px] font-semibold px-2 py-0.5 rounded-md flex items-center gap-1 bg-amber-100 text-amber-800">
-                  <i data-lucide="calendar" class="w-3 h-3 text-amber-600"></i> Memeriksa Jadwal
+                  <i data-lucide="calendar" class="w-3 h-3 text-amber-600"></i> Memeriksa Rentang
                 </span>
               </div>
               <select id="score-schedule-select" required onchange="handleScheduleChange()" class="w-full p-2.5 rounded-xl border border-slate-200 bg-white text-xs font-semibold text-slate-800 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
@@ -553,6 +566,8 @@
               </select>
               <input type="hidden" id="score-period-input" value="">
               <input type="hidden" id="score-date-input" value="">
+              <input type="hidden" id="score-start-date-input" value="">
+              <input type="hidden" id="score-end-date-input" value="">
             </div>
 
             <div>
@@ -757,9 +772,9 @@
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
           <div>
             <h3 class="font-bold text-slate-900 text-base flex items-center gap-2">
-              <i data-lucide="calendar-check" class="w-5 h-5 text-amber-600"></i> Jadwal Penilaian Sesi & Pembagian Komponen
+              <i data-lucide="calendar-check" class="w-5 h-5 text-amber-600"></i> Jadwal Penilaian Sesi & Rentang Pelaksanaan
             </h3>
-            <p class="text-xs text-slate-500 mt-0.5">Admin menetapkan 1 juri untuk setiap komponen (Fisik, Adiwiyata, Tata Ruang, dan Sarana).</p>
+            <p class="text-xs text-slate-500 mt-0.5">Admin menetapkan rentang tanggal aktif dan 1 juri untuk setiap komponen (Fisik, Adiwiyata, Tata Ruang, dan Sarana).</p>
           </div>
           <button onclick="openModalAddSchedule()" class="px-3.5 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-xl text-xs font-semibold flex items-center gap-1.5 transition shadow-sm">
             <i data-lucide="calendar-plus" class="w-4 h-4"></i> Buat Jadwal Sesi Baru
@@ -769,8 +784,8 @@
           <table class="w-full text-left text-xs">
             <thead class="bg-slate-50 text-[11px] font-bold text-slate-500 uppercase tracking-wider border-b border-slate-100">
               <tr>
-                <th class="py-3 px-4">Pekan & Tanggal</th>
-                <th class="py-3 px-4">Status</th>
+                <th class="py-3 px-4">Pekan & Rentang Tanggal</th>
+                <th class="py-3 px-4">Status Akses</th>
                 <th class="py-3 px-4">Pembagian Juri per Komponen</th>
                 <th class="py-3 px-4">Cakupan</th>
                 <th class="py-3 px-4">Catatan Instruksi</th>
@@ -930,8 +945,8 @@
             </div>
             <p><strong>Penyebab Umum:</strong></p>
             <ol class="list-decimal pl-4 space-y-1 text-[11px]">
-              <li>Tab <strong>Firestore Database</strong> di Firebase Console belum diaktifkan (klik menu <em>Firestore Database</em> &rarr; <em>Create database</em>).</li>
-              <li>Tab <strong>Rules</strong> di Firestore masih menolak akses. Pastikan Anda telah menempelkan aturan dari berkas <code>firestore.rules</code> lalu klik <strong>Publish</strong>.</li>
+              <li>Tab <strong>Firestore Database</strong> di Firebase Console belum diaktifkan.</li>
+              <li>Tab <strong>Rules</strong> di Firestore masih menolak akses.</li>
             </ol>
           </div>
         `;
@@ -1005,7 +1020,7 @@
     let currentEditingEvalId = null;
     let isFormReadOnly = false;
     let isScheduleLockedByDate = false;
-    let assignedComponentId = null; // Menyimpan ID komponen yang ditugaskan ke juri aktif (1, 2, 3, atau 4)
+    let assignedComponentId = null;
 
     function safeCreateIcons() {
       if (window.lucide && typeof window.lucide.createIcons === 'function') {
@@ -1045,6 +1060,13 @@
       } catch (e) {
         return dateStr;
       }
+    };
+
+    // Helper format rentang tanggal
+    window.formatDateRangeIndo = function(startDateStr, endDateStr) {
+      if (!startDateStr && !endDateStr) return '-';
+      if (!endDateStr || startDateStr === endDateStr) return formatDateIndo(startDateStr);
+      return `${formatDateIndo(startDateStr)} s.d. ${formatDateIndo(endDateStr)}`;
     };
 
     function setUserSession(user) {
@@ -1357,7 +1379,7 @@
 
     window.selectScore = function(itemKey, value, compId) {
       if (isScheduleLockedByDate) {
-        showToast("Akses penilaian terkunci: Hari ini bukan tanggal pelaksanaan jadwal sesi ini.", "error");
+        showToast("Akses penilaian terkunci: Hari ini di luar interval tanggal pelaksanaan jadwal sesi ini.", "error");
         return;
       }
 
@@ -1603,18 +1625,23 @@
         const opt = document.createElement('option');
         opt.value = s.id;
         opt.dataset.periode = s.periode;
-        opt.dataset.tanggal = s.tanggal || '';
+        
+        const startDate = s.tanggalMulai || s.tanggal || todayStr;
+        const endDate = s.tanggalSelesai || s.tanggalMulai || s.tanggal || todayStr;
+        opt.dataset.tanggalMulai = startDate;
+        opt.dataset.tanggalSelesai = endDate;
+        opt.dataset.tanggal = startDate;
 
         let statusText = '';
-        if (s.tanggal === todayStr) {
-          statusText = ' [🟢 AKTIF HARI INI]';
-        } else if (s.tanggal > todayStr) {
+        if (todayStr >= startDate && todayStr <= endDate) {
+          statusText = ' [🟢 AKTIF RENTANG INI]';
+        } else if (todayStr < startDate) {
           statusText = ' [⏳ AKAN DATANG]';
         } else {
           statusText = ' [🔒 TELAH BERLALU]';
         }
 
-        opt.textContent = `${s.periode} (Pelaksanaan: ${formatDateIndo(s.tanggal)})${statusText}`;
+        opt.textContent = `${s.periode} (${formatDateRangeIndo(startDate, endDate)})${statusText}`;
         scheduleSelect.appendChild(opt);
       });
 
@@ -1688,6 +1715,8 @@
       const banner = document.getElementById('judge-schedule-banner');
       const periodHidden = document.getElementById('score-period-input');
       const dateHidden = document.getElementById('score-date-input');
+      const startDateHidden = document.getElementById('score-start-date-input');
+      const endDateHidden = document.getElementById('score-end-date-input');
       const schedBadge = document.getElementById('schedule-status-badge');
 
       const selectedScheduleId = scheduleSelect.value;
@@ -1697,14 +1726,18 @@
       if (!currentSchedule) return;
 
       const todayStr = getTodayDateStr();
-      const scheduleDateStr = currentSchedule.tanggal || todayStr;
+      const startDateStr = currentSchedule.tanggalMulai || currentSchedule.tanggal || todayStr;
+      const endDateStr = currentSchedule.tanggalSelesai || currentSchedule.tanggalMulai || currentSchedule.tanggal || todayStr;
+
       periodHidden.value = currentSchedule.periode;
-      dateHidden.value = scheduleDateStr;
+      dateHidden.value = todayStr;
+      if (startDateHidden) startDateHidden.value = startDateStr;
+      if (endDateHidden) endDateHidden.value = endDateStr;
 
       const isAdmin = currentUser && currentUser.role === 'admin';
-      const isDateMatched = (scheduleDateStr === todayStr);
+      const isDateInRange = (todayStr >= startDateStr && todayStr <= endDateStr);
 
-      if (!isAdmin && !isDateMatched) {
+      if (!isAdmin && !isDateInRange) {
         isScheduleLockedByDate = true;
       } else {
         isScheduleLockedByDate = false;
@@ -1713,10 +1746,10 @@
       updateComponentVisibility(currentSchedule);
 
       if (schedBadge) {
-        if (isDateMatched) {
+        if (isDateInRange) {
           schedBadge.className = "text-[10px] font-semibold px-2 py-0.5 rounded-md flex items-center gap-1 bg-emerald-100 text-emerald-800";
-          schedBadge.innerHTML = `<i data-lucide="check-circle" class="w-3 h-3 text-emerald-600"></i> Sesi Aktif Hari Ini`;
-        } else if (scheduleDateStr > todayStr) {
+          schedBadge.innerHTML = `<i data-lucide="check-circle" class="w-3 h-3 text-emerald-600"></i> Aktif Dalam Rentang Jadwal`;
+        } else if (todayStr < startDateStr) {
           schedBadge.className = "text-[10px] font-semibold px-2 py-0.5 rounded-md flex items-center gap-1 bg-blue-100 text-blue-800";
           schedBadge.innerHTML = `<i data-lucide="clock" class="w-3 h-3 text-blue-600"></i> Jadwal Akan Datang`;
         } else {
@@ -1772,14 +1805,14 @@
                 <i data-lucide="shield-alert" class="w-4 h-4"></i>
               </div>
               <div>
-                <p><strong>Mode Administrator:</strong> Meninjau sesi <em>"${currentSchedule.periode}"</em> (Pelaksanaan: ${formatDateIndo(currentSchedule.tanggal)}).</p>
+                <p><strong>Mode Administrator:</strong> Meninjau sesi <em>"${currentSchedule.periode}"</em> (Rentang: ${formatDateRangeIndo(startDateStr, endDateStr)}).</p>
                 <p class="text-[11px] text-blue-700">Akses bebas tanggal & dapat meninjau/merubah semua komponen.</p>
               </div>
             </div>
             <span class="text-[10px] font-bold bg-blue-200 text-blue-900 px-2.5 py-1 rounded-lg">Akses Penuh</span>
           `;
         } else if (isScheduleLockedByDate) {
-          const isFuture = scheduleDateStr > todayStr;
+          const isFuture = todayStr < startDateStr;
           banner.className = "mb-6 p-3.5 rounded-2xl border border-rose-200 bg-rose-50 text-rose-900 text-xs flex items-center justify-between";
           banner.innerHTML = `
             <div class="flex items-center gap-2.5">
@@ -1787,8 +1820,8 @@
                 <i data-lucide="lock" class="w-4 h-4"></i>
               </div>
               <div>
-                <p><strong>Akses Penilaian Terkunci:</strong> Jadwal sesi ini ditetapkan untuk tanggal <strong>${formatDateIndo(scheduleDateStr)}</strong>.</p>
-                <p class="text-[11px] text-rose-700 mt-0.5">Hari ini adalah <strong>${formatDateIndo(todayStr)}</strong> (${isFuture ? 'Jadwal belum tiba' : 'Jadwal telah lewat'}).</p>
+                <p><strong>Akses Penilaian Terkunci:</strong> Jadwal sesi ini ditetapkan untuk rentang <strong>${formatDateRangeIndo(startDateStr, endDateStr)}</strong>.</p>
+                <p class="text-[11px] text-rose-700 mt-0.5">Hari ini adalah <strong>${formatDateIndo(todayStr)}</strong> (${isFuture ? 'Jadwal belum dibuka' : 'Jadwal telah berakhir'}).</p>
               </div>
             </div>
             <span class="text-[10px] font-bold bg-rose-200 text-rose-900 px-2.5 py-1 rounded-lg">Terkunci</span>
@@ -1801,7 +1834,7 @@
                 <i data-lucide="calendar-check" class="w-4 h-4"></i>
               </div>
               <div>
-                <p><strong>Sesi Bertugas Hari Ini:</strong> ${currentSchedule.periode} (Tanggal: ${formatDateIndo(currentSchedule.tanggal)}).</p>
+                <p><strong>Sesi Dibuka Hari Ini:</strong> ${currentSchedule.periode} (Rentang: ${formatDateRangeIndo(startDateStr, endDateStr)}).</p>
                 <p class="text-[11px] text-emerald-700">Silakan pilih kelas dan masukkan nilai untuk komponen yang ditugaskan.</p>
               </div>
             </div>
@@ -1839,14 +1872,14 @@
           iconWrap.className = "w-9 h-9 rounded-xl bg-rose-200 text-rose-800 flex items-center justify-center font-bold flex-shrink-0";
           iconWrap.innerHTML = `<i data-lucide="calendar-x" class="w-4 h-4 text-rose-700"></i>`;
         }
-        if (mainText) mainText.innerText = "Formulir Dinonaktifkan (Di Luar Jadwal)";
-        if (subText) subText.innerText = "Akses input rubrik hanya dapat dibuka saat tanggal pelaksanaan sesi penilaian berlangsung.";
+        if (mainText) mainText.innerText = "Formulir Dinonaktifkan (Di Luar Rentang Jadwal)";
+        if (subText) subText.innerText = "Akses input rubrik hanya dapat dibuka saat tanggal hari ini berada dalam rentang jadwal pelaksanaan.";
         if (actionWrap) actionWrap.innerHTML = '';
 
         if (submitBtn) {
           submitBtn.disabled = true;
           submitBtn.className = "w-full md:w-auto px-8 py-3.5 bg-slate-200 text-slate-400 font-bold rounded-2xl cursor-not-allowed shadow-none flex items-center justify-center gap-2";
-          submitBtn.innerHTML = `<i data-lucide="lock" class="w-4 h-4"></i> Terkunci (Di Luar Jadwal)`;
+          submitBtn.innerHTML = `<i data-lucide="lock" class="w-4 h-4"></i> Terkunci (Di Luar Rentang Jadwal)`;
         }
         safeCreateIcons();
         return;
@@ -2073,7 +2106,7 @@
       const scheduleSelect = document.getElementById('score-schedule-select');
       const selectedScheduleId = scheduleSelect ? scheduleSelect.value : '';
       const periode = document.getElementById('score-period-input').value.trim();
-      const tanggalPelaksanaan = document.getElementById('score-date-input').value.trim() || new Date().toISOString().split('T')[0];
+      const tanggalPelaksanaan = getTodayDateStr();
       const notes = document.getElementById('score-notes').value.trim();
 
       const isAdmin = currentUser && currentUser.role === 'admin';
@@ -2081,7 +2114,7 @@
       if (isScheduleLockedByDate && !isAdmin) {
         showCustomModal({
           title: 'Akses Penilaian Terkunci',
-          desc: `Anda tidak dapat mengirim penilaian di luar tanggal pelaksanaan jadwal sesi (${formatDateIndo(tanggalPelaksanaan)}).`,
+          desc: `Anda tidak dapat mengirim penilaian di luar interval tanggal pelaksanaan jadwal sesi.`,
           icon: 'alert-triangle'
         });
         return;
@@ -2101,7 +2134,6 @@
         return;
       }
 
-      // Validasi kelengkapan pengisian untuk komponen yang ditugaskan
       const targetComps = (isAdmin || !assignedComponentId) 
         ? RUBRIC_STRUCTURE 
         : RUBRIC_STRUCTURE.filter(c => c.id === assignedComponentId);
@@ -2151,7 +2183,6 @@
       else if (totalSkor >= 70) predikat = "Cukup Bersih (C)";
       else predikat = "Kurang Bersih (D)";
 
-      // Dokumen ID spesifik per jadwal, per kelas, dan per komponen
       const compSuffix = (!isAdmin && assignedComponentId) ? `_c${assignedComponentId}` : `_all`;
       const evalDocId = currentEditingEvalId || `eval_${selectedScheduleId}_${classId}${compSuffix}_${Date.now()}`;
 
@@ -2240,7 +2271,7 @@
         const weekMap = new Map();
 
         group.allEvaluations.forEach(ev => {
-          const weekKey = `${ev.periode || 'Pekan Penilaian'}__${ev.tanggal || ''}`;
+          const weekKey = `${ev.periode || 'Pekan Penilaian'}`;
           if (!weekMap.has(weekKey)) {
             weekMap.set(weekKey, {
               weekKey: weekKey,
@@ -2281,7 +2312,6 @@
               });
             }
 
-            // Jika penilaian per komponen spesifik
             if (e.componentId) {
               if (e.componentId === 1) {
                 wK1 = Number(e.scores?.k1?.weighted || 0);
@@ -2301,7 +2331,6 @@
                 k4Judge = e.evaluatorName;
               }
             } else {
-              // Backward-compatibility jika evaluasi menyeluruh
               if (e.scores?.k1?.weighted !== undefined) { wK1 = Number(e.scores.k1.weighted); hasK1 = true; k1Judge = e.evaluatorName; }
               if (e.scores?.k2?.weighted !== undefined) { wK2 = Number(e.scores.k2.weighted); hasK2 = true; k2Judge = e.evaluatorName; }
               if (e.scores?.k3?.weighted !== undefined) { wK3 = Number(e.scores.k3.weighted); hasK3 = true; k3Judge = e.evaluatorName; }
@@ -2468,7 +2497,7 @@
       sessionMap.forEach((tgl, p) => {
         const opt = document.createElement('option');
         opt.value = p;
-        opt.textContent = `${p} (${formatDateIndo(tgl)})`;
+        opt.textContent = `${p}`;
         if (p === currentSelected) opt.selected = true;
         periodSelect.appendChild(opt);
       });
@@ -2558,7 +2587,7 @@
           const w = item.activeWeek;
           weekHistoryBadges = `
             <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-amber-50 text-amber-900 border border-amber-200 text-[11px] font-bold">
-              <i data-lucide="calendar" class="w-3.5 h-3.5 text-amber-600"></i> ${w.periode} (${formatDateIndo(w.tanggal)})
+              <i data-lucide="calendar" class="w-3.5 h-3.5 text-amber-600"></i> ${w.periode}
             </span>
           `;
           weekScoreBadges = `
@@ -2567,11 +2596,11 @@
               <span class="text-[10px] text-emerald-600">(${w.judgeCount} juri)</span>
             </div>
           `;
-          weekSubtitleText = `Dinilai oleh ${w.judgeCount} juri komponen pada ${formatDateIndo(w.tanggal)}`;
+          weekSubtitleText = `Dinilai oleh ${w.judgeCount} juri komponen`;
         } else {
           weekHistoryBadges = item.weeksSummary.map(w => `
             <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-amber-50 text-amber-900 border border-amber-200 text-[10px] font-semibold mr-1 mb-1">
-              <i data-lucide="calendar" class="w-3.5 h-3.5 text-amber-600"></i> ${w.periode} (${formatDateIndo(w.tanggal)})
+              <i data-lucide="calendar" class="w-3.5 h-3.5 text-amber-600"></i> ${w.periode}
             </span>
           `).join('');
 
@@ -2628,43 +2657,9 @@
       safeCreateIcons();
     };
 
-    window.adminEditEvaluation = async function(evalId) {
-      const modal = document.getElementById('custom-modal');
-      if (modal) {
-        modal.classList.add('hidden');
-        modal.classList.remove('flex');
-      }
-
-      navigateView('scoring');
-      await populateScheduleAndClasses();
-
-      const rawEvals = await getEvaluationsList();
-      const targetEval = rawEvals.find(e => e.id === evalId);
-
-      if (!targetEval) {
-        showToast("Data evaluasi tidak ditemukan.", "error");
-        return;
-      }
-
-      const schedSelect = document.getElementById('score-schedule-select');
-      const classSelect = document.getElementById('score-class-select');
-
-      if (schedSelect && targetEval.scheduleId) {
-        schedSelect.value = targetEval.scheduleId;
-        await handleScheduleChange();
-      }
-
-      if (classSelect && targetEval.classId) {
-        classSelect.value = targetEval.classId;
-        await handleClassSelectionChange();
-      }
-    };
-
     window.viewClassByIndex = function(idx) {
       const group = currentAggregatedCache[idx];
       if (!group) return;
-
-      const isAdmin = currentUser && currentUser.role === 'admin';
 
       const weeksDetailHtml = group.weeksSummary.map((w, wIdx) => {
         const jd = w.judgeDetails || {};
@@ -2700,7 +2695,7 @@
                 <span class="w-6 h-6 rounded-lg bg-amber-100 text-amber-800 font-black text-xs flex items-center justify-center">${wIdx + 1}</span>
                 <div>
                   <h6 class="font-bold text-slate-900 text-xs">${w.periode}</h6>
-                  <p class="text-[10px] text-slate-500">Tanggal: ${formatDateIndo(w.tanggal)} • Dinilai oleh 4 Juri Komponen</p>
+                  <p class="text-[10px] text-slate-500">Tanggal Terakhir: ${formatDateIndo(w.tanggal)} • Dinilai oleh 4 Juri Komponen</p>
                 </div>
               </div>
               <div class="text-right">
@@ -2768,131 +2763,6 @@
         icon: 'trophy',
         confirmText: 'Tutup'
       });
-
-      const modalActions = document.getElementById('modal-actions');
-      if (modalActions) {
-        const printBtn = document.createElement('button');
-        printBtn.type = 'button';
-        printBtn.className = 'px-4 py-2.5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold rounded-xl transition flex items-center gap-1.5 shadow-sm';
-        printBtn.innerHTML = `<i data-lucide="printer" class="w-3.5 h-3.5"></i> Cetak Lembar Rincian (PDF)`;
-        printBtn.onclick = () => printClassDetailPDF(group);
-        modalActions.prepend(printBtn);
-        safeCreateIcons();
-      }
-    };
-
-    window.printClassDetailPDF = function(group) {
-      const printWindow = window.open('', '_blank');
-      if (!printWindow) {
-        showToast("Izinkan pop-up untuk mencetak PDF", "error");
-        return;
-      }
-
-      let weeksHtml = group.weeksSummary.map((w, idx) => {
-        const jd = w.judgeDetails || {};
-        const compRows = [
-          { num: 1, name: "Kebersihan Fisik", weight: "30%", judge: jd.k1Judge || '-', score: w.avgWK1 },
-          { num: 2, name: "Aspek Adiwiyata", weight: "30%", judge: jd.k2Judge || '-', score: w.avgWK2 },
-          { num: 3, name: "Tata Ruang & Administrasi", weight: "20%", judge: jd.k3Judge || '-', score: w.avgWK3 },
-          { num: 4, name: "Sarana & Inovasi", weight: "20%", judge: jd.k4Judge || '-', score: w.avgWK4 }
-        ];
-
-        let rows = compRows.map(cr => `
-          <tr>
-            <td style="padding: 6px 8px; border: 1px solid #cbd5e1; font-size: 11px;">${cr.num}. ${cr.name}</td>
-            <td style="padding: 6px 8px; border: 1px solid #cbd5e1; text-align: center; font-size: 11px;">${cr.weight}</td>
-            <td style="padding: 6px 8px; border: 1px solid #cbd5e1; font-size: 11px;">${cr.judge}</td>
-            <td style="padding: 6px 8px; border: 1px solid #cbd5e1; text-align: center; font-weight: bold; font-size: 11px;">${cr.score.toFixed(2)}</td>
-          </tr>
-        `).join('');
-
-        let notes = w.notes.length > 0 
-          ? w.notes.map(n => `<div style="font-size: 10px; margin-bottom: 3px;"><strong>${n.evaluator} (K${n.componentId || '-'}):</strong> <em>"${n.catatan}"</em></div>`).join('')
-          : '<div style="font-size: 10px; color: #64748b;">Tidak ada catatan khusus.</div>';
-
-        return `
-          <div style="margin-bottom: 16px;">
-            <div style="background: #f1f5f9; padding: 6px 10px; font-weight: bold; font-size: 12px; border: 1px solid #cbd5e1; border-bottom: none; display: flex; justify-content: space-between;">
-              <span>${w.periode} (Tanggal: ${formatDateIndo(w.tanggal)})</span>
-              <span>Total Pekan: ${w.avgWTotal.toFixed(2)}</span>
-            </div>
-            <table style="width: 100%; border-collapse: collapse; text-align: left;">
-              <thead>
-                <tr style="background: #f8fafc; font-size: 10px; text-transform: uppercase;">
-                  <th style="padding: 6px 8px; border: 1px solid #cbd5e1;">Komponen</th>
-                  <th style="padding: 6px 8px; border: 1px solid #cbd5e1; text-align: center;">Bobot</th>
-                  <th style="padding: 6px 8px; border: 1px solid #cbd5e1;">Juri yang Bertugas</th>
-                  <th style="padding: 6px 8px; border: 1px solid #cbd5e1; text-align: center;">Nilai</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${rows}
-                <tr style="background: #ecfdf5; font-weight: bold; font-size: 11px;">
-                  <td colspan="3" style="padding: 6px 8px; border: 1px solid #cbd5e1; color: #065f46;">Total Nilai Pekan ${idx + 1}</td>
-                  <td style="padding: 6px 8px; border: 1px solid #cbd5e1; text-align: center; color: #065f46;">${w.avgWTotal.toFixed(2)}</td>
-                </tr>
-              </tbody>
-            </table>
-            <div style="padding: 6px 10px; border: 1px solid #cbd5e1; border-top: none; background: #fff;">
-              <span style="font-size: 10px; font-weight: bold; color: #475569; text-transform: uppercase;">Catatan Evaluasi:</span>
-              <div style="margin-top: 4px;">${notes}</div>
-            </div>
-          </div>
-        `;
-      }).join('');
-
-      printWindow.document.write(`
-        <!DOCTYPE html>
-        <html>
-        <head>
-          <title>Laporan Hasil Penilaian Kebersihan - ${group.className}</title>
-          <style>
-            body { font-family: Arial, sans-serif; margin: 20px; color: #0f172a; line-height: 1.4; }
-            .header { text-align: center; border-bottom: 2px solid #0f172a; padding-bottom: 12px; margin-bottom: 16px; }
-            .header h2 { margin: 0; font-size: 18px; text-transform: uppercase; }
-            .header p { margin: 3px 0 0 0; font-size: 12px; color: #475569; }
-            .summary-box { display: flex; justify-content: space-between; align-items: center; border: 1.5px solid #059669; padding: 10px 14px; border-radius: 6px; margin-bottom: 18px; background: #f0fdf4; }
-            .footer-sign { margin-top: 36px; display: flex; justify-content: space-between; }
-            .sign-box { text-align: center; font-size: 11px; width: 220px; }
-            @media print { @page { size: A4 portrait; margin: 1.2cm; } }
-          </style>
-        </head>
-        <body>
-          <div class="header">
-            <h2>LEMBAR HASIL PENILAIAN KEBERSIHAN & ADIWIYATA KELAS</h2>
-            <p>Program Budaya Lingkungan Bersih & Sehat Sekolah</p>
-          </div>
-          <div class="summary-box">
-            <div>
-              <div style="font-size: 11px; text-transform: uppercase; color: #047857; font-weight: bold;">Identitas Kelas</div>
-              <div style="font-size: 18px; font-weight: bold; color: #065f46;">${group.className}</div>
-              <div style="font-size: 11px; color: #334155; margin-top: 2px;">Total Periode Dinilai: <strong>${group.totalWeeksCount} Pekan</strong></div>
-            </div>
-            <div style="text-align: right;">
-              <div style="font-size: 10px; text-transform: uppercase; color: #047857; font-weight: bold;">Rerata Nilai Akhir (Gabungan)</div>
-              <div style="font-size: 26px; font-weight: 900; color: #047857;">${group.grandAvgTotal.toFixed(2)}</div>
-              <div style="font-size: 11px; font-weight: bold; color: #065f46;">Predikat: ${group.predikat}</div>
-            </div>
-          </div>
-          <h4 style="margin: 0 0 10px 0; font-size: 13px; text-transform: uppercase; color: #1e293b;">Rincian Komponen per Pekan & Tim Penilai</h4>
-          ${weeksHtml}
-          <div class="footer-sign">
-            <div class="sign-box">
-              <p>Mengetahui,<br>Koordinator Tim Adiwiyata</p>
-              <div style="height: 55px;"></div>
-              <p><strong>( ............................................ )</strong><br>NIP. ........................................</p>
-            </div>
-            <div class="sign-box">
-              <p>Dicetak Pada: ${new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}<br>Tim Penilai Terjadwal</p>
-              <div style="height: 55px;"></div>
-              <p><strong>( Tim Penilai Komponen )</strong></p>
-            </div>
-          </div>
-          <script>window.onload = function() { window.print(); };<\/script>
-        </body>
-        </html>
-      `);
-      printWindow.document.close();
     };
 
     window.printLeaderboardPDF = async function() {
@@ -2919,7 +2789,7 @@
 
           return {
             className: item.className,
-            weekDetailStr: `${targetWeek.periode} (${formatDateIndo(targetWeek.tanggal)})`,
+            weekDetailStr: `${targetWeek.periode}`,
             k1: targetWeek.avgWK1,
             k2: targetWeek.avgWK2,
             k3: targetWeek.avgWK3,
@@ -2994,7 +2864,7 @@
               <tr>
                 <th style="width: 35px;">Rank</th>
                 <th>Nama Kelas</th>
-                <th>${isSingleWeek ? 'Sesi Pelaksanaan' : 'Nilai per Pekan'}</th>
+                <th>${isSingleWeek ? 'Sesi Pekan' : 'Nilai per Pekan'}</th>
                 <th>Fisik (30%)</th>
                 <th>Adiwiyata (30%)</th>
                 <th>Tata Ruang (20%)</th>
@@ -3039,7 +2909,7 @@
 
       let csv = '';
       if (isSingleWeek) {
-        csv = 'Rank,Kelas,Sesi Pekan,Tanggal Pelaksanaan,Jumlah Juri,Fisik (30%),Adiwiyata (30%),Tata Ruang (20%),Sarana (20%),Nilai Akhir Pekan,Predikat\n';
+        csv = 'Rank,Kelas,Sesi Pekan,Jumlah Juri,Fisik (30%),Adiwiyata (30%),Tata Ruang (20%),Sarana (20%),Nilai Akhir Pekan,Predikat\n';
         const filteredList = aggregatedList.filter(item => item.weeksSummary.some(w => w.periode === periodFilter)).map(item => {
           const w = item.weeksSummary.find(target => target.periode === periodFilter);
           let pred = "Cukup";
@@ -3050,7 +2920,6 @@
           return {
             className: item.className,
             periode: w.periode,
-            tanggal: w.tanggal,
             judgeCount: w.judgeCount,
             k1: w.avgWK1,
             k2: w.avgWK2,
@@ -3062,14 +2931,14 @@
         });
         filteredList.sort((a, b) => b.score - a.score);
         filteredList.forEach((row, i) => {
-          csv += `${i + 1},"${row.className}","${row.periode}","${formatDateIndo(row.tanggal)}",${row.judgeCount},${row.k1},${row.k2},${row.k3},${row.k4},${row.score},"${row.predikat}"\n`;
+          csv += `${i + 1},"${row.className}","${row.periode}",${row.judgeCount},${row.k1},${row.k2},${row.k3},${row.k4},${row.score},"${row.predikat}"\n`;
         });
       } else {
         csv = 'Rank,Kelas,Total Pekan,Riwayat Pekan,Rata-rata Nilai Akhir,Predikat,Fisik Rerata (30%),Adiwiyata Rerata (30%),Tata Ruang Rerata (20%),Sarana Rerata (20%),Rincian Nilai per Pekan\n';
         const sorted = [...aggregatedList].sort((a, b) => b.grandAvgTotal - a.grandAvgTotal);
 
         sorted.forEach((item, i) => {
-          const periods = item.weeksSummary.map(w => `${w.periode} (${formatDateIndo(w.tanggal)})`).join('; ').replace(/"/g, '""');
+          const periods = item.weeksSummary.map(w => `${w.periode}`).join('; ').replace(/"/g, '""');
           const weekScores = item.weeksSummary.map((w, idx) => `Pekan ${idx + 1}: ${w.avgWTotal}`).join('; ');
           csv += `${i + 1},"${item.className}",${item.totalWeeksCount},"${periods}",${item.grandAvgTotal},"${item.predikat}",${item.overallAvgK1},${item.overallAvgK2},${item.overallAvgK3},${item.overallAvgK4},"${weekScores}"\n`;
         });
@@ -3164,7 +3033,7 @@
         });
       }
 
-      // Render Jadwal Sesi dengan Pembagian Komponen
+      // Render Jadwal Sesi dengan Rentang Tanggal
       const schedTbody = document.getElementById('list-master-schedules');
       if (schedTbody) {
         schedTbody.innerHTML = '';
@@ -3176,10 +3045,13 @@
             const tr = document.createElement('tr');
             tr.className = 'hover:bg-slate-50 transition border-b border-slate-100';
 
+            const startDate = s.tanggalMulai || s.tanggal || todayStr;
+            const endDate = s.tanggalSelesai || s.tanggalMulai || s.tanggal || todayStr;
+
             let statusBadge = '';
-            if (s.tanggal === todayStr) {
-              statusBadge = `<span class="px-2.5 py-1 bg-emerald-100 text-emerald-800 rounded-full text-[10px] font-bold flex items-center gap-1 w-fit"><span class="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-ping"></span> Aktif Hari Ini</span>`;
-            } else if (s.tanggal > todayStr) {
+            if (todayStr >= startDate && todayStr <= endDate) {
+              statusBadge = `<span class="px-2.5 py-1 bg-emerald-100 text-emerald-800 rounded-full text-[10px] font-bold flex items-center gap-1 w-fit"><span class="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-ping"></span> Aktif Sekarang</span>`;
+            } else if (todayStr < startDate) {
               statusBadge = `<span class="px-2.5 py-1 bg-blue-100 text-blue-800 rounded-full text-[10px] font-bold w-fit">Akan Datang</span>`;
             } else {
               statusBadge = `<span class="px-2.5 py-1 bg-slate-100 text-slate-600 rounded-full text-[10px] font-semibold w-fit">Telah Selesai</span>`;
@@ -3206,8 +3078,8 @@
               <td class="py-3 px-4">
                 <p class="font-bold text-slate-900">${s.periode}</p>
                 <div class="flex items-center gap-1 text-[11px] text-emerald-700 font-semibold mt-0.5">
-                  <i data-lucide="calendar" class="w-3.5 h-3.5"></i>
-                  <span>${formatDateIndo(s.tanggal)}</span>
+                  <i data-lucide="calendar-range" class="w-3.5 h-3.5"></i>
+                  <span>${formatDateRangeIndo(startDate, endDate)}</span>
                 </div>
               </td>
               <td class="py-3 px-4">${statusBadge}</td>
@@ -3436,14 +3308,15 @@
       await renderManageData();
     };
 
-    // Modal Tambah / Edit Jadwal Sesi & Pembagian Komponen
+    // Modal Tambah / Edit Jadwal Sesi dengan Rentang Interval Tanggal
     window.openModalAddSchedule = async function() {
       const j1 = document.getElementById('input-schedule-judge-1');
       const j2 = document.getElementById('input-schedule-judge-2');
       const j3 = document.getElementById('input-schedule-judge-3');
       const j4 = document.getElementById('input-schedule-judge-4');
       const periodInput = document.getElementById('input-schedule-period');
-      const dateInput = document.getElementById('input-schedule-date');
+      const startDateInput = document.getElementById('input-schedule-start-date');
+      const endDateInput = document.getElementById('input-schedule-end-date');
       const notesInput = document.getElementById('input-schedule-notes');
 
       document.getElementById('input-schedule-id').value = '';
@@ -3452,11 +3325,13 @@
       });
       notesInput.value = '';
 
-      periodInput.value = "Pekan 1 Oktober 2026";
-      dateInput.value = getTodayDateStr();
+      periodInput.value = "Pekan 1";
+      const today = getTodayDateStr();
+      startDateInput.value = today;
+      endDateInput.value = today;
 
-      document.getElementById('modal-schedule-title').innerText = 'Jadwal Sesi & Pembagian Komponen Juri';
-      document.getElementById('modal-schedule-desc').innerText = 'Atur periode pekan, tanggal, dan tetapkan 1 juri untuk setiap komponen';
+      document.getElementById('modal-schedule-title').innerText = 'Jadwal Sesi & Rentang Pelaksanaan';
+      document.getElementById('modal-schedule-desc').innerText = 'Atur periode pekan, rentang tanggal aktif, dan tetapkan juri per komponen';
       document.getElementById('label-submit-schedule').innerText = 'Simpan Jadwal Sesi';
 
       let users = [];
@@ -3499,7 +3374,8 @@
       const j3 = document.getElementById('input-schedule-judge-3');
       const j4 = document.getElementById('input-schedule-judge-4');
       const periodInput = document.getElementById('input-schedule-period');
-      const dateInput = document.getElementById('input-schedule-date');
+      const startDateInput = document.getElementById('input-schedule-start-date');
+      const endDateInput = document.getElementById('input-schedule-end-date');
       const notesInput = document.getElementById('input-schedule-notes');
 
       [j1, j2, j3, j4].forEach((sel, idx) => {
@@ -3550,7 +3426,11 @@
 
       document.getElementById('input-schedule-id').value = targetSchedule.id;
       periodInput.value = targetSchedule.periode || '';
-      dateInput.value = targetSchedule.tanggal || getTodayDateStr();
+      
+      const sDate = targetSchedule.tanggalMulai || targetSchedule.tanggal || getTodayDateStr();
+      const eDate = targetSchedule.tanggalSelesai || targetSchedule.tanggalMulai || targetSchedule.tanggal || getTodayDateStr();
+      startDateInput.value = sDate;
+      endDateInput.value = eDate;
       notesInput.value = targetSchedule.notes || '';
 
       if (targetSchedule.componentAssignments) {
@@ -3566,8 +3446,8 @@
         if (targetSchedule.judgeIds[3]) j4.value = targetSchedule.judgeIds[3];
       }
 
-      document.getElementById('modal-schedule-title').innerText = 'Edit Jadwal Sesi & Pembagian Komponen';
-      document.getElementById('modal-schedule-desc').innerText = 'Perbarui periode, tanggal pelaksanaan, atau juri yang bertugas';
+      document.getElementById('modal-schedule-title').innerText = 'Edit Jadwal Sesi & Rentang Pelaksanaan';
+      document.getElementById('modal-schedule-desc').innerText = 'Perbarui periode, rentang tanggal aktif, atau juri yang bertugas';
       document.getElementById('label-submit-schedule').innerText = 'Perbarui Jadwal Sesi';
 
       const modal = document.getElementById('modal-add-schedule');
@@ -3589,7 +3469,8 @@
       const j3 = document.getElementById('input-schedule-judge-3');
       const j4 = document.getElementById('input-schedule-judge-4');
       const periodInput = document.getElementById('input-schedule-period');
-      const dateInput = document.getElementById('input-schedule-date');
+      const startDateInput = document.getElementById('input-schedule-start-date');
+      const endDateInput = document.getElementById('input-schedule-end-date');
       const notesInput = document.getElementById('input-schedule-notes');
 
       const id1 = j1.value;
@@ -3597,11 +3478,17 @@
       const id3 = j3.value;
       const id4 = j4.value;
       const periode = periodInput.value.trim();
-      const tanggal = dateInput.value;
+      const startDate = startDateInput.value;
+      const endDate = endDateInput.value;
       const notes = notesInput.value.trim();
 
-      if (!id1 || !id2 || !id3 || !id4 || !periode || !tanggal) {
-        showToast("Harap tentukan juri untuk seluruh 4 komponen serta tanggal pelaksanaan.", "error");
+      if (!id1 || !id2 || !id3 || !id4 || !periode || !startDate || !endDate) {
+        showToast("Harap tentukan juri untuk seluruh 4 komponen serta rentang tanggal pelaksanaan.", "error");
+        return;
+      }
+
+      if (startDate > endDate) {
+        showToast("Tanggal mulai tidak boleh lebih lambat daripada tanggal selesai.", "error");
         return;
       }
 
@@ -3626,7 +3513,9 @@
       const scheduleData = {
         id: docId,
         periode,
-        tanggal,
+        tanggal: startDate,
+        tanggalMulai: startDate,
+        tanggalSelesai: endDate,
         componentAssignments,
         judgeIds: uniqueJudgeIds,
         judgeNames: uniqueJudgeNames,
@@ -3642,7 +3531,7 @@
       if (fbDb) {
         try {
           await setDoc(doc(fbDb, 'schedules', docId), scheduleData, { merge: true });
-          showToast(`Jadwal sesi untuk ${periode} berhasil ${isEdit ? 'diperbarui' : 'disimpan'} ke Firestore!`);
+          showToast(`Jadwal rentang untuk ${periode} berhasil ${isEdit ? 'diperbarui' : 'disimpan'} ke Firestore!`);
         } catch (e) {
           console.error("Gagal simpan jadwal:", e);
           showToast("Gagal menyimpan ke Firebase: " + e.message, "error");
