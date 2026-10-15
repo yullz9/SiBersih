@@ -185,7 +185,7 @@
         
         <div>
           <label class="block text-xs font-semibold text-slate-700 mb-1">Pekan / Periode Penilaian *</label>
-          <input type="text" id="input-schedule-period" required placeholder="Contoh: Pekan 1 Oktober 2026" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none bg-white">
+          <input type="text" id="input-schedule-period" required placeholder="Contoh: Pekan 1" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none bg-white">
         </div>
 
         <!-- Rentang Interval Tanggal (Dari s.d. Sampai) -->
@@ -607,7 +607,10 @@
               <div class="bg-emerald-800 text-white p-4 flex flex-wrap items-center justify-between gap-2">
                 <div class="flex items-center gap-2">
                   <span class="w-7 h-7 rounded-lg bg-emerald-700 flex items-center justify-center font-bold text-sm">1</span>
-                  <h3 class="font-bold text-base">Kebersihan Fisik</h3>
+                  <div>
+                    <h3 class="font-bold text-base">Kebersihan Fisik</h3>
+                    <p id="judge-tag-comp-1" class="text-[11px] text-emerald-200 font-medium"></p>
+                  </div>
                 </div>
                 <div class="flex items-center gap-3">
                   <span class="text-xs bg-emerald-900/80 px-3 py-1 rounded-full font-semibold border border-emerald-700">Total Bobot: 30%</span>
@@ -622,7 +625,10 @@
               <div class="bg-teal-800 text-white p-4 flex flex-wrap items-center justify-between gap-2">
                 <div class="flex items-center gap-2">
                   <span class="w-7 h-7 rounded-lg bg-teal-700 flex items-center justify-center font-bold text-sm">2</span>
-                  <h3 class="font-bold text-base">Aspek Adiwiyata</h3>
+                  <div>
+                    <h3 class="font-bold text-base">Aspek Adiwiyata</h3>
+                    <p id="judge-tag-comp-2" class="text-[11px] text-teal-200 font-medium"></p>
+                  </div>
                 </div>
                 <div class="flex items-center gap-3">
                   <span class="text-xs bg-teal-900/80 px-3 py-1 rounded-full font-semibold border border-teal-700">Total Bobot: 30%</span>
@@ -637,7 +643,10 @@
               <div class="bg-sky-800 text-white p-4 flex flex-wrap items-center justify-between gap-2">
                 <div class="flex items-center gap-2">
                   <span class="w-7 h-7 rounded-lg bg-sky-700 flex items-center justify-center font-bold text-sm">3</span>
-                  <h3 class="font-bold text-base">Tata Ruang & Administrasi</h3>
+                  <div>
+                    <h3 class="font-bold text-base">Tata Ruang & Administrasi</h3>
+                    <p id="judge-tag-comp-3" class="text-[11px] text-sky-200 font-medium"></p>
+                  </div>
                 </div>
                 <div class="flex items-center gap-3">
                   <span class="text-xs bg-sky-900/80 px-3 py-1 rounded-full font-semibold border border-sky-700">Total Bobot: 20%</span>
@@ -652,7 +661,10 @@
               <div class="bg-indigo-800 text-white p-4 flex flex-wrap items-center justify-between gap-2">
                 <div class="flex items-center gap-2">
                   <span class="w-7 h-7 rounded-lg bg-indigo-700 flex items-center justify-center font-bold text-sm">4</span>
-                  <h3 class="font-bold text-base">Sarana & Inovasi</h3>
+                  <div>
+                    <h3 class="font-bold text-base">Sarana & Inovasi</h3>
+                    <p id="judge-tag-comp-4" class="text-[11px] text-indigo-200 font-medium"></p>
+                  </div>
                 </div>
                 <div class="flex items-center gap-3">
                   <span class="text-xs bg-indigo-900/80 px-3 py-1 rounded-full font-semibold border border-indigo-700">Total Bobot: 20%</span>
@@ -844,7 +856,7 @@
 
     // Database Fallback In-Memory
     let mockDB = {
-      settings: { activePeriod: "Pekan 1 Oktober 2026" },
+      settings: { activePeriod: "Pekan 1" },
       classes: [],
       users: [],
       schedules: [],
@@ -1018,6 +1030,7 @@
     let currentUser = null;
     let currentScoringState = {};
     let currentEditingEvalId = null;
+    let currentEditingEvalList = []; // Array lembar nilai komponen yang ditemukan untuk kelas ini
     let isFormReadOnly = false;
     let isScheduleLockedByDate = false;
     let assignedComponentId = null;
@@ -1472,7 +1485,7 @@
         if (predikatDisplay) predikatDisplay.innerText = `Status: ${status}`;
       } else {
         if (maxTargetLabel) maxTargetLabel.innerText = `/ 100 Poin`;
-        if (summaryTitle) summaryTitle.innerText = `Total Nilai Keseluruhan Kelas`;
+        if (summaryTitle) summaryTitle.innerText = `Total Nilai Keseluruhan Kelas (4 Komponen)`;
         let pred = "Belum Lengkap";
         if (totalFilled === totalQuestions) {
           if (totalWeighted >= 90) pred = "Predikat: Sangat Bersih (A)";
@@ -1688,8 +1701,8 @@
       if (assignBanner && titleEl && descEl && badgeEl) {
         if (isAdmin) {
           assignBanner.className = "mb-6 p-4 rounded-2xl border bg-blue-50/70 border-blue-200 text-blue-950 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs";
-          titleEl.innerText = "Mode Administrator: Akses Seluruh 4 Komponen";
-          descEl.innerText = "Anda memiliki hak akses penuh untuk meninjau atau merevisi seluruh komponen penilaian.";
+          titleEl.innerText = "Mode Administrator: Menampilkan Seluruh 4 Komponen";
+          descEl.innerText = "Menampilkan seluruh nilai yang telah dinilai juri di semua komponen. Anda dapat meninjau, mengedit, atau mereset penilaian.";
           badgeEl.className = "px-3 py-1 bg-white border border-blue-300 rounded-xl text-blue-900 font-extrabold text-xs self-start sm:self-auto";
           badgeEl.innerText = "Total Bobot: 100%";
         } else if (assignedComponentId) {
@@ -1779,20 +1792,39 @@
       classSelect.innerHTML = '<option value="">-- Pilih Kelas yang Dinilai --</option>';
       classSelect.disabled = false;
 
-      const myEvaluationsThisSchedule = existingEvals.filter(e => {
-        const matchEvaluator = (e.evaluatorId === currentUser?.id || e.evaluatorName === currentUser?.name);
+      // Filter penilaian yang relevan dengan jadwal sesi ini
+      const relevantEvalsThisSchedule = existingEvals.filter(e => {
         const matchSchedule = (e.scheduleId === currentSchedule.id) || (e.periode?.trim().toLowerCase() === currentSchedule.periode.trim().toLowerCase());
-        const matchComp = assignedComponentId ? (e.componentId === assignedComponentId) : true;
-        return matchEvaluator && matchSchedule && matchComp;
+        if (isAdmin) {
+          return matchSchedule;
+        } else {
+          const matchEvaluator = (e.evaluatorId === currentUser?.id || e.evaluatorName === currentUser?.name);
+          const matchComp = assignedComponentId ? (e.componentId === assignedComponentId) : true;
+          return matchSchedule && matchEvaluator && matchComp;
+        }
       });
 
-      const assessedClassIds = myEvaluationsThisSchedule.map(e => e.classId);
+      const assessedClassIds = Array.from(new Set(relevantEvalsThisSchedule.map(e => e.classId)));
 
       classes.forEach(c => {
-        const hasAssessed = assessedClassIds.includes(c.id);
+        let tagAssessed = '';
+        if (isAdmin) {
+          const countCompAssessed = existingEvals.filter(e => {
+            const matchSchedule = (e.scheduleId === currentSchedule.id) || (e.periode?.trim().toLowerCase() === currentSchedule.periode.trim().toLowerCase());
+            return matchSchedule && e.classId === c.id;
+          }).length;
+          if (countCompAssessed > 0) {
+            tagAssessed = ` (✓ ${countCompAssessed} Komponen Dinilai)`;
+          }
+        } else {
+          if (assessedClassIds.includes(c.id)) {
+            tagAssessed = ' (✓ Sudah Dinilai)';
+          }
+        }
+
         const opt = document.createElement('option');
         opt.value = c.id;
-        opt.textContent = `${c.namaKelas} ${hasAssessed ? ' (✓ Sudah Dinilai)' : ''}`;
+        opt.textContent = `${c.namaKelas}${tagAssessed}`;
         classSelect.appendChild(opt);
       });
 
@@ -1806,10 +1838,10 @@
               </div>
               <div>
                 <p><strong>Mode Administrator:</strong> Meninjau sesi <em>"${currentSchedule.periode}"</em> (Rentang: ${formatDateRangeIndo(startDateStr, endDateStr)}).</p>
-                <p class="text-[11px] text-blue-700">Akses bebas tanggal & dapat meninjau/merubah semua komponen.</p>
+                <p class="text-[11px] text-blue-700">Akses bebas tanggal & menampilkan gabungan seluruh komponen dari semua juri.</p>
               </div>
             </div>
-            <span class="text-[10px] font-bold bg-blue-200 text-blue-900 px-2.5 py-1 rounded-lg">Akses Penuh</span>
+            <span class="text-[10px] font-bold bg-blue-200 text-blue-900 px-2.5 py-1 rounded-lg">Akses Penuh Admin</span>
           `;
         } else if (isScheduleLockedByDate) {
           const isFuture = todayStr < startDateStr;
@@ -1862,6 +1894,12 @@
 
       const isAdmin = currentUser && currentUser.role === 'admin';
 
+      // Reset info juri pada tag komponen
+      for (let cId = 1; cId <= 4; cId++) {
+        const tagEl = document.getElementById(`judge-tag-comp-${cId}`);
+        if (tagEl) tagEl.innerText = '';
+      }
+
       if (isScheduleLockedByDate && !isAdmin) {
         applyReadOnlyLockToRubric(true);
         if (editBanner) {
@@ -1887,6 +1925,7 @@
 
       if (!classId) {
         currentEditingEvalId = null;
+        currentEditingEvalList = [];
         currentScoringState = {};
         clearScoringButtonHighlights();
         applyReadOnlyLockToRubric(false);
@@ -1904,26 +1943,33 @@
 
       const rawEvals = await getEvaluationsList();
 
-      const existing = rawEvals.find(e => {
-        const matchClass = (e.classId === classId);
-        const matchPeriodOrSched = (e.scheduleId && currentScheduleId && e.scheduleId === currentScheduleId) || 
-                                   (e.periode?.trim().toLowerCase() === period.toLowerCase());
-        if (isAdmin) {
+      if (isAdmin) {
+        // Mode Admin: Ambil SELURUH lembar penilaian untuk kelas & sesi ini dari semua juri
+        const matchedEvals = rawEvals.filter(e => {
+          const matchClass = (e.classId === classId);
+          const matchPeriodOrSched = (e.scheduleId && currentScheduleId && e.scheduleId === currentScheduleId) || 
+                                     (e.periode?.trim().toLowerCase() === period.toLowerCase());
           return matchClass && matchPeriodOrSched;
-        } else {
-          const matchEvaluator = (e.evaluatorId === currentUser?.id || e.evaluatorName === currentUser?.name);
-          const matchComp = assignedComponentId ? (e.componentId === assignedComponentId) : true;
-          return matchClass && matchPeriodOrSched && matchEvaluator && matchComp;
-        }
-      });
+        });
 
-      if (existing) {
-        currentEditingEvalId = existing.id;
+        currentEditingEvalList = matchedEvals;
         currentScoringState = {};
+        let collectedNotes = [];
 
-        if (existing.indicatorScores && Object.keys(existing.indicatorScores).length > 0) {
-          currentScoringState = { ...existing.indicatorScores };
-        }
+        // Gabungkan seluruh indicatorScores dari semua lembar komponen
+        matchedEvals.forEach(e => {
+          if (e.indicatorScores && typeof e.indicatorScores === 'object') {
+            Object.assign(currentScoringState, e.indicatorScores);
+          }
+          if (e.catatan && e.catatan.trim() !== '') {
+            collectedNotes.push(`${e.evaluatorName || 'Juri'}: "${e.catatan}"`);
+          }
+          // Beri label nama juri pada header komponen
+          if (e.componentId) {
+            const tagEl = document.getElementById(`judge-tag-comp-${e.componentId}`);
+            if (tagEl) tagEl.innerText = `Dinilai oleh: ${e.evaluatorName || '-'}`;
+          }
+        });
 
         clearScoringButtonHighlights();
         Object.keys(currentScoringState).forEach(key => {
@@ -1936,12 +1982,13 @@
         });
 
         const notesEl = document.getElementById('score-notes');
-        if (notesEl) notesEl.value = existing.catatan || '';
+        if (notesEl) notesEl.value = collectedNotes.join('\n');
 
         calculateLiveScores();
+        applyReadOnlyLockToRubric(false);
 
-        if (isAdmin) {
-          applyReadOnlyLockToRubric(false);
+        if (matchedEvals.length > 0) {
+          currentEditingEvalId = matchedEvals[0].id;
           if (editBanner) {
             editBanner.className = "mb-6 p-4 bg-amber-50/90 border border-amber-200 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-amber-900 shadow-sm";
             editBanner.classList.remove('hidden');
@@ -1950,12 +1997,12 @@
             iconWrap.className = "w-9 h-9 rounded-xl bg-amber-200/80 text-amber-800 flex items-center justify-center font-bold flex-shrink-0";
             iconWrap.innerHTML = `<i data-lucide="edit-3" class="w-4 h-4 text-amber-700"></i>`;
           }
-          if (mainText) mainText.innerText = "Mode Edit Penilaian (Admin)";
-          if (subText) subText.innerText = `Menampilkan data penilaian oleh ${existing.evaluatorName}. Anda memiliki hak akses penuh untuk merevisi skor atau mereset form.`;
+          if (mainText) mainText.innerText = `Mode Tinjau & Edit Seluruh Komponen (${matchedEvals.length} Data Komponen Masuk)`;
+          if (subText) subText.innerText = "Menampilkan seluruh nilai gabungan dari para juri. Anda memiliki akses penuh untuk merevisi skor atau mereset penilaian.";
           if (actionWrap) {
             actionWrap.innerHTML = `
               <button type="button" onclick="cancelEditMode()" class="px-3.5 py-1.5 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 transition shadow-sm">
-                <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> Reset Form (Hapus dari Rekap)
+                <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> Reset Semua Komponen Kelas Ini
               </button>
             `;
           }
@@ -1966,6 +2013,49 @@
             submitBtn.innerHTML = `<i data-lucide="refresh-cw" class="w-4 h-4"></i> Perbarui Penilaian (Admin)`;
           }
         } else {
+          currentEditingEvalId = null;
+          if (editBanner) editBanner.classList.add('hidden');
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.className = "w-full md:w-auto px-8 py-3.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold rounded-2xl shadow-lg shadow-emerald-500/25 transition active:scale-95";
+            submitBtn.innerHTML = "Simpan Penilaian";
+          }
+        }
+
+      } else {
+        // Mode Juri: Cari lembar penilaian milik juri ini untuk komponen yang ditugaskan
+        const existing = rawEvals.find(e => {
+          const matchClass = (e.classId === classId);
+          const matchPeriodOrSched = (e.scheduleId && currentScheduleId && e.scheduleId === currentScheduleId) || 
+                                     (e.periode?.trim().toLowerCase() === period.toLowerCase());
+          const matchEvaluator = (e.evaluatorId === currentUser?.id || e.evaluatorName === currentUser?.name);
+          const matchComp = assignedComponentId ? (e.componentId === assignedComponentId) : true;
+          return matchClass && matchPeriodOrSched && matchEvaluator && matchComp;
+        });
+
+        if (existing) {
+          currentEditingEvalId = existing.id;
+          currentEditingEvalList = [existing];
+          currentScoringState = {};
+
+          if (existing.indicatorScores && Object.keys(existing.indicatorScores).length > 0) {
+            currentScoringState = { ...existing.indicatorScores };
+          }
+
+          clearScoringButtonHighlights();
+          Object.keys(currentScoringState).forEach(key => {
+            const val = currentScoringState[key];
+            const btn = document.getElementById(`btn-score-${key}-${val}`);
+            if (btn) {
+              btn.classList.add('score-badge-active');
+              btn.classList.remove('bg-slate-50', 'text-slate-700');
+            }
+          });
+
+          const notesEl = document.getElementById('score-notes');
+          if (notesEl) notesEl.value = existing.catatan || '';
+
+          calculateLiveScores();
           applyReadOnlyLockToRubric(true);
 
           if (editBanner) {
@@ -1991,21 +2081,22 @@
             submitBtn.className = "w-full md:w-auto px-8 py-3.5 bg-slate-200 text-slate-400 font-bold rounded-2xl cursor-not-allowed shadow-none flex items-center justify-center gap-2";
             submitBtn.innerHTML = `<i data-lucide="lock" class="w-4 h-4"></i> Nilai Terkunci`;
           }
-        }
-      } else {
-        currentEditingEvalId = null;
-        currentScoringState = {};
-        clearScoringButtonHighlights();
-        applyReadOnlyLockToRubric(false);
-        const notesEl = document.getElementById('score-notes');
-        if (notesEl) notesEl.value = '';
-        calculateLiveScores();
+        } else {
+          currentEditingEvalId = null;
+          currentEditingEvalList = [];
+          currentScoringState = {};
+          clearScoringButtonHighlights();
+          applyReadOnlyLockToRubric(false);
+          const notesEl = document.getElementById('score-notes');
+          if (notesEl) notesEl.value = '';
+          calculateLiveScores();
 
-        if (editBanner) editBanner.classList.add('hidden');
-        if (submitBtn) {
-          submitBtn.disabled = false;
-          submitBtn.className = "w-full md:w-auto px-8 py-3.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold rounded-2xl shadow-lg shadow-emerald-500/25 transition active:scale-95";
-          submitBtn.innerHTML = "Simpan Penilaian";
+          if (editBanner) editBanner.classList.add('hidden');
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.className = "w-full md:w-auto px-8 py-3.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold rounded-2xl shadow-lg shadow-emerald-500/25 transition active:scale-95";
+            submitBtn.innerHTML = "Simpan Penilaian";
+          }
         }
       }
       safeCreateIcons();
@@ -2016,7 +2107,7 @@
       const selectedOption = classSelect?.options[classSelect.selectedIndex];
       const className = selectedOption ? selectedOption.text.split(' (')[0] : 'kelas ini';
 
-      if (!currentEditingEvalId) {
+      if (!currentEditingEvalId && currentEditingEvalList.length === 0) {
         currentScoringState = {};
         clearScoringButtonHighlights();
         applyReadOnlyLockToRubric(false);
@@ -2034,27 +2125,32 @@
       showCustomModal({
         title: "Reset Penilaian ke 0 & Batalkan Penilaian",
         desc: `Apakah Anda ingin mereset penilaian <strong>${className}</strong>?<br><br>
-               Tindakan ini akan <strong>menghapus lembar penilaian komponen ini</strong> sehingga juri yang bertugas dapat menilai kembali kelas tersebut dari awal.`,
+               Tindakan ini akan <strong>menghapus seluruh lembar penilaian komponen kelas ini</strong> di Firestore sehingga masing-masing juri dapat menilai kembali kelas tersebut dari awal.`,
         icon: "alert-triangle",
         confirmText: "Ya, Reset & Hapus",
         onConfirm: async () => {
-          const evalIdToDelete = currentEditingEvalId;
+          const evalIdsToDelete = currentEditingEvalList.length > 0 
+            ? currentEditingEvalList.map(e => e.id)
+            : [currentEditingEvalId];
 
           if (fbDb) {
             try {
-              await deleteDoc(doc(fbDb, 'evaluations', evalIdToDelete));
-              showToast(`Penilaian untuk ${className} telah direset dan dihapus.`);
+              for (const eId of evalIdsToDelete) {
+                if (eId) await deleteDoc(doc(fbDb, 'evaluations', eId));
+              }
+              showToast(`Seluruh penilaian untuk ${className} telah direset dan dihapus.`);
             } catch (err) {
               console.error("Gagal menghapus penilaian dari Firestore:", err);
               showToast("Gagal mereset di Firebase: " + err.message, "error");
               return;
             }
           } else {
-            mockDB.evaluations = mockDB.evaluations.filter(e => e.id !== evalIdToDelete);
+            mockDB.evaluations = mockDB.evaluations.filter(e => !evalIdsToDelete.includes(e.id));
             showToast(`Penilaian untuk ${className} telah direset.`);
           }
 
           currentEditingEvalId = null;
+          currentEditingEvalList = [];
           currentScoringState = {};
           clearScoringButtonHighlights();
           applyReadOnlyLockToRubric(false);
@@ -2081,6 +2177,7 @@
 
     window.resetScoringForm = async function() {
       currentEditingEvalId = null;
+      currentEditingEvalList = [];
       currentScoringState = {};
       buildRubricMatrix();
       applyReadOnlyLockToRubric(false);
@@ -2152,85 +2249,131 @@
         }
       }
 
-      const componentBreakdown = {};
-      let totalSkor = 0;
-
-      RUBRIC_STRUCTURE.forEach(comp => {
-        let rawSum = 0;
-        comp.indicators.forEach((_, idx) => {
-          rawSum += (currentScoringState[`c${comp.id}_i${idx}`] || 0);
-        });
-        const maxRaw = comp.indicators.length * 5;
-        const weighted = (rawSum / maxRaw) * comp.weight;
-        totalSkor += weighted;
-        componentBreakdown[`k${comp.id}`] = {
-          nama: comp.name,
-          raw: rawSum,
-          maxRaw: maxRaw,
-          weighted: Number(weighted.toFixed(2))
-        };
-      });
-
       let className = "Kelas";
       const selOpt = document.getElementById('score-class-select');
       if (selOpt && selOpt.options[selOpt.selectedIndex]) {
         className = selOpt.options[selOpt.selectedIndex].text.split(' (')[0];
       }
 
-      let predikat = "Cukup";
-      if (totalSkor >= 90) predikat = "Sangat Bersih (A)";
-      else if (totalSkor >= 80) predikat = "Bersih (B)";
-      else if (totalSkor >= 70) predikat = "Cukup Bersih (C)";
-      else predikat = "Kurang Bersih (D)";
-
-      const compSuffix = (!isAdmin && assignedComponentId) ? `_c${assignedComponentId}` : `_all`;
-      const evalDocId = currentEditingEvalId || `eval_${selectedScheduleId}_${classId}${compSuffix}_${Date.now()}`;
-
-      const evaluationData = {
-        id: evalDocId,
-        scheduleId: selectedScheduleId,
-        classId: classId,
-        className: className,
-        evaluatorId: currentUser.id,
-        evaluatorName: currentUser.name,
-        componentId: (!isAdmin && assignedComponentId) ? assignedComponentId : null,
-        tanggal: tanggalPelaksanaan,
-        periode: periode,
-        indicatorScores: { ...currentScoringState },
-        scores: componentBreakdown,
-        totalSkor: Number(totalSkor.toFixed(2)),
-        predikat: predikat,
-        catatan: notes,
-        updatedAt: new Date().toISOString()
-      };
-
-      if (fbDb) {
+      if (isAdmin) {
+        // Mode Admin: Simpan atau perbarui masing-masing lembar komponen secara terpisah agar rekap tetap terpetakan ke juri
         try {
-          if (currentEditingEvalId) {
-            await updateDoc(doc(fbDb, 'evaluations', currentEditingEvalId), evaluationData);
-            showToast(`Penilaian untuk ${className} berhasil diperbarui di Firestore!`);
-          } else {
-            evaluationData.createdAt = new Date().toISOString();
-            await setDoc(doc(fbDb, 'evaluations', evalDocId), evaluationData);
-            showToast(`Penilaian ${(!isAdmin && assignedComponentId) ? 'Komponen ' + assignedComponentId : ''} untuk ${className} berhasil disimpan!`);
+          const schedules = await getSchedulesList();
+          const currentSched = schedules.find(s => s.id === selectedScheduleId);
+
+          for (const comp of RUBRIC_STRUCTURE) {
+            let compRawSum = 0;
+            const compIndicatorScores = {};
+            comp.indicators.forEach((_, idx) => {
+              const k = `c${comp.id}_i${idx}`;
+              const scoreVal = currentScoringState[k] || 0;
+              compRawSum += scoreVal;
+              compIndicatorScores[k] = scoreVal;
+            });
+            const maxRaw = comp.indicators.length * 5;
+            const weighted = (compRawSum / maxRaw) * comp.weight;
+
+            const existingCompDoc = currentEditingEvalList.find(e => e.componentId === comp.id);
+            const docId = existingCompDoc ? existingCompDoc.id : `eval_${selectedScheduleId}_${classId}_c${comp.id}`;
+            const judgeInfo = currentSched?.componentAssignments?.[comp.id];
+
+            const compData = {
+              id: docId,
+              scheduleId: selectedScheduleId,
+              classId: classId,
+              className: className,
+              evaluatorId: existingCompDoc?.evaluatorId || judgeInfo?.judgeId || currentUser.id,
+              evaluatorName: existingCompDoc?.evaluatorName || judgeInfo?.judgeName || currentUser.name,
+              componentId: comp.id,
+              tanggal: existingCompDoc?.tanggal || tanggalPelaksanaan,
+              periode: periode,
+              indicatorScores: compIndicatorScores,
+              scores: {
+                [`k${comp.id}`]: {
+                  nama: comp.name,
+                  raw: compRawSum,
+                  maxRaw: maxRaw,
+                  weighted: Number(weighted.toFixed(2))
+                }
+              },
+              totalSkor: Number(weighted.toFixed(2)),
+              catatan: notes,
+              updatedAt: new Date().toISOString()
+            };
+
+            if (fbDb) {
+              await setDoc(doc(fbDb, 'evaluations', docId), compData, { merge: true });
+            } else {
+              const idx = mockDB.evaluations.findIndex(e => e.id === docId);
+              if (idx !== -1) mockDB.evaluations[idx] = compData;
+              else mockDB.evaluations.unshift(compData);
+            }
           }
+
+          showToast(`Seluruh nilai komponen untuk ${className} berhasil disimpan Admin ke Firestore!`);
         } catch (e) {
-          console.error("Gagal simpan evaluasi ke Firebase:", e);
+          console.error("Gagal simpan evaluasi oleh Admin:", e);
           showToast("Gagal menyimpan ke Firebase: " + e.message, "error");
           return;
         }
+
       } else {
-        if (currentEditingEvalId) {
-          const idx = mockDB.evaluations.findIndex(e => e.id === currentEditingEvalId);
-          if (idx !== -1) mockDB.evaluations[idx] = { ...mockDB.evaluations[idx], ...evaluationData };
-        } else {
-          evaluationData.createdAt = new Date().toISOString();
-          mockDB.evaluations.unshift(evaluationData);
+        // Mode Juri: Simpan lembar nilai spesifik untuk komponennya
+        let rawSum = 0;
+        const currentComp = RUBRIC_STRUCTURE.find(c => c.id === assignedComponentId);
+        if (currentComp) {
+          currentComp.indicators.forEach((_, idx) => {
+            rawSum += (currentScoringState[`c${currentComp.id}_i${idx}`] || 0);
+          });
         }
-        showToast(`Penilaian tersimpan sementara di memori browser.`);
+        const maxRaw = (currentComp?.indicators.length || 4) * 5;
+        const weighted = (rawSum / maxRaw) * (currentComp?.weight || 30);
+
+        const evalDocId = currentEditingEvalId || `eval_${selectedScheduleId}_${classId}_c${assignedComponentId}`;
+
+        const evaluationData = {
+          id: evalDocId,
+          scheduleId: selectedScheduleId,
+          classId: classId,
+          className: className,
+          evaluatorId: currentUser.id,
+          evaluatorName: currentUser.name,
+          componentId: assignedComponentId,
+          tanggal: tanggalPelaksanaan,
+          periode: periode,
+          indicatorScores: { ...currentScoringState },
+          scores: {
+            [`k${assignedComponentId}`]: {
+              nama: currentComp?.name || `Komponen ${assignedComponentId}`,
+              raw: rawSum,
+              maxRaw: maxRaw,
+              weighted: Number(weighted.toFixed(2))
+            }
+          },
+          totalSkor: Number(weighted.toFixed(2)),
+          catatan: notes,
+          updatedAt: new Date().toISOString()
+        };
+
+        if (fbDb) {
+          try {
+            await setDoc(doc(fbDb, 'evaluations', evalDocId), evaluationData, { merge: true });
+            showToast(`Penilaian Komponen ${assignedComponentId} untuk ${className} berhasil disimpan!`);
+          } catch (e) {
+            console.error("Gagal simpan evaluasi ke Firebase:", e);
+            showToast("Gagal menyimpan ke Firebase: " + e.message, "error");
+            return;
+          }
+        } else {
+          const idx = mockDB.evaluations.findIndex(e => e.id === evalDocId);
+          if (idx !== -1) mockDB.evaluations[idx] = evaluationData;
+          else mockDB.evaluations.unshift(evaluationData);
+          showToast(`Penilaian Komponen ${assignedComponentId} tersimpan.`);
+        }
       }
 
       currentEditingEvalId = null;
+      currentEditingEvalList = [];
       navigateView('leaderboard');
     };
 
@@ -2292,7 +2435,6 @@
 
         sortedWeeks.forEach(w => {
           let wK1 = 0, wK2 = 0, wK3 = 0, wK4 = 0;
-          let hasK1 = false, hasK2 = false, hasK3 = false, hasK4 = false;
           let k1Judge = '-', k2Judge = '-', k3Judge = '-', k4Judge = '-';
           const wJudges = [];
           const wNotes = [];
@@ -2315,26 +2457,22 @@
             if (e.componentId) {
               if (e.componentId === 1) {
                 wK1 = Number(e.scores?.k1?.weighted || 0);
-                hasK1 = true;
                 k1Judge = e.evaluatorName;
               } else if (e.componentId === 2) {
                 wK2 = Number(e.scores?.k2?.weighted || 0);
-                hasK2 = true;
                 k2Judge = e.evaluatorName;
               } else if (e.componentId === 3) {
                 wK3 = Number(e.scores?.k3?.weighted || 0);
-                hasK3 = true;
                 k3Judge = e.evaluatorName;
               } else if (e.componentId === 4) {
                 wK4 = Number(e.scores?.k4?.weighted || 0);
-                hasK4 = true;
                 k4Judge = e.evaluatorName;
               }
             } else {
-              if (e.scores?.k1?.weighted !== undefined) { wK1 = Number(e.scores.k1.weighted); hasK1 = true; k1Judge = e.evaluatorName; }
-              if (e.scores?.k2?.weighted !== undefined) { wK2 = Number(e.scores.k2.weighted); hasK2 = true; k2Judge = e.evaluatorName; }
-              if (e.scores?.k3?.weighted !== undefined) { wK3 = Number(e.scores.k3.weighted); hasK3 = true; k3Judge = e.evaluatorName; }
-              if (e.scores?.k4?.weighted !== undefined) { wK4 = Number(e.scores.k4.weighted); hasK4 = true; k4Judge = e.evaluatorName; }
+              if (e.scores?.k1?.weighted !== undefined) { wK1 = Number(e.scores.k1.weighted); k1Judge = e.evaluatorName; }
+              if (e.scores?.k2?.weighted !== undefined) { wK2 = Number(e.scores.k2.weighted); k2Judge = e.evaluatorName; }
+              if (e.scores?.k3?.weighted !== undefined) { wK3 = Number(e.scores.k3.weighted); k3Judge = e.evaluatorName; }
+              if (e.scores?.k4?.weighted !== undefined) { wK4 = Number(e.scores.k4.weighted); k4Judge = e.evaluatorName; }
             }
           });
 
