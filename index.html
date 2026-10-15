@@ -1962,7 +1962,11 @@
             Object.assign(currentScoringState, e.indicatorScores);
           }
           if (e.catatan && e.catatan.trim() !== '') {
-            collectedNotes.push(`${e.evaluatorName || 'Juri'}: "${e.catatan}"`);
+            const cleanNote = e.catatan.trim();
+            const noteText = `${e.evaluatorName || 'Juri'}: "${cleanNote}"`;
+            if (!collectedNotes.some(n => n.includes(cleanNote))) {
+              collectedNotes.push(noteText);
+            }
           }
           // Beri label nama juri pada header komponen
           if (e.componentId) {
@@ -2438,20 +2442,26 @@
           let k1Judge = '-', k2Judge = '-', k3Judge = '-', k4Judge = '-';
           const wJudges = [];
           const wNotes = [];
+          const seenNotes = new Set(); // Mencegah duplikasi catatan dari juri yang sama
 
           w.evals.forEach(e => {
             if (e.evaluatorName && !wJudges.includes(e.evaluatorName)) {
               wJudges.push(e.evaluatorName);
             }
 
-            if (e.catatan && e.catatan.trim() !== '') {
-              wNotes.push({
-                id: e.id,
-                evaluator: e.evaluatorName,
-                componentId: e.componentId,
-                tanggal: e.tanggal,
-                catatan: e.catatan
-              });
+            if (e.catatan && typeof e.catatan === 'string' && e.catatan.trim() !== '') {
+              const cleanText = e.catatan.trim();
+              const noteKey = `${e.evaluatorName || 'Juri'}_c${e.componentId || ''}_${cleanText}`;
+              if (!seenNotes.has(noteKey)) {
+                seenNotes.add(noteKey);
+                wNotes.push({
+                  id: e.id,
+                  evaluator: e.evaluatorName || 'Juri',
+                  componentId: e.componentId,
+                  tanggal: e.tanggal,
+                  catatan: cleanText
+                });
+              }
             }
 
             if (e.componentId) {
@@ -2823,8 +2833,8 @@
         `).join('');
 
         const notesList = w.notes.length > 0 
-          ? w.notes.map(n => `<div class="p-2 bg-slate-50 rounded-lg border border-slate-200/80 text-[11px] text-slate-700"><strong class="text-slate-900">${n.evaluator} (Komponen ${n.componentId || '-'}):</strong> "${n.catatan}"</div>`).join('')
-          : '<p class="text-[11px] text-slate-400 italic">Tidak ada catatan pada pekan ini.</p>';
+          ? w.notes.map(n => `<div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200/80 text-xs text-slate-700 leading-relaxed"><strong class="text-slate-900">${n.evaluator} (Komponen ${n.componentId || '-'}):</strong> "${n.catatan}"</div>`).join('')
+          : '<p class="text-xs text-slate-400 italic">Tidak ada catatan pada pekan ini.</p>';
 
         return `
           <div class="p-4 rounded-2xl border border-slate-200 bg-white space-y-3 mb-4 shadow-xs">
@@ -2862,8 +2872,8 @@
             </div>
 
             <div>
-              <p class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Catatan Evaluasi Juri Pekan Ini:</p>
-              <div class="space-y-1.5">${notesList}</div>
+              <p class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Catatan Evaluasi Juri Pekan Ini:</p>
+              <div class="space-y-2">${notesList}</div>
             </div>
           </div>
         `;
