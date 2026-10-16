@@ -408,7 +408,10 @@
             <label class="block text-xs font-semibold text-slate-700 mb-1">Kata Sandi</label>
             <div class="relative">
               <i data-lucide="lock" class="w-4 h-4 absolute left-3.5 top-3.5 text-slate-400"></i>
-              <input type="password" id="evaluator-password" required placeholder="••••••••" class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
+              <input type="password" id="evaluator-password" required placeholder="••••••••" class="w-full pl-10 pr-11 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
+              <button type="button" onclick="togglePasswordVisibility('evaluator-password', 'eye-evaluator')" class="absolute right-3.5 top-3 text-slate-400 hover:text-slate-700 transition focus:outline-none" title="Lihat/Sembunyikan Sandi" aria-label="Toggle kata sandi">
+                <i data-lucide="eye" id="eye-evaluator" class="w-4 h-4"></i>
+              </button>
             </div>
           </div>
           <button type="submit" id="btn-login-evaluator" class="w-full py-3 bg-emerald-600 hover:bg-emerald-700 active:scale-[0.99] text-white font-semibold text-sm rounded-xl shadow-lg shadow-emerald-600/25 transition">
@@ -429,7 +432,10 @@
             <label class="block text-xs font-semibold text-slate-700 mb-1">Kata Sandi</label>
             <div class="relative">
               <i data-lucide="lock" class="w-4 h-4 absolute left-3.5 top-3.5 text-slate-400"></i>
-              <input type="password" id="admin-password" required placeholder="••••••••" class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
+              <input type="password" id="admin-password" required placeholder="••••••••" class="w-full pl-10 pr-11 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
+              <button type="button" onclick="togglePasswordVisibility('admin-password', 'eye-admin')" class="absolute right-3.5 top-3 text-slate-400 hover:text-slate-700 transition focus:outline-none" title="Lihat/Sembunyikan Sandi" aria-label="Toggle kata sandi">
+                <i data-lucide="eye" id="eye-admin" class="w-4 h-4"></i>
+              </button>
             </div>
           </div>
           <button type="submit" id="btn-login-admin" class="w-full py-3 bg-slate-900 hover:bg-slate-800 active:scale-[0.99] text-white font-semibold text-sm rounded-xl shadow-lg transition">
@@ -1040,6 +1046,22 @@
         window.lucide.createIcons();
       }
     }
+
+    // Toggle Tampilkan / Sembunyikan Kata Sandi
+    window.togglePasswordVisibility = function(inputId, iconId) {
+      const inputEl = document.getElementById(inputId);
+      const iconEl = document.getElementById(iconId);
+      if (!inputEl) return;
+
+      if (inputEl.type === 'password') {
+        inputEl.type = 'text';
+        if (iconEl) iconEl.setAttribute('data-lucide', 'eye-off');
+      } else {
+        inputEl.type = 'password';
+        if (iconEl) iconEl.setAttribute('data-lucide', 'eye');
+      }
+      safeCreateIcons();
+    };
 
     window.toggleMobileSidebar = function(isOpen) {
       const sidebar = document.getElementById('app-sidebar');
